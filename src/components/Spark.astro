@@ -2,28 +2,91 @@
 interface Props {
   class?: string;
   size?: number;
+  delay?: number;
   [key: string]: unknown;
 }
 
-const { class: className, size = 20, ...rest } = Astro.props;
+const { class: className, size = 20, delay = 0, ...rest } = Astro.props;
+
+const sparkId = crypto.randomUUID().replaceAll("-", "");
+const gradientId = `spark-paint-${sparkId}`;
+const highlightId = `spark-highlight-${sparkId}`;
 ---
 
 <svg
   {...rest}
-  class={className}
+  class:list={["spark-icon", className]}
   width={size}
   height={size}
   viewBox="0 0 24 24"
   fill="none"
   xmlns="http://www.w3.org/2000/svg"
   aria-hidden="true"
+  style={`--spark-delay: ${delay}s`}
 >
-  <path
-    data-draw
-    d="M12 2.5C13 9.2 14.8 11 21.5 12C14.8 13 13 14.8 12 21.5C11 14.8 9.2 13 2.5 12C9.2 11 11 9.2 12 2.5Z"
-    stroke="currentColor"
-    stroke-width="1.6"
-    stroke-linejoin="round"
-  />
-  <circle cx="12" cy="12" r="1.25" fill="currentColor" />
+  <defs>
+    <linearGradient
+      id={gradientId}
+      x1="4"
+      y1="2.5"
+      x2="20"
+      y2="21.5"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#4d8dff" />
+      <stop offset="0.3" stop-color="#8c6cff" />
+      <stop offset="0.56" stop-color="#ed68a8" />
+      <stop offset="0.78" stop-color="#ff8b55" />
+      <stop offset="1" stop-color="#ffd75c" />
+    </linearGradient>
+    <radialGradient id={highlightId} cx="0" cy="0" r="1">
+      <stop stop-color="#ffffff" stop-opacity="0.92" />
+      <stop offset="0.34" stop-color="#ffffff" stop-opacity="0.28" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <g class="spark-rotor">
+    <path
+      d="M12 2.15C12.9 8.7 15.3 11.1 21.85 12C15.3 12.9 12.9 15.3 12 21.85C11.1 15.3 8.7 12.9 2.15 12C8.7 11.1 11.1 8.7 12 2.15Z"
+      fill={`url(#${gradientId})`}
+    />
+    <path
+      d="M12 6.2C12.5 10.2 13.8 11.5 17.8 12C13.8 12.5 12.5 13.8 12 17.8C11.5 13.8 10.2 12.5 6.2 12C10.2 11.5 11.5 10.2 12 6.2Z"
+      fill={`url(#${gradientId})`}
+      opacity="0.45"
+    />
+    <circle cx="9.1" cy="8.4" r="3.3" fill={`url(#${highlightId})`} />
+  </g>
 </svg>
+
+<style>
+  .spark-icon {
+    flex: none;
+    overflow: visible;
+    vertical-align: middle;
+  }
+
+  .spark-rotor {
+    transform-origin: 12px 12px;
+    animation: spark-turn 18s linear infinite;
+    animation-delay: var(--spark-delay, 0s);
+    will-change: transform;
+  }
+
+  .spark-icon:hover .spark-rotor {
+    animation-duration: 7s;
+  }
+
+  @keyframes spark-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spark-rotor,
+    .spark-icon:hover .spark-rotor {
+      animation: none;
+    }
+  }
+</style>
