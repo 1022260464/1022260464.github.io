@@ -47,26 +47,18 @@ export default function MotionPath() {
             <stop offset="0.8" stopColor="#ff8b55" />
             <stop offset="1" stopColor="#ffd75c" />
           </linearGradient>
-          <linearGradient id="star-top-paint" x1="12" y1="12" x2="12" y2="2">
-            <stop stopColor="#4d8dff" />
-            <stop offset="1" stopColor="#8c6cff" />
-          </linearGradient>
-          <linearGradient id="star-right-paint" x1="12" y1="12" x2="22" y2="12">
-            <stop stopColor="#8c6cff" />
-            <stop offset="1" stopColor="#ed68a8" />
-          </linearGradient>
           <linearGradient
-            id="star-bottom-paint"
-            x1="12"
-            y1="12"
-            x2="12"
-            y2="22"
+            id="mini-star-paint"
+            x1="4"
+            y1="2.5"
+            x2="20"
+            y2="21.5"
+            gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#ed68a8" />
-            <stop offset="1" stopColor="#ff8b55" />
-          </linearGradient>
-          <linearGradient id="star-left-paint" x1="12" y1="12" x2="2" y2="12">
-            <stop stopColor="#ff8b55" />
+            <stop stopColor="#4d8dff" />
+            <stop offset="0.3" stopColor="#8c6cff" />
+            <stop offset="0.56" stopColor="#ed68a8" />
+            <stop offset="0.78" stopColor="#ff8b55" />
             <stop offset="1" stopColor="#ffd75c" />
           </linearGradient>
           <radialGradient id="planet-warm" cx="0.32" cy="0.28" r="0.78">
@@ -87,20 +79,13 @@ export default function MotionPath() {
 
           <symbol id="spiral-star" viewBox="0 0 24 24">
             <path
-              d="M12 12C9.3 9.6 8.9 4.3 12 2.15C15.1 4.3 14.7 9.6 12 12Z"
-              fill="url(#star-top-paint)"
+              d="M12 2.15C12.9 8.7 15.3 11.1 21.85 12C15.3 12.9 12.9 15.3 12 21.85C11.1 15.3 8.7 12.9 2.15 12C8.7 11.1 11.1 8.7 12 2.15Z"
+              fill="url(#mini-star-paint)"
             />
             <path
-              d="M12 12C14.4 9.3 19.7 8.9 21.85 12C19.7 15.1 14.4 14.7 12 12Z"
-              fill="url(#star-right-paint)"
-            />
-            <path
-              d="M12 12C14.7 14.4 15.1 19.7 12 21.85C8.9 19.7 9.3 14.4 12 12Z"
-              fill="url(#star-bottom-paint)"
-            />
-            <path
-              d="M12 12C9.6 14.7 4.3 15.1 2.15 12C4.3 8.9 9.6 9.3 12 12Z"
-              fill="url(#star-left-paint)"
+              d="M12 6.2C12.5 10.2 13.8 11.5 17.8 12C13.8 12.5 12.5 13.8 12 17.8C11.5 13.8 10.2 12.5 6.2 12C10.2 11.5 11.5 10.2 12 6.2Z"
+              fill="url(#mini-star-paint)"
+              opacity="0.4"
             />
           </symbol>
           <symbol id="spiral-planet-warm" viewBox="0 0 24 24">
