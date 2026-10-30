@@ -3,6 +3,9 @@ title: "为什么用 Astro 重做这个网站"
 description: "内容优先、默认零客户端 JavaScript，以及足够自由的页面结构。"
 pubDate: 2026-10-28
 tags: ["Astro", "前端"]
+category: "建站手记"
+parent: "building-in-public"
+order: 2
 draft: false
 ---
 

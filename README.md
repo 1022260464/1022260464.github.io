@@ -26,6 +26,8 @@ title: "文章标题"
 description: "用于列表和搜索引擎的一句话简介"
 pubDate: 2026-10-30
 tags: ["随笔", "设计"]
+category: "建站手记"
+order: 1
 draft: false
 cover: "/images/article-cover.jpg"
 coverAlt: "文章封面的替代文本"
@@ -36,6 +38,18 @@ coverAlt: "文章封面的替代文本"
 
 文件名为文章网址，例如 `my-first-post.md` 会生成
 `/writing/my-first-post/`。设置 `draft: true` 后不会出现在文章列表和构建结果中。
+
+文章可以通过以下字段形成层级：
+
+```yaml
+category: "建站手记"     # 顶层分类
+parent: "building-in-public" # 上级文章的 id，也就是不带 .md 的文件名
+order: 2                 # 同一层级内的排序
+```
+
+`parent` 可省略。设置后出现的嵌套关系会同时显示在文章归档的“层级”
+视图和文章详情页侧栏中。文章页还提供按月查看的日历、时间清单、搜索和
+标签筛选。
 
 ## 页面动画
 

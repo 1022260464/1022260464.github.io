@@ -12,24 +12,47 @@ export async function getStaticPaths() {
   const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   );
+  const postById = new Map(posts.map((post) => [post.id, post]));
 
-  return posts.map((post, index) => ({
-    params: { slug: post.id },
-    props: {
-      post,
-      newer: posts[index - 1],
-      older: posts[index + 1],
-    },
-  }));
+  return posts.map((post, index) => {
+    const ancestors: CollectionEntry<"blog">[] = [];
+    const visited = new Set<string>([post.id]);
+    let current = post;
+
+    while (current.data.parent) {
+      const parent = postById.get(current.data.parent);
+      if (!parent || visited.has(parent.id)) break;
+      ancestors.unshift(parent);
+      visited.add(parent.id);
+      current = parent;
+    }
+
+    return {
+      params: { slug: post.id },
+      props: {
+        post,
+        ancestors,
+        parent: ancestors.at(-1),
+        children: posts
+          .filter((candidate) => candidate.data.parent === post.id)
+          .sort((a, b) => a.data.order - b.data.order),
+        newer: posts[index - 1],
+        older: posts[index + 1],
+      },
+    };
+  });
 }
 
 interface Props {
   post: CollectionEntry<"blog">;
+  ancestors: CollectionEntry<"blog">[];
+  parent?: CollectionEntry<"blog">;
+  children: CollectionEntry<"blog">[];
   newer?: CollectionEntry<"blog">;
   older?: CollectionEntry<"blog">;
 }
 
-const { post, newer, older } = Astro.props;
+const { post, ancestors, parent, children, newer, older } = Astro.props;
 const { Content, headings } = await render(post);
 const dateFormat = new Intl.DateTimeFormat("zh-CN", {
   year: "numeric",
@@ -50,7 +73,19 @@ const updatedDate = post.data.updatedDate
   <ReadingProgress />
   <article class="article-shell">
     <header class="article-header">
-      <a class="back-link" href="/writing" data-enter>← 返回文章</a>
+      <nav class="article-path" aria-label="文章层级" data-enter>
+        <a href="/writing">文章</a>
+        <span aria-hidden="true">/</span>
+        <span>{post.data.category}</span>
+        {
+          ancestors.map((ancestor) => (
+            <>
+              <span aria-hidden="true">/</span>
+              <a href={`/writing/${ancestor.id}`}>{ancestor.data.title}</a>
+            </>
+          ))
+        }
+      </nav>
       <div class="article-kicker" data-enter>
         <time datetime={post.data.pubDate.toISOString()}>{displayDate}</time>
         <span aria-hidden="true">/</span>
@@ -104,6 +139,27 @@ const updatedDate = post.data.updatedDate
         <div class="tag-list">
           {post.data.tags.map((tag) => <span>{tag}</span>)}
         </div>
+        {
+          (parent || children.length > 0) && (
+            <section class="article-hierarchy">
+              <p class="eyebrow">In this collection</p>
+              {parent && (
+                <a href={`/writing/${parent.id}`}>
+                  <span>上级</span>
+                  <strong>{parent.data.title}</strong>
+                </a>
+              )}
+              {
+                children.map((child, index) => (
+                  <a href={`/writing/${child.id}`}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <strong>{child.data.title}</strong>
+                  </a>
+                ))
+              }
+            </section>
+          )
+        }
         {updatedDate && <p class="updated">更新于 {updatedDate}</p>}
       </aside>
     </div>
@@ -146,15 +202,22 @@ const updatedDate = post.data.updatedDate
     border-bottom: 1px solid var(--line);
   }
 
-  .back-link {
-    display: inline-block;
+  .article-path {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
     color: var(--muted);
     font-family: var(--font-mono);
     font-size: 0.69rem;
   }
 
-  .back-link:hover {
+  .article-path a:hover {
     color: var(--ink);
+  }
+
+  .article-path span:last-child {
+    color: var(--faint);
   }
 
   .article-kicker {
@@ -277,6 +340,42 @@ const updatedDate = post.data.updatedDate
     border: 1px solid var(--line);
     border-radius: 999px;
     font-size: 0.67rem;
+  }
+
+  .article-hierarchy {
+    display: grid;
+    gap: 0;
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+
+  .article-hierarchy > p {
+    margin-bottom: 10px;
+  }
+
+  .article-hierarchy a {
+    display: grid;
+    gap: 4px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .article-hierarchy a:hover strong {
+    color: var(--blue);
+  }
+
+  .article-hierarchy span {
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    text-transform: uppercase;
+  }
+
+  .article-hierarchy strong {
+    font-size: 0.7rem;
+    font-weight: 550;
+    line-height: 1.45;
   }
 
   .updated {

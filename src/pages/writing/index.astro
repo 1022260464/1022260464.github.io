@@ -1,12 +1,27 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import PostList from "../../components/PostList.astro";
+import WritingArchive from "../../components/WritingArchive";
 import { site } from "../../lib/site";
 
 const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+const archivePosts = posts.map((post) => ({
+  id: post.id,
+  title: post.data.title,
+  description: post.data.description,
+  date: post.data.pubDate.toISOString(),
+  updatedDate: post.data.updatedDate?.toISOString(),
+  tags: post.data.tags,
+  category: post.data.category,
+  parent: post.data.parent,
+  order: post.data.order,
+  readingMinutes: Math.max(
+    1,
+    Math.ceil((post.body ?? "").length / 500),
+  ),
+}));
 ---
 
 <Layout
@@ -23,18 +38,12 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
         </h1>
         <p data-enter>
           关于设计、代码与日常的笔记。<br />
-          目前共有 {posts.length} 篇公开文章。
+          按内容层级、时间清单或发布日期浏览。
         </p>
       </div>
     </header>
 
-    <section aria-label="全部文章">
-      <div class="list-caption" data-reveal>
-        <span>按时间倒序</span>
-        <a href="/writing.xml">RSS 订阅 ↗</a>
-      </div>
-      <PostList posts={posts} />
-    </section>
+    <WritingArchive client:load posts={archivePosts} />
   </div>
 </Layout>
 
@@ -73,21 +82,6 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
     color: var(--muted);
     font-size: 0.93rem;
     line-height: 1.7;
-  }
-
-  .list-caption {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 13px;
-    color: var(--faint);
-    font-family: var(--font-mono);
-    font-size: 0.64rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .list-caption a:hover {
-    color: var(--ink);
   }
 
   @media (max-width: 760px) {
