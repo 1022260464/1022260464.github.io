@@ -6,21 +6,21 @@ const path =
   "M 239 17 C 142 17 48.5 103 48.5 213.5 C 48.5 324 126 408 244 408 C 362 408 412 319 412 213.5 C 412 108 334 68.5 244 68.5 C 154 68.5 102.68 135.079 99 213.5 C 95.32 291.921 157 350 231 345.5 C 305 341 357.5 290 357.5 219.5 C 357.5 149 314 121 244 121 C 174 121 151.5 167 151.5 213.5 C 151.5 260 176 286.5 224.5 286.5 C 273 286.5 296.5 253 296.5 218.5 C 296.5 184 270 177 244 177 C 218 177 197 198 197 218.5 C 197 239 206 250.5 225.5 250.5 C 245 250.5 253 242 253 218.5";
 
 const pathTransition: Transition = {
-  duration: 4,
+  duration: 10,
   repeat: Infinity,
   repeatType: "reverse",
   ease: "easeInOut",
 };
 
 const satellites = [
-  { kind: "star", size: 22, duration: 13.6, begin: -0.2 },
-  { kind: "warm", size: 18, duration: 14.4, begin: -1.8 },
-  { kind: "star", size: 16, duration: 12.8, begin: -3.1 },
-  { kind: "ring", size: 22, duration: 15.2, begin: -4.7 },
-  { kind: "star", size: 20, duration: 13.2, begin: -6.3 },
-  { kind: "blue", size: 16, duration: 14.8, begin: -7.9 },
-  { kind: "star", size: 15, duration: 12.4, begin: -9.2 },
-  { kind: "star", size: 18, duration: 15.8, begin: -11.1 },
+  { kind: "star", size: 30, duration: 34, begin: -0.5 },
+  { kind: "warm", size: 26, duration: 36, begin: -4.5 },
+  { kind: "star", size: 24, duration: 32, begin: -7.8 },
+  { kind: "ring", size: 28, duration: 38, begin: -11.8 },
+  { kind: "star", size: 28, duration: 33, begin: -15.8 },
+  { kind: "blue", size: 24, duration: 37, begin: -19.8 },
+  { kind: "star", size: 24, duration: 31, begin: -23 },
+  { kind: "star", size: 26, duration: 39.5, begin: -27.8 },
 ] as const;
 
 export default function MotionPath() {
@@ -107,6 +107,16 @@ export default function MotionPath() {
           animate={{ pathLength: 1, opacity: 0.58 }}
           transition={transition}
         />
+
+        <g className="spiral-anchor" transform="translate(230 218)">
+          <use
+            href="#spiral-star"
+            x="-27"
+            y="-27"
+            width="54"
+            height="54"
+          />
+        </g>
 
         {satellites.map((satellite, index) => {
           const symbol =

@@ -15,6 +15,10 @@
   filter: drop-shadow(0 1px 1px rgb(17 19 15 / 0.08));
 }
 
+.spiral-anchor {
+  filter: drop-shadow(0 2px 4px rgb(78 52 154 / 0.14));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .spiral-satellite {
     display: none;
