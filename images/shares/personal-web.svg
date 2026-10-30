@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Personal web</title>
+  <desc id="desc">Dark editorial composition of stacked browser windows, stars and orange accents.</desc>
+  <rect width="1200" height="900" fill="#11140f"/>
+  <g stroke="#f4f2e9" stroke-opacity=".12">
+    <path d="M0 150h1200M0 300h1200M0 450h1200M0 600h1200M0 750h1200"/>
+    <path d="M150 0v900M300 0v900M450 0v900M600 0v900M750 0v900M900 0v900M1050 0v900"/>
+  </g>
+  <g fill="#f4f2e9">
+    <rect x="138" y="176" width="552" height="406" rx="4" transform="rotate(-4 414 379)"/>
+    <rect x="318" y="262" width="700" height="462" rx="4" transform="rotate(3 668 493)"/>
+  </g>
+  <g fill="#11140f">
+    <circle cx="382" cy="314" r="7"/>
+    <circle cx="405" cy="314" r="7"/>
+    <circle cx="428" cy="314" r="7"/>
+    <path d="M365 383h346M365 417h256M365 451h306"/>
+  </g>
+  <rect x="465" y="526" width="320" height="8" rx="4" fill="#ef5b47"/>
+  <circle cx="949" cy="206" r="62" fill="#ff6a42"/>
+  <g fill="#ffd84d">
+    <path d="m903 607 14 35 35 14-35 14-14 35-14-35-35-14 35-14Z"/>
+    <path d="m204 722 8 21 21 8-21 8-8 21-8-21-21-8 21-8Z"/>
+  </g>
+  <path d="M893 430h134M960 363v134" stroke="#2458ff" stroke-width="8"/>
+</svg>

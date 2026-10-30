@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Motion language</title>
+  <desc id="desc">Blue abstract composition with concentric arcs and spring curves.</desc>
+  <rect width="1200" height="900" fill="#2458ff"/>
+  <g fill="none" stroke="#f7f8f4" stroke-linecap="round">
+    <circle cx="276" cy="430" r="218" stroke-width="3" opacity=".32"/>
+    <circle cx="276" cy="430" r="154" stroke-width="3" opacity=".48"/>
+    <circle cx="276" cy="430" r="88" stroke-width="3" opacity=".68"/>
+    <path d="M74 690C274 690 352 272 546 272s254 372 430 372 160-212 190-294" stroke-width="12"/>
+    <path d="M84 748C302 748 370 362 562 362s216 294 378 294 178-152 210-236" stroke-width="2" opacity=".45"/>
+  </g>
+  <g fill="#ffd84d">
+    <rect x="801" y="120" width="94" height="94" rx="4" transform="rotate(9 848 167)"/>
+    <rect x="959" y="672" width="48" height="48" rx="2" transform="rotate(-13 983 696)"/>
+  </g>
+  <circle cx="276" cy="430" r="32" fill="#f7f8f4"/>
+  <path d="M933 164 838 425" stroke="#f7f8f4" stroke-width="3" stroke-dasharray="8 10"/>
+  <circle cx="838" cy="425" r="12" fill="#ffd84d"/>
+</svg>

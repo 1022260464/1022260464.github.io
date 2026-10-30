@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Astro islands</title>
+  <desc id="desc">Green editorial grid connecting a set of geometric islands.</desc>
+  <rect width="1200" height="900" fill="#d9e8d6"/>
+  <g fill="none" stroke="#1c2c22" stroke-opacity=".14">
+    <path d="M0 150h1200M0 300h1200M0 450h1200M0 600h1200M0 750h1200"/>
+    <path d="M150 0v900M300 0v900M450 0v900M600 0v900M750 0v900M900 0v900M1050 0v900"/>
+  </g>
+  <path d="M294 652C390 510 426 352 558 342s194 138 302 72 128-178 152-226" fill="none" stroke="#1c2c22" stroke-width="5"/>
+  <g fill="#f9f5e8" stroke="#1c2c22" stroke-width="4">
+    <rect x="206" y="238" width="208" height="258" rx="10" transform="rotate(-7 310 367)"/>
+    <rect x="782" y="486" width="234" height="210" rx="10" transform="rotate(8 899 591)"/>
+  </g>
+  <circle cx="610" cy="451" r="94" fill="#2458ff"/>
+  <path d="M610 378v146M537 451h146" stroke="#fff" stroke-width="7"/>
+  <g fill="#ffd84d" stroke="#1c2c22" stroke-width="4">
+    <rect x="900" y="158" width="92" height="92" rx="4" transform="rotate(17 946 204)"/>
+    <rect x="324" y="646" width="58" height="58" rx="29"/>
+  </g>
+  <circle cx="1028" cy="688" r="16" fill="#1c2c22"/>
+</svg>
