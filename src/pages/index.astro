@@ -13,22 +13,22 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 	<div class="page-shell">
 		<section class="hero" aria-labelledby="hero-title">
 			<div class="hero-copy">
-				<p class="eyebrow">Design × Code × Notes</p>
-				<h1 id="hero-title">
-					<span class="hero-mark" aria-hidden="true">✦</span>
+				<p class="eyebrow" data-enter>Design × Code × Notes</p>
+				<h1 id="hero-title" data-enter>
+					<span class="hero-mark" aria-hidden="true" data-spin>✦</span>
 					<span>0x330</span>
 				</h1>
-				<p class="hero-lede">
+				<p class="hero-lede" data-enter>
 					把设计、代码与日常放进同一个空间。<br />
 					保持好奇，认真做东西，也认真生活。
 				</p>
-				<div class="hero-actions">
+				<div class="hero-actions" data-enter>
 					<a class="button-link" href="/writing">阅读文章</a>
 					<a class="button-link secondary" href="/about">关于我</a>
 				</div>
 			</div>
 
-			<aside class="hero-note" aria-label="站点简介">
+			<aside class="hero-note" aria-label="站点简介" data-enter>
 				<p class="note-index">01 / PERSONAL SPACE</p>
 				<p>{site.intro}</p>
 				<div class="note-rule"></div>
@@ -40,7 +40,7 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 		</section>
 
 		<section class="writing-section" aria-labelledby="writing-title">
-			<div class="section-heading">
+			<div class="section-heading" data-reveal>
 				<div>
 					<p class="eyebrow">Recent writing</p>
 					<h2 id="writing-title">最近写下的</h2>
@@ -50,7 +50,7 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 			<PostList posts={posts} />
 		</section>
 
-		<section class="field-notes" aria-labelledby="notes-title">
+		<section class="field-notes" aria-labelledby="notes-title" data-reveal>
 			<div>
 				<p class="eyebrow">Field notes</p>
 				<h2 id="notes-title">持续做，持续记录。</h2>

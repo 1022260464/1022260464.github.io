@@ -14,7 +14,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.4.4"
+    "astro": "^7.4.4",
+    "motion": "^14.7.1"
   },
   "devDependencies": {
     "gh-pages": "^6.3.0"

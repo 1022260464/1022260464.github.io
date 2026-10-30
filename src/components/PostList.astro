@@ -16,7 +16,7 @@ const formatDate = (date: Date) =>
 <div class="post-list">
   {
     posts.map((post, index) => (
-      <a class="post-row" href={`/writing/${post.id}`}>
+      <a class="post-row" href={`/writing/${post.id}`} data-reveal>
         <span class="post-number">{String(index + 1).padStart(2, "0")}</span>
         <div class="post-meta">
           <time datetime={post.data.pubDate.toISOString()}>

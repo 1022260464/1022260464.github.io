@@ -48,17 +48,17 @@ const updatedDate = post.data.updatedDate
 >
   <article class="article-shell">
     <header class="article-header">
-      <a class="back-link" href="/writing">← 返回文章</a>
-      <div class="article-kicker">
+      <a class="back-link" href="/writing" data-enter>← 返回文章</a>
+      <div class="article-kicker" data-enter>
         <time datetime={post.data.pubDate.toISOString()}>{displayDate}</time>
         <span aria-hidden="true">/</span>
         <span>{post.data.tags[0] ?? "写作"}</span>
       </div>
-      <h1>{post.data.title}</h1>
+      <h1 data-enter>{post.data.title}</h1>
       {post.data.description && (
-        <p class="article-description">{post.data.description}</p>
+        <p class="article-description" data-enter>{post.data.description}</p>
       )}
-      <div class="article-meta">
+      <div class="article-meta" data-enter>
         <span>文 / {site.name}</span>
         <span>{Math.max(1, Math.ceil((post.body ?? "").length / 500))} 分钟阅读</span>
       </div>
@@ -66,7 +66,7 @@ const updatedDate = post.data.updatedDate
 
     {
       headings.length > 0 && (
-        <aside class="toc" aria-label="文章目录">
+        <aside class="toc" aria-label="文章目录" data-reveal>
           <p>On this page</p>
           <ol>
             {headings
@@ -85,7 +85,7 @@ const updatedDate = post.data.updatedDate
       <div class="article-body prose">
         <Content />
       </div>
-      <aside class="article-aside">
+      <aside class="article-aside" data-reveal>
         <p class="eyebrow">Filed under</p>
         <div class="tag-list">
           {post.data.tags.map((tag) => <span>{tag}</span>)}
@@ -94,7 +94,7 @@ const updatedDate = post.data.updatedDate
       </aside>
     </div>
 
-    <nav class="article-nav" aria-label="文章翻页">
+    <nav class="article-nav" aria-label="文章翻页" data-reveal>
       {
         older ? (
           <a href={`/writing/${older.id}`}>

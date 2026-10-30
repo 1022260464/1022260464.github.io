@@ -15,10 +15,10 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
 >
   <div class="page-shell listing-page">
     <header class="page-header">
-      <p class="eyebrow">Writing / Archive</p>
+      <p class="eyebrow" data-enter>Writing / Archive</p>
       <div class="page-title-row">
-        <h1>写下来的<br />一切。</h1>
-        <p>
+        <h1 data-enter>写下来的<br />一切。</h1>
+        <p data-enter>
           关于设计、代码与日常的笔记。<br />
           目前共有 {posts.length} 篇公开文章。
         </p>
@@ -26,7 +26,7 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
     </header>
 
     <section aria-label="全部文章">
-      <div class="list-caption">
+      <div class="list-caption" data-reveal>
         <span>按时间倒序</span>
         <a href="/writing.xml">RSS 订阅 ↗</a>
       </div>

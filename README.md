@@ -35,6 +35,23 @@ draft: false
 文件名为文章网址，例如 `my-first-post.md` 会生成
 `/writing/my-first-post/`。设置 `draft: true` 后不会出现在文章列表和构建结果中。
 
+## 页面动画
+
+站点使用 `motion` 驱动动画，逻辑集中在 `src/scripts/site-motion.ts`。在需要动画的元素上添加属性即可：
+
+```html
+<!-- 页面首次加载时错峰进入 -->
+<h1 data-enter>标题</h1>
+
+<!-- 滚动进入视口时出现 -->
+<article data-reveal>内容</article>
+
+<!-- 旋转缩放进入，适合装饰性图标 -->
+<span data-spin>✦</span>
+```
+
+`prefers-reduced-motion: reduce` 开启时，页面会跳过动画并直接显示内容。页面之间的切换由 Astro 的 `ClientRouter` 完成。
+
 ## 发布
 
 源码保存在 `astro` 分支，GitHub Pages 展示 `gh-pages` 分支中的构建结果。
