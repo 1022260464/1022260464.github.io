@@ -1,0 +1,1 @@
+import{r as e,t}from"./react.DvXU6kJ2.js";import{c as n,o as r,s as i}from"./feature-bundle.BZ3zGPtZ.js";var a=e(t(),1);function o(){!i.current&&r();let[e]=(0,a.useState)(n.current);return e}export{o as t};
