@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Spark from "../components/Spark.astro";
+import MotionPath from "../components/MotionPath";
 import { site } from "../lib/site";
 ---
 
@@ -19,70 +19,7 @@ import { site } from "../lib/site";
       </div>
       <div class="monogram" aria-hidden="true" data-enter>
         <span>0x</span>
-        <div class="orbit-system">
-          <span class="orbit-ring orbit-ring-inner"></span>
-          <span class="orbit-ring orbit-ring-middle"></span>
-          <span class="orbit-ring orbit-ring-outer"></span>
-
-          <div class="orbit orbit-one">
-            <i class="planet planet-one">
-              <span class="planet-graphic">
-                <Spark size={10} spin={false} />
-              </span>
-            </i>
-          </div>
-          <div class="orbit orbit-two">
-            <i class="planet planet-two">
-              <span class="planet-graphic">
-                <Spark size={13} spin={false} />
-              </span>
-            </i>
-          </div>
-          <div class="orbit orbit-three">
-            <i class="planet planet-three">
-              <span class="planet-graphic">
-                <Spark size={8} spin={false} />
-              </span>
-            </i>
-          </div>
-          <div class="orbit orbit-four">
-            <i class="planet planet-four">
-              <span class="planet-graphic">
-                <Spark size={11} spin={false} />
-              </span>
-            </i>
-          </div>
-          <div class="orbit orbit-five">
-            <i class="planet planet-five">
-              <span class="planet-graphic">
-                <span class="planet-dot planet-dot-warm"></span>
-              </span>
-            </i>
-          </div>
-          <div class="orbit orbit-six">
-            <i class="planet planet-six">
-              <span class="planet-graphic">
-                <span class="planet-dot planet-dot-blue"></span>
-              </span>
-            </i>
-          </div>
-          <div class="orbit orbit-seven">
-            <i class="planet planet-seven">
-              <span class="planet-graphic">
-                <span class="planet-dot planet-dot-ring"></span>
-              </span>
-            </i>
-          </div>
-          <div class="orbit orbit-eight">
-            <i class="planet planet-eight">
-              <span class="planet-graphic">
-                <Spark size={9} spin={false} />
-              </span>
-            </i>
-          </div>
-
-          <i class="monogram-core"><Spark size={30} spin={false} /></i>
-        </div>
+        <MotionPath client:load />
         <span>330</span>
       </div>
     </header>
@@ -175,211 +112,22 @@ import { site } from "../lib/site";
     display: grid;
     aspect-ratio: 1;
     place-items: center;
-    border: 1px solid var(--line);
-    border-radius: 50%;
     background: transparent;
     font-family: var(--font-mono);
     font-size: 0.76rem;
     letter-spacing: 0.16em;
   }
 
-  .monogram::after {
-    position: absolute;
-    inset: 11%;
-    border: 1px dashed var(--line-strong);
-    border-radius: 50%;
-    content: "";
-  }
-
   .monogram > span:first-child {
     position: absolute;
-    top: 27%;
+    top: 4%;
+    z-index: 1;
   }
 
   .monogram > span:last-child {
     position: absolute;
-    bottom: 27%;
-  }
-
-  .orbit-system {
-    position: relative;
-    display: grid;
-    width: 72%;
-    aspect-ratio: 1;
-    place-items: center;
-  }
-
-  .orbit-ring {
-    position: absolute;
-    border: 1px solid rgb(30 30 30 / 0.1);
-    border-radius: 50%;
-  }
-
-  .orbit-ring-inner {
-    inset: 31%;
-  }
-
-  .orbit-ring-middle {
-    inset: 17%;
-    border-style: dashed;
-  }
-
-  .orbit-ring-outer {
-    inset: 2%;
-    border-color: rgb(30 30 30 / 0.07);
-  }
-
-  .orbit {
-    position: absolute;
-    inset: 0;
-    animation: orbit-spin var(--orbit-duration) linear infinite;
-    animation-delay: var(--orbit-delay);
-  }
-
-  .orbit-one {
-    --orbit-duration: 26s;
-    --orbit-delay: -7s;
-  }
-
-  .orbit-two {
-    --orbit-duration: 38s;
-    --orbit-delay: -24s;
-  }
-
-  .orbit-three {
-    --orbit-duration: 20s;
-    --orbit-delay: -13s;
-  }
-
-  .orbit-four {
-    --orbit-duration: 33s;
-    --orbit-delay: -18s;
-  }
-
-  .orbit-five {
-    --orbit-duration: 29s;
-    --orbit-delay: -9s;
-  }
-
-  .orbit-six {
-    --orbit-duration: 22s;
-    --orbit-delay: -3s;
-  }
-
-  .orbit-seven {
-    --orbit-duration: 42s;
-    --orbit-delay: -31s;
-  }
-
-  .orbit-eight {
-    --orbit-duration: 17s;
-    --orbit-delay: -6s;
-  }
-
-  .planet {
-    position: absolute;
-    top: 50%;
-    left: calc(50% + var(--orbit-radius));
-    display: grid;
-    width: 24px;
-    height: 24px;
-    place-items: center;
-    transform: translate(-50%, -50%);
-  }
-
-  .planet-one {
-    --orbit-radius: calc(50% - 13px);
-  }
-
-  .planet-two {
-    --orbit-radius: 31%;
-  }
-
-  .planet-three {
-    --orbit-radius: 14%;
-  }
-
-  .planet-four {
-    --orbit-radius: 39%;
-  }
-
-  .planet-five {
-    --orbit-radius: 24%;
-  }
-
-  .planet-six {
-    --orbit-radius: 13%;
-  }
-
-  .planet-seven {
-    --orbit-radius: 43%;
-  }
-
-  .planet-eight {
-    --orbit-radius: 31%;
-  }
-
-  .planet-graphic {
-    display: grid;
-    animation: orbit-counter-spin var(--orbit-duration) linear infinite;
-    animation-delay: var(--orbit-delay);
-    place-items: center;
-  }
-
-  .planet-dot {
-    display: block;
-    border-radius: 50%;
-    box-shadow: inset -1px -1px 2px rgb(0 0 0 / 0.12);
-  }
-
-  .planet-dot-warm {
-    width: 12px;
-    height: 12px;
-    background: radial-gradient(circle at 32% 28%, #fff4c7 0 12%, #ffba63 35%, #f06c76 100%);
-  }
-
-  .planet-dot-blue {
-    width: 9px;
-    height: 9px;
-    background: radial-gradient(circle at 34% 27%, #e5fbff 0 12%, #69b9e8 38%, #4d68ce 100%);
-  }
-
-  .planet-dot-ring {
-    position: relative;
-    width: 10px;
-    height: 10px;
-    background: radial-gradient(circle at 32% 27%, #f6e9ff 0 12%, #b983dc 40%, #6f56bd 100%);
-  }
-
-  .planet-dot-ring::after {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 18px;
-    height: 5px;
-    border: 1px solid rgb(112 81 174 / 0.62);
-    border-radius: 50%;
-    content: "";
-    transform: translate(-50%, -50%) rotate(-18deg);
-  }
-
-  .monogram-core {
-    display: grid;
-    place-items: center;
-    color: var(--blue);
-    font-style: normal;
-  }
-
-  @keyframes orbit-spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @keyframes orbit-counter-spin {
-    to {
-      transform: rotate(-360deg);
-    }
+    bottom: 2%;
+    z-index: 1;
   }
 
   .about-intro {
@@ -559,13 +307,6 @@ import { site } from "../lib/site";
     .contact-panel {
       grid-template-columns: 1fr;
       gap: 48px;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .orbit,
-    .planet-graphic {
-      animation: none;
     }
   }
 
