@@ -6,16 +6,19 @@ let revealStops: Array<() => void> = [];
 let scrollStops: Array<() => void> = [];
 let interactionStops: Array<() => void> = [];
 let playbackControls: Array<{ stop: () => void }> = [];
+let typewriterTimers: number[] = [];
 
 const clearPageEffects = () => {
   revealStops.forEach((stop) => stop());
   scrollStops.forEach((stop) => stop());
   interactionStops.forEach((stop) => stop());
   playbackControls.forEach((controls) => controls.stop());
+  typewriterTimers.forEach((timer) => window.clearTimeout(timer));
   revealStops = [];
   scrollStops = [];
   interactionStops = [];
   playbackControls = [];
+  typewriterTimers = [];
 };
 
 const splitText = (element: HTMLElement) => {
@@ -42,6 +45,129 @@ const splitText = (element: HTMLElement) => {
   element.append(fragment);
   element.dataset.splitReady = "true";
   return characters;
+};
+
+const scheduleTypewriter = (callback: () => void, delay: number) => {
+  const timer = window.setTimeout(callback, delay);
+  typewriterTimers.push(timer);
+};
+
+const getTypewriterDelay = (text: string, index: number) => {
+  const character = text[index] ?? "";
+  const previousCharacter = text[index - 1] ?? "";
+  const isCjk = /[\u3400-\u9fff\u3040-\u30ff]/u.test(character);
+  const isLatin = /[a-z0-9]/i.test(character);
+  const previousLatinRun =
+    text.slice(0, index).match(/[a-z0-9]+$/i)?.[0].length ?? 0;
+
+  let delay = isCjk ? 48 : isLatin ? 34 : 42;
+
+  if (isLatin && previousLatinRun > 0) {
+    delay *= Math.max(0.62, 1 - Math.min(previousLatinRun, 8) * 0.045);
+  }
+
+  if (isLatin && !/[a-z0-9]/i.test(previousCharacter)) delay += 24;
+  if (/\s/u.test(character)) delay = 82;
+  if (/[，、；：]/u.test(character)) delay += 120;
+  if (/[。！？.!?]/u.test(character)) delay += 210;
+  if (/[—…]/u.test(character)) delay += 150;
+  if (/[×+]/u.test(character)) delay += 64;
+
+  const rhythm = 0.86 + ((index * 47 + character.codePointAt(0)!) % 23) / 100;
+  return Math.round(delay * rhythm);
+};
+
+const setupTypewriter = () => {
+  document.querySelectorAll<HTMLElement>("[data-typewriter]").forEach((element) => {
+    if (element.dataset.typewriterReady === "true") return;
+
+    const text = element.textContent?.replace(/\s+/g, " ").trim();
+    if (!text) return;
+
+    const characters = Array.from(text);
+    const fragment = document.createDocumentFragment();
+    const characterElements: HTMLElement[] = [];
+
+    element.setAttribute("aria-label", text);
+    element.textContent = "";
+
+    characters.forEach((character) => {
+      const span = document.createElement("span");
+      span.className = "typewriter-char";
+      span.setAttribute("aria-hidden", "true");
+      span.textContent = character;
+      fragment.append(span);
+      characterElements.push(span);
+    });
+
+    const caret = document.createElement("span");
+    caret.className = "typewriter-caret";
+    caret.setAttribute("aria-hidden", "true");
+    fragment.append(caret);
+    element.append(fragment);
+    element.dataset.typewriterReady = "true";
+    element.classList.add("typewriter-ready");
+
+    const positionCaret = (character?: HTMLElement) => {
+      if (!character) return;
+      const elementRect = element.getBoundingClientRect();
+      const characterRect = character.getBoundingClientRect();
+      caret.style.left = `${characterRect.right - elementRect.left}px`;
+      caret.style.top = `${characterRect.top - elementRect.top + characterRect.height * 0.12}px`;
+      caret.style.height = `${characterRect.height * 0.76}px`;
+    };
+
+    const startTyping = () => {
+      if (element.dataset.typewriterStarted === "true") return;
+      element.dataset.typewriterStarted = "true";
+
+      const caretBlink = animate(
+        caret,
+        { opacity: [1, 1, 0, 0, 1] },
+        { duration: 1.05, repeat: Infinity, ease: "linear" },
+      );
+      playbackControls.push(caretBlink);
+      const firstCharacterRect = characterElements[0]?.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      if (firstCharacterRect) {
+        caret.style.left = `${firstCharacterRect.left - elementRect.left}px`;
+        caret.style.top = `${firstCharacterRect.top - elementRect.top + firstCharacterRect.height * 0.12}px`;
+        caret.style.height = `${firstCharacterRect.height * 0.76}px`;
+      }
+
+      let elapsed = Number(element.dataset.typewriterDelay ?? 220);
+
+      characterElements.forEach((characterElement, index) => {
+        const delay = getTypewriterDelay(text, index);
+        elapsed += delay;
+
+        scheduleTypewriter(() => {
+          positionCaret(characterElement);
+          playbackControls.push(
+            animate(
+              characterElement,
+              {
+                opacity: [0, 1],
+                transform: ["translateY(0.16em)", "translateY(0)"],
+                filter: ["blur(1.6px)", "blur(0px)"],
+              },
+              { duration: 0.13, ease: "ease-out" },
+            ),
+          );
+        }, elapsed);
+      });
+
+      scheduleTypewriter(() => {
+        caretBlink.stop();
+        playbackControls.push(
+          animate(caret, { opacity: 0 }, { duration: 0.45, ease: "ease-out" }),
+        );
+      }, elapsed + 1500);
+    };
+
+    const stop = inView(element, startTyping, { amount: 0.2 });
+    revealStops.push(stop);
+  });
 };
 
 const setupReadingProgress = () => {
@@ -280,6 +406,7 @@ const setupMotion = () => {
   setupCoverMotion();
   setupSvgDrawing();
   setupPointerEffects();
+  setupTypewriter();
 
   requestAnimationFrame(() => {
     document.documentElement.classList.remove("motion-pending");

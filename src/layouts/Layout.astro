@@ -2,6 +2,7 @@
 import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import MobileHeader from "../components/MobileHeader.astro";
+import PageCurtain from "../components/PageCurtain.astro";
 import Sidebar from "../components/Sidebar.astro";
 import { site } from "../lib/site";
 
@@ -60,5 +61,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 		<script>
 			import "../scripts/site-motion";
 		</script>
+		<PageCurtain />
 	</body>
 </html>

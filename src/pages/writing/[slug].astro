@@ -73,8 +73,8 @@ const updatedDate = post.data.updatedDate
   <ReadingProgress />
   <article class="article-shell">
     <header class="article-header">
-      <nav class="article-path" aria-label="文章层级" data-enter>
-        <a href="/writing">文章</a>
+      <nav class="article-path" aria-label="笔记层级" data-enter>
+        <a href="/writing">笔记</a>
         <span aria-hidden="true">/</span>
         <span>{post.data.category}</span>
         {
@@ -89,14 +89,14 @@ const updatedDate = post.data.updatedDate
       <div class="article-kicker" data-enter>
         <time datetime={post.data.pubDate.toISOString()}>{displayDate}</time>
         <span aria-hidden="true">/</span>
-        <span>{post.data.tags[0] ?? "写作"}</span>
+        <span>{post.data.tags[0] ?? "笔记"}</span>
       </div>
       <h1 data-split="chars">{post.data.title}</h1>
       {post.data.description && (
-        <p class="article-description" data-enter>{post.data.description}</p>
+        <p class="article-description" data-typewriter>{post.data.description}</p>
       )}
       <div class="article-meta" data-enter>
-        <span>文 / {site.name}</span>
+        <span>笔记 / {site.name}</span>
         <span>{Math.max(1, Math.ceil((post.body ?? "").length / 500))} 分钟阅读</span>
       </div>
     </header>
@@ -115,7 +115,7 @@ const updatedDate = post.data.updatedDate
 
     {
       headings.length > 0 && (
-        <aside class="toc" aria-label="文章目录" data-reveal>
+        <aside class="toc" aria-label="笔记目录" data-reveal>
           <p>On this page</p>
           <ol>
             {headings
@@ -164,7 +164,7 @@ const updatedDate = post.data.updatedDate
       </aside>
     </div>
 
-    <nav class="article-nav" aria-label="文章翻页" data-reveal>
+    <nav class="article-nav" aria-label="笔记翻页" data-reveal>
       {
         older ? (
           <a href={`/writing/${older.id}`}>

@@ -1,0 +1,261 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import PostList from "../../components/PostList.astro";
+import Spark from "../../components/Spark.astro";
+import { site } from "../../lib/site";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+---
+
+<Layout title={site.title}>
+	<div class="page-shell">
+		<section class="hero" aria-labelledby="hero-title">
+			<div class="hero-copy">
+				<p class="eyebrow" data-enter>Code × Life × AI</p>
+				<h1 id="hero-title">
+					<Spark class="hero-mark" size={48} delay={-6} data-spin />
+					<span class="hero-word" data-enter>0x330</span>
+				</h1>
+				<p class="hero-lede">
+					<span data-typewriter>记录代码学习、日常生活，以及前端、后端、算法与 AI 的实践笔记。</span>
+					<span data-typewriter data-typewriter-delay="2080">保持好奇，持续学习，也认真生活。</span>
+				</p>
+				<div class="hero-actions" data-enter>
+					<a class="button-link" href="/writing" data-magnetic>阅读笔记</a>
+					<a class="button-link secondary" href="/about" data-magnetic>关于我</a>
+				</div>
+			</div>
+
+			<aside class="hero-note" aria-label="站点简介" data-enter data-tilt>
+				<p class="note-index">01 / PERSONAL SPACE</p>
+				<p data-typewriter data-typewriter-delay="760">{site.intro}</p>
+				<div class="note-rule"></div>
+				<div class="note-meta">
+					<span>Based in {site.location}</span>
+					<span>Updated Oct 2026</span>
+				</div>
+			</aside>
+		</section>
+
+		<section class="writing-section" aria-labelledby="writing-title">
+			<div class="section-heading" data-reveal>
+				<div>
+					<p class="eyebrow">Recent notes</p>
+					<h2 id="writing-title">最近笔记</h2>
+				</div>
+				<a href="/writing">全部笔记 ↗</a>
+			</div>
+			<PostList posts={posts} />
+		</section>
+
+		<section class="field-notes" aria-labelledby="notes-title" data-reveal>
+			<div>
+				<p class="eyebrow">Field notes</p>
+				<h2 id="notes-title">持续学习，持续记录。</h2>
+			</div>
+			<p data-typewriter>
+				这里会持续更新前端、后端、算法与 AI 学习笔记，也留下日常生活中的观察、阅读和灵感。
+				不追求信息密度，只保留值得再次回看的内容。
+			</p>
+		</section>
+	</div>
+</Layout>
+
+<style>
+	.hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.7fr);
+		gap: 44px;
+		align-items: end;
+		min-height: 560px;
+		padding: 34px 0 62px;
+	}
+
+	.hero-copy {
+		max-width: 850px;
+	}
+
+	.hero h1 {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+		margin: 36px 0 28px;
+		font-size: 6.8rem;
+		font-weight: 760;
+		letter-spacing: 0;
+		line-height: 0.92;
+	}
+
+	.hero-mark {
+		flex: 0 0 auto;
+		width: 3rem;
+		height: 3rem;
+		color: var(--blue);
+		line-height: 1;
+		overflow: visible;
+	}
+
+	.hero-lede {
+		max-width: 610px;
+		margin: 0;
+		color: #373a34;
+		font-size: 1.48rem;
+		line-height: 1.65;
+	}
+
+	.hero-lede > span {
+		display: block;
+	}
+
+	.hero-actions {
+		display: flex;
+		gap: 10px;
+		margin-top: 34px;
+	}
+
+	.hero-note {
+		padding: 22px;
+		background: rgb(255 255 255 / 0.7);
+		border: 1px solid var(--line);
+		border-radius: var(--radius);
+		box-shadow: 0 14px 45px rgb(17 19 15 / 0.035);
+	}
+
+	.hero-note > p:not(.note-index) {
+		margin: 38px 0 28px;
+		font-size: 0.91rem;
+		line-height: 1.75;
+	}
+
+	.note-index {
+		margin: 0;
+		color: var(--faint);
+		font-family: var(--font-mono);
+		font-size: 0.62rem;
+	}
+
+	.note-rule {
+		height: 1px;
+		background: var(--line);
+	}
+
+	.note-meta {
+		display: flex;
+		justify-content: space-between;
+		gap: 18px;
+		padding-top: 14px;
+		color: var(--muted);
+		font-family: var(--font-mono);
+		font-size: 0.61rem;
+	}
+
+	.writing-section {
+		padding: 80px 0 96px;
+	}
+
+	.section-heading {
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 24px;
+		margin-bottom: 26px;
+	}
+
+	.section-heading h2,
+	.field-notes h2 {
+		margin: 10px 0 0;
+		font-size: 2rem;
+		line-height: 1.15;
+	}
+
+	.section-heading > a {
+		padding-bottom: 6px;
+		color: var(--muted);
+		font-size: 0.78rem;
+	}
+
+	.section-heading > a:hover {
+		color: var(--ink);
+	}
+
+	.field-notes {
+		display: grid;
+		grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+		gap: 72px;
+		padding: 56px 0 22px;
+		border-top: 1px solid var(--line);
+	}
+
+	.field-notes > p {
+		max-width: 540px;
+		margin: 0;
+		color: var(--muted);
+		font-size: 1rem;
+		line-height: 1.8;
+	}
+
+	@media (max-width: 1180px) {
+		.hero h1 {
+			font-size: 5.4rem;
+		}
+
+		.hero-lede {
+			font-size: 1.28rem;
+		}
+	}
+
+	@media (max-width: 840px) {
+		.hero {
+			grid-template-columns: 1fr;
+			min-height: 0;
+			padding-top: 18px;
+		}
+
+		.hero-note {
+			max-width: 560px;
+		}
+
+		.field-notes {
+			grid-template-columns: 1fr;
+			gap: 22px;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.hero h1 {
+			gap: 12px;
+			margin: 28px 0 22px;
+			font-size: 3.8rem;
+		}
+
+		.hero-mark {
+			width: 2rem;
+			height: 2rem;
+		}
+
+		.hero-lede {
+			font-size: 1.08rem;
+			line-height: 1.7;
+		}
+
+		.hero-actions {
+			flex-wrap: wrap;
+		}
+
+		.writing-section {
+			padding: 62px 0 70px;
+		}
+
+		.section-heading {
+			align-items: start;
+		}
+
+		.section-heading h2,
+		.field-notes h2 {
+			font-size: 1.65rem;
+		}
+	}
+</style>

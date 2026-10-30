@@ -187,7 +187,7 @@ function OutlineView({ posts }: { posts: WritingArchivePost[] }) {
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
                 <h2>{category}</h2>
-                <p>{countNodes(tree)} articles</p>
+                <p>{countNodes(tree)} notes</p>
               </div>
             </header>
             <OutlineBranch nodes={tree} />
@@ -208,7 +208,7 @@ function ListView({ posts }: { posts: WritingArchivePost[] }) {
       <div className="writing-list-head" aria-hidden="true">
         <span>No.</span>
         <span>Date</span>
-        <span>Article</span>
+        <span>Note</span>
         <span>Reading</span>
       </div>
       {sortPosts([...posts])
@@ -286,7 +286,7 @@ function CalendarView({ posts }: { posts: WritingArchivePost[] }) {
 
   return (
     <div className="writing-calendar">
-      <section className="calendar-card" aria-label="文章日历">
+      <section className="calendar-card" aria-label="笔记日历">
         <header className="calendar-toolbar">
           <div>
             <span>Publication calendar</span>
@@ -339,7 +339,7 @@ function CalendarView({ posts }: { posts: WritingArchivePost[] }) {
                 ].join(" ")}
                 key={day.key}
                 onClick={() => setSelectedDate(day.key)}
-                aria-label={`${day.key}，${day.articles.length} 篇文章`}
+                aria-label={`${day.key}，${day.articles.length} 篇笔记`}
               >
                 <span>{day.day}</span>
                 <i>{day.articles.length}</i>
@@ -373,7 +373,7 @@ function CalendarView({ posts }: { posts: WritingArchivePost[] }) {
             ))}
           </div>
         ) : (
-          <p className="calendar-empty">这一天没有发布文章。</p>
+          <p className="calendar-empty">这一天没有发布笔记。</p>
         )}
       </aside>
     </div>
@@ -384,7 +384,7 @@ function EmptyState() {
   return (
     <div className="writing-empty">
       <span>∅</span>
-      <p>没有找到匹配的文章。</p>
+      <p>没有找到匹配的笔记。</p>
     </div>
   );
 }
@@ -427,7 +427,7 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
           <div className="archive-stats">
             <span>
               <strong>{String(posts.length).padStart(2, "0")}</strong>
-              articles
+              notes
             </span>
             <span>
               <strong>{String(tags.length - 1).padStart(2, "0")}</strong>
@@ -441,7 +441,7 @@ export default function WritingArchive({ posts }: WritingArchiveProps) {
               RSS ↗
             </a>
           </div>
-          <div className="archive-view-switch" role="group" aria-label="切换文章视图">
+          <div className="archive-view-switch" role="group" aria-label="切换笔记视图">
             {viewOptions.map((option) => (
               <button
                 type="button"

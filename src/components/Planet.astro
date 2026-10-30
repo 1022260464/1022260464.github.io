@@ -1,0 +1,262 @@
+---
+type PlanetVariant = "ocean" | "rose" | "saturn" | "moon" | "ember";
+
+interface Props {
+	variant: PlanetVariant;
+	class?: string;
+}
+
+const { variant, class: className } = Astro.props;
+const uid = crypto.randomUUID().replaceAll("-", "");
+const sphereId = `planet-sphere-${uid}`;
+const shadeId = `planet-shade-${uid}`;
+const clipId = `planet-clip-${uid}`;
+---
+
+<span class:list={["planet", className]} data-planet={variant}>
+	<svg
+		viewBox="0 0 120 120"
+		role="presentation"
+		aria-hidden="true"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<defs>
+			<radialGradient id={sphereId} cx="31%" cy="24%" r="78%">
+				{
+					variant === "ocean" && (
+						<>
+							<stop offset="0" stop-color="#eef5ff" />
+							<stop offset="0.24" stop-color="#8bb6ff" />
+							<stop offset="0.62" stop-color="#4d8dff" />
+							<stop offset="1" stop-color="#183d94" />
+						</>
+					)
+				}
+				{
+					variant === "rose" && (
+						<>
+							<stop offset="0" stop-color="#fff0f5" />
+							<stop offset="0.23" stop-color="#f4a8c2" />
+							<stop offset="0.62" stop-color="#e778a7" />
+							<stop offset="1" stop-color="#832f56" />
+						</>
+					)
+				}
+				{
+					variant === "saturn" && (
+						<>
+							<stop offset="0" stop-color="#fff6ca" />
+							<stop offset="0.26" stop-color="#f0ce72" />
+							<stop offset="0.64" stop-color="#dcae3c" />
+							<stop offset="1" stop-color="#7f5c10" />
+						</>
+					)
+				}
+				{
+					variant === "moon" && (
+						<>
+							<stop offset="0" stop-color="#fffefa" />
+							<stop offset="0.32" stop-color="#dfded7" />
+							<stop offset="0.68" stop-color="#babbb4" />
+							<stop offset="1" stop-color="#747770" />
+						</>
+					)
+				}
+				{
+					variant === "ember" && (
+						<>
+							<stop offset="0" stop-color="#fff2e8" />
+							<stop offset="0.28" stop-color="#f2b58b" />
+							<stop offset="0.7" stop-color="#c96d4a" />
+							<stop offset="1" stop-color="#713628" />
+						</>
+					)
+				}
+			</radialGradient>
+			<radialGradient id={shadeId} cx="36%" cy="28%" r="76%">
+				<stop offset="0.5" stop-color="#0b0d0a" stop-opacity="0" />
+				<stop offset="0.82" stop-color="#0b0d0a" stop-opacity="0.08" />
+				<stop offset="1" stop-color="#0b0d0a" stop-opacity="0.42" />
+			</radialGradient>
+			<clipPath id={clipId}>
+				<circle cx="60" cy="60" r="35" />
+			</clipPath>
+		</defs>
+
+		{
+			variant === "saturn" && (
+				<ellipse
+					cx="60"
+					cy="63"
+					rx="56"
+					ry="16"
+					fill="none"
+					stroke="#b98d2c"
+					stroke-opacity="0.68"
+					stroke-width="4.2"
+					transform="rotate(-14 60 63)"
+				/>
+			)
+		}
+
+		<circle cx="60" cy="60" r="35" fill={`url(#${sphereId})`} />
+
+		<g clip-path={`url(#${clipId})`}>
+			{
+				variant === "ocean" && (
+					<g fill="none" stroke-linecap="round">
+						<path
+							d="M18 42 C38 34 76 36 105 46"
+							stroke="#f4f8ff"
+							stroke-opacity="0.25"
+							stroke-width="3"
+						/>
+						<path
+							d="M14 58 C42 49 81 53 107 64"
+							stroke="#10327d"
+							stroke-opacity="0.16"
+							stroke-width="4"
+						/>
+						<path
+							d="M24 77 C49 69 82 74 103 83"
+							stroke="#f4f8ff"
+							stroke-opacity="0.17"
+							stroke-width="2.5"
+						/>
+					</g>
+				)
+			}
+			{
+				variant === "rose" && (
+					<g fill="none" stroke-linecap="round">
+						<path
+							d="M16 48 C39 35 74 35 105 49"
+							stroke="#fff4f7"
+							stroke-opacity="0.22"
+							stroke-width="5"
+						/>
+						<path
+							d="M25 72 C48 61 76 63 99 76"
+							stroke="#742241"
+							stroke-opacity="0.14"
+							stroke-width="5"
+						/>
+					</g>
+				)
+			}
+			{
+				variant === "saturn" && (
+					<g fill="none" stroke-linecap="round">
+						<path
+							d="M18 46 C41 38 79 38 104 48"
+							stroke="#fff5bd"
+							stroke-opacity="0.24"
+							stroke-width="4"
+						/>
+						<path
+							d="M18 65 C46 55 77 57 104 68"
+							stroke="#876115"
+							stroke-opacity="0.16"
+							stroke-width="4"
+						/>
+					</g>
+				)
+			}
+			{
+				variant === "moon" && (
+					<g fill="#555b54">
+						<circle cx="46" cy="42" r="6" opacity="0.13" />
+						<circle cx="77" cy="56" r="4" opacity="0.1" />
+						<circle cx="57" cy="79" r="7" opacity="0.11" />
+						<circle cx="85" cy="83" r="3" opacity="0.09" />
+					</g>
+				)
+			}
+			{
+				variant === "ember" && (
+					<g fill="none" stroke-linecap="round">
+						<path
+							d="M20 52 C43 42 78 45 103 57"
+							stroke="#ffe8d8"
+							stroke-opacity="0.22"
+							stroke-width="4"
+						/>
+						<path
+							d="M28 74 C52 64 80 68 98 79"
+							stroke="#663023"
+							stroke-opacity="0.12"
+							stroke-width="4"
+						/>
+					</g>
+				)
+			}
+		</g>
+
+		<circle cx="60" cy="60" r="35" fill={`url(#${shadeId})`} />
+
+		{
+			variant === "saturn" && (
+				<path
+					d="M13 72 C28 88 92 88 107 70"
+					fill="none"
+					stroke="#d1a840"
+					stroke-opacity="0.78"
+					stroke-linecap="round"
+					stroke-width="4.2"
+				/>
+			)
+		}
+
+		<ellipse
+			cx="43"
+			cy="38"
+			rx="17"
+			ry="10"
+			fill="#ffffff"
+			opacity="0.13"
+			transform="rotate(-28 43 38)"
+		/>
+	</svg>
+</span>
+
+<style>
+	.planet {
+		position: absolute;
+		left: 50%;
+		display: block;
+		width: var(--planet-size);
+		aspect-ratio: 1;
+		translate: -50% 0;
+		animation: planet-counter-spin var(--orbit-duration) linear infinite;
+		animation-direction: var(--counter-direction);
+	}
+
+	.planet svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+		filter: drop-shadow(0 4px 7px rgb(17 19 15 / 0.14));
+	}
+
+	.planet-primary {
+		top: calc(var(--planet-size) / -2);
+	}
+
+	.planet-secondary {
+		bottom: calc(var(--second-planet-size) / -2);
+		width: var(--second-planet-size);
+	}
+
+	@keyframes planet-counter-spin {
+		to {
+			rotate: -360deg;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.planet {
+			animation: none;
+		}
+	}
+</style>

@@ -50,9 +50,21 @@ html.motion-enabled [data-split] {
   opacity: 0;
 }
 
+html.motion-enabled [data-typewriter] {
+  opacity: 0;
+}
+
+html.motion-enabled [data-typewriter].typewriter-ready {
+  opacity: 1;
+}
+
 html.motion-enabled [data-cover] {
   clip-path: inset(0 0 100% 0);
   opacity: 0;
+}
+
+[data-typewriter] {
+  position: relative;
 }
 
 .motion-char {
@@ -60,31 +72,30 @@ html.motion-enabled [data-cover] {
   transform-origin: center bottom;
 }
 
+.typewriter-char {
+  display: inline-block;
+  opacity: 0;
+  white-space: pre;
+  will-change: opacity, transform, filter;
+}
+
+.typewriter-caret {
+  position: absolute;
+  width: 1px;
+  background: var(--blue);
+  border-radius: 999px;
+  pointer-events: none;
+  transform: translateX(2px);
+}
+
 [data-tilt] {
   transform-style: preserve-3d;
   will-change: transform;
 }
 
-::view-transition-old(root) {
-  animation: page-out 180ms ease both;
-}
-
+::view-transition-old(root),
 ::view-transition-new(root) {
-  animation: page-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes page-out {
-  to {
-    opacity: 0;
-    transform: scale(0.995);
-  }
-}
-
-@keyframes page-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
+  animation: none;
 }
 
 button,
@@ -316,6 +327,7 @@ img {
   }
 
   html.motion-enabled [data-split],
+  html.motion-enabled [data-typewriter],
   html.motion-enabled [data-cover] {
     clip-path: none;
     opacity: 1;

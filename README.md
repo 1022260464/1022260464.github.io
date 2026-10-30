@@ -1,6 +1,16 @@
 # 0x330
 
-一个使用 Astro 构建的个人网站，包含首页、文章归档、个人分享 Gallery、Markdown 文章详情、关于页和 RSS。
+一个使用 Astro 构建的个人网站，包含全屏入口页、首页、文章归档、个人分享 Gallery、Markdown 文章详情、关于页和 RSS。
+
+## 页面结构
+
+- `/`：独立的浅色全屏入口页，使用 CSS 轨道与圆形行星动画，不显示站点侧边栏。
+- `/home/`：原来的个人网站首页。
+- `/writing/`、`/gallery/`、`/about/`：内容页面。
+
+从入口页点击“进入网站”后，会通过竖向幕布过渡到 `/home/`。站内使用
+`ClientRouter` 的页面导航也会复用该过渡。相关实现位于
+`src/components/PageCurtain.astro`。
 
 ## 本地开发
 
@@ -62,6 +72,9 @@ order: 2                 # 同一层级内的排序
 <!-- 滚动进入视口时出现 -->
 <article data-reveal>内容</article>
 
+<!-- 自然逐字输入，适合说明文字 -->
+<p data-typewriter>一段说明文字</p>
+
 <!-- 逐字拆分并依次出现 -->
 <h1 data-split="chars">逐字出现的标题</h1>
 
@@ -73,7 +86,7 @@ order: 2                 # 同一层级内的排序
 <a data-magnetic>按钮</a>
 ```
 
-`prefers-reduced-motion: reduce` 开启时，页面会跳过动画并直接显示内容。页面之间的切换由 Astro 的 `ClientRouter` 完成。
+`prefers-reduced-motion: reduce` 开启时，页面会跳过动画并直接显示内容。页面之间的切换由 Astro 的 `ClientRouter` 完成，幕布效果不依赖 WebGPU。
 
 文章设置 `cover` 后会显示封面，并自动启用遮罩展开和滚动视差。封面图片放在 `public/images`，路径从 `/images/...` 开始。
 

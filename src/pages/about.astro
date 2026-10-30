@@ -6,33 +6,31 @@ import { site } from "../lib/site";
 
 <Layout
   title={`关于 — ${site.name}`}
-  description="关于这个网站、正在做的事，以及如何联系。"
+  description="关于我，以及这个记录代码学习、日常生活和技术笔记的个人网站。"
 >
   <div class="page-shell about-page">
     <header class="about-hero">
       <div>
-        <p class="eyebrow" data-enter>About / Personal space</p>
+        <p class="eyebrow" data-enter>About / Learning in public</p>
         <h1>
-          <span data-enter>保持好奇，</span>
-          <span data-enter>认真做东西。</span>
+          <span data-enter>记录学习，</span>
+          <span data-enter>也记录生活。</span>
         </h1>
       </div>
-      <div class="monogram" aria-hidden="true" data-enter>
-        <span>0x</span>
+      <div class="orbit-decoration" aria-hidden="true" data-enter>
         <MotionPath client:load />
-        <span>330</span>
       </div>
     </header>
 
     <section class="about-intro" data-reveal>
       <p class="section-index">01 / 关于这里</p>
       <div>
-        <p class="lead">
-          这是一个用于存放作品、笔记和长期思考的个人空间。
+        <p class="lead" data-typewriter>
+          这是我的个人网站，用来记录代码学习、日常生活，以及前端、后端、算法和 AI 的知识与实践。
         </p>
-        <p>
-          我关注设计如何让信息更清楚，也关注代码如何把想法真正做出来。
-          这里不会追逐每一个新工具，而会记录那些经过使用、验证和反复回看的经验。
+        <p data-typewriter data-typewriter-delay="2160">
+          这里既会有学习过程中的技术笔记，也会留下阅读、生活片段和一些还没有答案的思考。
+          我会持续整理那些经过实践、验证和反复回看的内容。
         </p>
       </div>
     </section>
@@ -42,21 +40,22 @@ import { site } from "../lib/site";
         <p class="section-index">02 / 此刻</p>
         <h2>正在做的事</h2>
         <ul>
-          <li><span>01</span>重新整理个人网站的内容与结构</li>
-          <li><span>02</span>记录前端开发和界面设计中的实践</li>
-          <li><span>03</span>把零散想法整理成可以分享的文章</li>
+          <li><span>01</span>学习并整理前端与后端开发实践</li>
+          <li><span>02</span>记录算法、数据结构与 AI 基础学习</li>
+          <li><span>03</span>分享日常、阅读与生活中的观察</li>
+          <li><span>04</span>把零散经验整理成可以回看的笔记</li>
         </ul>
       </article>
       <article data-reveal data-tilt>
         <p class="section-index">03 / 关键词</p>
         <h2>最近关注</h2>
         <div class="keyword-cloud">
-          <span>Astro</span>
-          <span>Interface</span>
-          <span>Typography</span>
-          <span>Open source</span>
-          <span>Writing</span>
-          <span>Tools for thought</span>
+          <span>Frontend</span>
+          <span>Backend</span>
+          <span>Algorithms</span>
+          <span>AI</span>
+          <span>Learning in public</span>
+          <span>Daily notes</span>
         </div>
       </article>
     </section>
@@ -97,37 +96,21 @@ import { site } from "../lib/site";
 
   h1 {
     margin: 32px 0 0;
-    font-size: clamp(4rem, 8vw, 7.2rem);
+    font-size: clamp(3.4rem, 6.8vw, 5.8rem);
     font-weight: 750;
-    letter-spacing: -0.06em;
+    letter-spacing: 0;
     line-height: 0.94;
   }
 
   h1 span {
     display: block;
+    white-space: nowrap;
   }
 
-  .monogram {
-    position: relative;
-    display: grid;
-    aspect-ratio: 1;
-    place-items: center;
-    background: transparent;
-    font-family: var(--font-mono);
-    font-size: 0.76rem;
-    letter-spacing: 0.16em;
-  }
-
-  .monogram > span:first-child {
-    position: absolute;
-    top: 4%;
-    z-index: 1;
-  }
-
-  .monogram > span:last-child {
-    position: absolute;
-    bottom: 2%;
-    z-index: 1;
+  .orbit-decoration {
+    justify-self: end;
+    width: min(100%, 390px);
+    aspect-ratio: 451 / 437;
   }
 
   .about-intro {
@@ -151,15 +134,15 @@ import { site } from "../lib/site";
     max-width: 680px;
     margin: 0 0 20px;
     color: var(--muted);
-    font-size: 1rem;
+    font-size: 0.94rem;
     line-height: 1.8;
   }
 
   .about-intro .lead {
     color: var(--ink);
-    font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+    font-size: clamp(1.45rem, 2.7vw, 2.1rem);
     font-weight: 620;
-    letter-spacing: -0.035em;
+    letter-spacing: 0;
     line-height: 1.35;
   }
 
@@ -180,8 +163,8 @@ import { site } from "../lib/site";
 
   .about-grid h2 {
     margin: 28px 0 32px;
-    font-size: 1.7rem;
-    letter-spacing: -0.03em;
+    font-size: 1.55rem;
+    letter-spacing: 0;
   }
 
   .about-grid ul {
@@ -237,8 +220,8 @@ import { site } from "../lib/site";
 
   .contact-panel h2 {
     margin: 24px 0 0;
-    font-size: clamp(2.6rem, 5vw, 4.2rem);
-    letter-spacing: -0.055em;
+    font-size: clamp(2.35rem, 4.3vw, 3.7rem);
+    letter-spacing: 0;
     line-height: 0.98;
   }
 
@@ -291,8 +274,10 @@ import { site } from "../lib/site";
       padding-bottom: 64px;
     }
 
-    .monogram {
-      display: none;
+    .orbit-decoration {
+      justify-self: center;
+      width: min(78vw, 300px);
+      margin-top: 20px;
     }
 
     .about-intro {
@@ -320,7 +305,7 @@ import { site } from "../lib/site";
     }
 
     h1 {
-      font-size: clamp(3.4rem, 17vw, 5rem);
+      font-size: clamp(2.6rem, 11.4vw, 3.7rem);
     }
 
     .about-grid article {

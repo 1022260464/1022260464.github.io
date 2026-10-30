@@ -4,21 +4,28 @@ import Spark from "./Spark.astro";
 
 const pathname = Astro.url.pathname;
 const isActive = (href: string) =>
-  href === "/" ? pathname === "/" : pathname.startsWith(href);
+  href === "/home/" ? pathname === "/home" || pathname === "/home/" : pathname.startsWith(href);
 ---
 
 <aside class="sidebar" aria-label="站点导航">
   <div class="sidebar-inner">
-    <a class="brand" href="/" aria-label={`${site.name} 首页`}>
+    <a class="brand" href="/home/" aria-label={`${site.name} 首页`}>
       <span>{site.name}</span>
       <Spark class="brand-mark" size={18} delay={-3} data-spin />
     </a>
 
     <div class="identity">
-      <div class="avatar" aria-hidden="true">0x</div>
+      <div class="avatar">
+        <img
+          src="/images/avatar-code-notes.jpg"
+          alt=""
+          width="40"
+          height="40"
+        />
+      </div>
       <div>
         <p class="identity-name">{site.name}</p>
-        <p class="identity-role">记录设计、代码与日常</p>
+        <p class="identity-role">代码 · 生活 · 技术笔记</p>
       </div>
     </div>
 
@@ -41,8 +48,8 @@ const isActive = (href: string) =>
 
     <section class="status" aria-labelledby="status-title">
       <p class="eyebrow" id="status-title">Now</p>
-      <p>正在搭建自己的数字花园，持续记录设计与代码。</p>
-      <span class="status-pill"><i></i> Available for ideas</span>
+      <p>持续记录前端、后端、算法与 AI 学习，也留下日常生活。</p>
+      <span class="status-pill"><i></i> Learning in public</span>
     </section>
 
     <div class="sidebar-footer">
@@ -108,9 +115,13 @@ const isActive = (href: string) =>
     background: var(--paper-strong);
     border: 1px solid var(--line-strong);
     border-radius: 50%;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 700;
+    overflow: hidden;
+  }
+
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .identity p {

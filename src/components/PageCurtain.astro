@@ -1,0 +1,313 @@
+<div
+	class="page-curtain"
+	data-page-curtain
+	data-state="open"
+	aria-hidden="true"
+	transition:persist="site-page-curtain"
+>
+	<svg
+		class="page-curtain-panel"
+		viewBox="0 0 1000 1000"
+		preserveAspectRatio="none"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<path
+			d="M -300 0 L 1030 0 C 1260 280 1260 720 1030 1000 L -300 1000 C -70 720 -70 280 -300 0 Z"
+			fill="#ffda3d"
+		/>
+	</svg>
+
+	<div class="page-curtain-content">
+		<div class="page-curtain-mark">
+			<svg
+				viewBox="0 0 96 96"
+				xmlns="http://www.w3.org/2000/svg"
+				aria-hidden="true"
+			>
+				<rect x="1.5" y="1.5" width="93" height="93" rx="27" fill="#11130f" />
+				<ellipse
+					cx="48"
+					cy="49"
+					rx="36"
+					ry="13"
+					fill="none"
+					stroke="#f8f9f6"
+					stroke-opacity="0.3"
+					transform="rotate(-20 48 49)"
+				/>
+				<ellipse
+					cx="48"
+					cy="49"
+					rx="33"
+					ry="11"
+					fill="none"
+					stroke="#ffda3d"
+					stroke-opacity="0.34"
+					transform="rotate(58 48 49)"
+				/>
+				<circle cx="20" cy="62" r="2.8" fill="#ffda3d" />
+				<circle cx="76" cy="26" r="2.4" fill="#7ca3ff" />
+				<circle cx="64" cy="76" r="2.1" fill="#ff9d73" />
+				<path
+					d="M48 17C51.2 33.7 58.4 41.2 76 44.8 58.4 48.4 51.2 55.9 48 72.6 44.8 55.9 37.6 48.4 20 44.8 37.6 41.2 44.8 33.7 48 17Z"
+					fill="#f8f9f6"
+				/>
+			</svg>
+		</div>
+		<h2
+			class="page-curtain-title"
+			data-curtain-title
+			data-text="记录代码与生活"
+		>记录代码与生活</h2>
+		<p class="page-curtain-outline">前端 · 后端 · 算法 · AI</p>
+	</div>
+</div>
+
+<style>
+	.page-curtain {
+		position: fixed;
+		inset: 0;
+		z-index: 200;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.page-curtain[data-state="closed"],
+	.page-curtain[data-state="opening"] {
+		pointer-events: auto;
+	}
+
+	.page-curtain-panel {
+		display: block;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+		transform: translateX(-120%);
+		will-change: transform;
+	}
+
+	.page-curtain-content {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		align-content: center;
+		padding: clamp(32px, 8vw, 120px);
+		color: var(--ink);
+		opacity: 0;
+		transform: translateY(18px);
+		transition:
+			opacity 180ms ease,
+			transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.page-curtain[data-state="closed"] .page-curtain-content {
+		opacity: 1;
+		transform: translateY(0);
+		transition-delay: 260ms;
+	}
+
+	.page-curtain[data-state="opening"] .page-curtain-content {
+		opacity: 0;
+		transform: translateY(-12px);
+		transition-delay: 0ms;
+		transition-duration: 140ms;
+	}
+
+	.page-curtain-mark {
+		width: clamp(58px, 6.5vw, 86px);
+		margin-bottom: clamp(26px, 3.8vw, 46px);
+	}
+
+	.page-curtain-mark svg {
+		display: block;
+		width: 100%;
+		height: auto;
+		filter: drop-shadow(0 9px 20px rgb(17 19 15 / 0.12));
+	}
+
+	.page-curtain-title {
+		min-height: 1em;
+		margin: 0;
+		font-size: clamp(3.3rem, 8.2vw, 8.3rem);
+		font-weight: 800;
+		letter-spacing: -0.075em;
+		line-height: 0.92;
+		white-space: nowrap;
+	}
+
+	.page-curtain-title::after {
+		display: inline-block;
+		width: 0.08em;
+		height: 0.75em;
+		margin-left: 0.08em;
+		background: currentcolor;
+		content: "";
+		animation: curtain-caret 680ms steps(1, end) infinite;
+		translate: 0 0.06em;
+	}
+
+	.page-curtain-outline {
+		display: inline-block;
+		width: fit-content;
+		margin: clamp(16px, 1.8vw, 26px) 0 0;
+		padding: 0.13em 0.24em 0.18em;
+		color: #ffda3d;
+		background: var(--ink);
+		font-size: clamp(1.35rem, 3.2vw, 3.4rem);
+		font-weight: 820;
+		letter-spacing: -0.035em;
+		line-height: 1;
+		white-space: nowrap;
+		clip-path: polygon(
+			0.1em 0,
+			100% 0.05em,
+			calc(100% - 0.08em) 100%,
+			0 calc(100% - 0.06em)
+		);
+	}
+
+	@keyframes curtain-caret {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.page-curtain-content {
+			padding: 28px;
+		}
+
+		.page-curtain-title {
+			font-size: clamp(2.9rem, 12.8vw, 3.6rem);
+		}
+
+		.page-curtain-outline {
+			font-size: clamp(1.25rem, 5.8vw, 1.7rem);
+		}
+	}
+</style>
+
+<script>
+	import { animate } from "motion";
+
+	type AstroPreparationEvent = Event & {
+		from: URL;
+		to: URL;
+		loader: () => Promise<void>;
+	};
+
+	const ease = [0.65, 0, 0.35, 1] as const;
+	let curtainClosed = false;
+	let typingToken = 0;
+
+	const getCurtain = () =>
+		document.querySelector<HTMLElement>("[data-page-curtain]");
+
+	const getPanel = (curtain: HTMLElement) =>
+		curtain.querySelector<HTMLElement>(".page-curtain-panel");
+
+	const wait = (duration: number) =>
+		new Promise((resolve) => window.setTimeout(resolve, duration));
+
+	const typeCurtainTitle = async () => {
+		const title = document.querySelector<HTMLElement>("[data-curtain-title]");
+		if (!title) return;
+
+		const token = ++typingToken;
+		const text = title.dataset.text ?? "";
+		title.textContent = "";
+		await wait(220);
+
+		for (const character of text) {
+			if (token !== typingToken) return;
+			title.textContent += character;
+			await wait(48);
+		}
+	};
+
+	const closeCurtain = async () => {
+		const curtain = getCurtain();
+		const panel = curtain && getPanel(curtain);
+		if (!curtain || !panel || curtainClosed) return;
+
+		curtain.dataset.state = "closed";
+		void typeCurtainTitle();
+		await animate(
+			panel,
+			{ transform: ["translateX(-120%)", "translateX(0%)"] },
+			{
+				duration: 0.78,
+				ease,
+			},
+		).finished;
+		curtainClosed = true;
+	};
+
+	const openCurtain = async () => {
+		const curtain = getCurtain();
+		const panel = curtain && getPanel(curtain);
+		if (!curtain || !panel) {
+			curtainClosed = false;
+			return;
+		}
+
+		curtain.dataset.state = "opening";
+		typingToken += 1;
+		await animate(
+			panel,
+			{ transform: ["translateX(0%)", "translateX(120%)"] },
+			{
+				duration: 0.68,
+				ease,
+			},
+		).finished;
+		curtain.dataset.state = "open";
+		curtainClosed = false;
+	};
+
+	document.addEventListener("astro:before-preparation", (event) => {
+		const preparation = event as AstroPreparationEvent;
+		const samePageHash =
+			preparation.from.pathname === preparation.to.pathname &&
+			preparation.to.hash;
+
+		if (
+			samePageHash ||
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches
+		) {
+			return;
+		}
+
+		const loadPage = preparation.loader;
+		preparation.loader = async () => {
+			await closeCurtain();
+
+			try {
+				await loadPage();
+			} catch (error) {
+				await openCurtain();
+				throw error;
+			}
+		};
+	});
+
+	document.addEventListener("astro:after-swap", () => {
+		if (!curtainClosed) return;
+		requestAnimationFrame(() => {
+			window.setTimeout(() => {
+				void openCurtain();
+			}, 220);
+		});
+	});
+
+	window.addEventListener("pageshow", (event) => {
+		if (!event.persisted || !curtainClosed) return;
+		const curtain = getCurtain();
+		const panel = curtain && getPanel(curtain);
+		if (!curtain || !panel) return;
+
+		curtain.dataset.state = "open";
+		panel.style.transform = "translateX(-120%)";
+		curtainClosed = false;
+	});
+</script>

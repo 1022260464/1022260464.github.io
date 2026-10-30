@@ -1,0 +1,51 @@
+---
+import { ClientRouter } from "astro:transitions";
+import PageCurtain from "../components/PageCurtain.astro";
+import "../styles/global.css";
+import { site } from "../lib/site";
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = `${site.name} — 代码、生活与 AI 笔记`,
+	description = "记录代码学习、日常生活，以及前端、后端、算法与 AI 知识的个人网站。",
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#f8f9f6" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:site_name" content={site.name} />
+		<link rel="canonical" href={canonicalURL} />
+		<title>{title}</title>
+		<ClientRouter />
+		<script is:inline>
+			document.documentElement.classList.add("motion-pending");
+			document.documentElement.classList.add("motion-enabled");
+			window.setTimeout(() => {
+				if (document.documentElement.dataset.motionReady !== "true") {
+					document.documentElement.classList.remove("motion-enabled");
+				}
+			}, 1800);
+		</script>
+	</head>
+	<body class="landing-body">
+		<slot />
+		<PageCurtain />
+	</body>
+</html>

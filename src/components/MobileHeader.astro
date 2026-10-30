@@ -4,12 +4,19 @@ import Spark from "./Spark.astro";
 
 const pathname = Astro.url.pathname;
 const isActive = (href: string) =>
-  href === "/" ? pathname === "/" : pathname.startsWith(href);
+  href === "/home/" ? pathname === "/home" || pathname === "/home/" : pathname.startsWith(href);
 ---
 
 <header class="mobile-header">
-  <a class="mobile-brand" href="/">
-    {site.name}
+  <a class="mobile-brand" href="/home/">
+    <img
+      class="mobile-avatar"
+      src="/images/avatar-code-notes.jpg"
+      alt=""
+      width="26"
+      height="26"
+    />
+    <span>{site.name}</span>
     <Spark class="mobile-mark" size={16} delay={-3} data-spin />
   </a>
   <details class="mobile-menu">
@@ -52,6 +59,15 @@ const isActive = (href: string) =>
     gap: 7px;
     font-size: 0.9rem;
     font-weight: 750;
+  }
+
+  .mobile-avatar {
+    width: 26px;
+    height: 26px;
+    object-fit: cover;
+    background: white;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
   }
 
   .mobile-mark {

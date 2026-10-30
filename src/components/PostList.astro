@@ -22,7 +22,7 @@ const formatDate = (date: Date) =>
           <time datetime={post.data.pubDate.toISOString()}>
             {formatDate(post.data.pubDate)}
           </time>
-          <span>{post.data.tags[0] ?? "写作"}</span>
+          <span>{post.data.tags[0] ?? "笔记"}</span>
         </div>
         <div class="post-copy">
           <h2>{post.data.title}</h2>
