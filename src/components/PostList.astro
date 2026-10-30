@@ -1,0 +1,131 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  posts: CollectionEntry<"blog">[];
+}
+
+const { posts } = Astro.props;
+const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+---
+
+<div class="post-list">
+  {
+    posts.map((post, index) => (
+      <a class="post-row" href={`/writing/${post.id}`}>
+        <span class="post-number">{String(index + 1).padStart(2, "0")}</span>
+        <div class="post-meta">
+          <time datetime={post.data.pubDate.toISOString()}>
+            {formatDate(post.data.pubDate)}
+          </time>
+          <span>{post.data.tags[0] ?? "写作"}</span>
+        </div>
+        <div class="post-copy">
+          <h2>{post.data.title}</h2>
+          {post.data.description && <p>{post.data.description}</p>}
+        </div>
+        <span class="post-arrow" aria-hidden="true">↗</span>
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .post-list {
+    border-top: 1px solid var(--line);
+  }
+
+  .post-row {
+    display: grid;
+    grid-template-columns: 42px 116px minmax(0, 1fr) 28px;
+    gap: 18px;
+    align-items: start;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line);
+    transition:
+      padding 180ms ease,
+      background 180ms ease;
+  }
+
+  .post-row:hover {
+    padding-right: 14px;
+    padding-left: 14px;
+    background: rgb(255 255 255 / 0.72);
+  }
+
+  .post-number,
+  .post-meta {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+  }
+
+  .post-number,
+  .post-meta span {
+    color: var(--faint);
+  }
+
+  .post-meta {
+    display: grid;
+    gap: 7px;
+    padding-top: 5px;
+    color: var(--muted);
+  }
+
+  .post-copy h2 {
+    margin: 0;
+    font-size: 1.34rem;
+    line-height: 1.25;
+  }
+
+  .post-copy p {
+    max-width: 620px;
+    margin: 9px 0 0;
+    color: var(--muted);
+    font-size: 0.87rem;
+    line-height: 1.65;
+  }
+
+  .post-arrow {
+    padding-top: 3px;
+    font-size: 1rem;
+    transition: transform 180ms ease;
+  }
+
+  .post-row:hover .post-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  @media (max-width: 700px) {
+    .post-row {
+      grid-template-columns: 30px minmax(0, 1fr) 20px;
+      gap: 12px;
+      padding: 22px 0;
+    }
+
+    .post-meta {
+      grid-column: 2;
+      grid-row: 2;
+      display: flex;
+      gap: 12px;
+      padding-top: 0;
+    }
+
+    .post-copy {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .post-copy h2 {
+      font-size: 1.12rem;
+    }
+
+    .post-arrow {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+</style>

@@ -1,46 +1,51 @@
-# Astro Starter Kit: Basics
+# 0x330
 
-```sh
-pnpm create astro@latest -- --template basics
+一个使用 Astro 构建的个人网站，包含首页、文章归档、Markdown 文章详情、关于页和 RSS。
+
+## 本地开发
+
+```powershell
+pnpm install
+pnpm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+打开 `http://localhost:4321/`。生产构建和本地预览：
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```powershell
+pnpm run build
+pnpm run preview
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 新建文章
 
-## 🧞 Commands
+在 `src/content/blog` 中新建 `.md` 文件：
 
-All commands are run from the root of the project, from a terminal:
+```md
+---
+title: "文章标题"
+description: "用于列表和搜索引擎的一句话简介"
+pubDate: 2026-10-30
+tags: ["随笔", "设计"]
+draft: false
+---
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+正文从此开始。
+```
 
-## 👀 Want to learn more?
+文件名为文章网址，例如 `my-first-post.md` 会生成
+`/writing/my-first-post/`。设置 `draft: true` 后不会出现在文章列表和构建结果中。
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 发布
+
+源码保存在 `astro` 分支，GitHub Pages 展示 `gh-pages` 分支中的构建结果。
+
+```powershell
+git add src public astro.config.mjs package.json pnpm-lock.yaml
+git commit -m "post: 更新文章"
+git push
+pnpm run deploy
+```
+
+## 设计说明
+
+站点视觉参考了编辑式排版、纸张网格和克制的单色界面，但代码、组件、文案与视觉细节均为本项目独立实现。未复制参考项目的源码、图片或个人内容。

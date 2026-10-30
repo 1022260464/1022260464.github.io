@@ -1,0 +1,264 @@
+:root {
+  color-scheme: light;
+  --paper: #f8f9f6;
+  --paper-strong: #ffffff;
+  --ink: #11130f;
+  --muted: #63685f;
+  --faint: #7c8178;
+  --line: #dfe2db;
+  --line-strong: #c9cdc5;
+  --blue: #1f5eff;
+  --blue-soft: #e8eeff;
+  --sidebar-width: 272px;
+  --page-gutter: 56px;
+  --radius: 8px;
+  --font-sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, rgb(17 19 15 / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(17 19 15 / 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  color: white;
+  background: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 14px;
+  color: white;
+  background: var(--ink);
+  border-radius: 999px;
+  transform: translateY(-160%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.site-frame {
+  min-height: 100vh;
+}
+
+.site-main {
+  min-height: 100vh;
+  margin-left: var(--sidebar-width);
+  padding: 0 var(--page-gutter);
+}
+
+.page-shell {
+  width: min(100%, 1160px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 72px 0 48px;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.rule {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: var(--line);
+}
+
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 17px;
+  color: white;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 650;
+  transition:
+    color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.button-link:hover {
+  color: var(--ink);
+  background: transparent;
+  transform: translateY(-1px);
+}
+
+.button-link.secondary {
+  color: var(--ink);
+  background: transparent;
+  border-color: var(--line-strong);
+}
+
+.button-link.secondary:hover {
+  background: var(--paper-strong);
+}
+
+.prose {
+  max-width: 760px;
+  color: #2d302b;
+  font-size: 1.04rem;
+  line-height: 1.85;
+}
+
+.prose h2,
+.prose h3 {
+  margin: 2.25em 0 0.7em;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.prose h2 {
+  font-size: 1.65rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+}
+
+.prose p,
+.prose ul,
+.prose ol,
+.prose blockquote,
+.prose pre {
+  margin: 0 0 1.35em;
+}
+
+.prose a {
+  color: var(--blue);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.prose code {
+  padding: 0.15em 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: #ecefe9;
+  border-radius: 4px;
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: 20px;
+  background: #171915;
+  border-radius: var(--radius);
+}
+
+.prose pre code {
+  padding: 0;
+  color: #eef1eb;
+  background: none;
+}
+
+.prose blockquote {
+  margin-left: 0;
+  padding: 4px 0 4px 20px;
+  color: var(--muted);
+  border-left: 2px solid var(--line-strong);
+}
+
+@media (max-width: 980px) {
+  :root {
+    --page-gutter: 28px;
+  }
+
+  .site-main {
+    margin-left: 0;
+    padding-top: 64px;
+  }
+
+  .page-shell {
+    padding-top: 44px;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --page-gutter: 20px;
+  }
+
+  .page-shell {
+    padding: 32px 0;
+  }
+
+  .prose {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

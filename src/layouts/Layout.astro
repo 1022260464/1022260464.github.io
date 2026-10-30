@@ -1,23 +1,50 @@
+---
+import "../styles/global.css";
+import MobileHeader from "../components/MobileHeader.astro";
+import Sidebar from "../components/Sidebar.astro";
+import { site } from "../lib/site";
+
+interface Props {
+	title?: string;
+	description?: string;
+	type?: "website" | "article";
+}
+
+const {
+	title = site.title,
+	description = site.description,
+	type = "website",
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#f8f9f6" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content={type} />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:site_name" content={site.name} />
+		<link rel="canonical" href={canonicalURL} />
+		<link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/writing.xml" />
+		<title>{title}</title>
 	</head>
 	<body>
-		<slot />
+		<a class="skip-link" href="#content">跳到主要内容</a>
+		<div class="site-frame">
+			<Sidebar />
+			<MobileHeader />
+			<main class="site-main" id="content">
+				<slot />
+			</main>
+		</div>
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

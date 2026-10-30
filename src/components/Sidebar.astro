@@ -1,0 +1,226 @@
+---
+import { navigation, site } from "../lib/site";
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === "/" ? pathname === "/" : pathname.startsWith(href);
+---
+
+<aside class="sidebar" aria-label="站点导航">
+  <div class="sidebar-inner">
+    <a class="brand" href="/" aria-label={`${site.name} 首页`}>
+      <span>{site.name}</span>
+      <span class="brand-mark" aria-hidden="true">✦</span>
+    </a>
+
+    <div class="identity">
+      <div class="avatar" aria-hidden="true">0x</div>
+      <div>
+        <p class="identity-name">{site.name}</p>
+        <p class="identity-role">记录设计、代码与日常</p>
+      </div>
+    </div>
+
+    <nav class="nav-list" aria-label="主导航">
+      {
+        navigation.map((item) => (
+          <a
+            class:list={["nav-link", { active: isActive(item.href) }]}
+            href={item.href}
+            aria-current={isActive(item.href) ? "page" : undefined}
+          >
+            <span>{item.label}</span>
+            <span class="nav-index">{item.index}</span>
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="sidebar-rule"></div>
+
+    <section class="status" aria-labelledby="status-title">
+      <p class="eyebrow" id="status-title">Now</p>
+      <p>正在搭建自己的数字花园，持续记录设计与代码。</p>
+      <span class="status-pill"><i></i> Available for ideas</span>
+    </section>
+
+    <div class="sidebar-footer">
+      <a href={site.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+      <a href="/writing.xml">RSS ↗</a>
+      <p>© {new Date().getFullYear()} {site.name}</p>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 20;
+    width: var(--sidebar-width);
+    overflow-y: auto;
+    background: rgb(247 248 245 / 0.94);
+    border-right: 1px solid var(--line);
+    backdrop-filter: blur(18px);
+  }
+
+  .sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 28px 20px 22px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 9px;
+    min-height: 40px;
+    padding: 0 16px;
+    color: white;
+    background: var(--ink);
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 750;
+  }
+
+  .brand-mark {
+    color: #ffdc62;
+    font-size: 1rem;
+  }
+
+  .identity {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 34px;
+    padding: 8px;
+  }
+
+  .avatar {
+    display: grid;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    background: var(--paper-strong);
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .identity p {
+    margin: 0;
+  }
+
+  .identity-name {
+    font-size: 0.9rem;
+    font-weight: 750;
+  }
+
+  .identity-role {
+    margin-top: 2px !important;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  .nav-list {
+    display: grid;
+    gap: 4px;
+    margin-top: 32px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 42px;
+    padding: 0 12px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    transition:
+      background 150ms ease,
+      color 150ms ease;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    background: var(--paper-strong);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .nav-link.active {
+    font-weight: 700;
+  }
+
+  .nav-index {
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+  }
+
+  .sidebar-rule {
+    height: 1px;
+    margin: 24px 12px;
+    background: var(--line);
+  }
+
+  .status {
+    padding: 0 12px;
+  }
+
+  .status > p:not(.eyebrow) {
+    margin: 11px 0 16px;
+    color: var(--muted);
+    font-size: 0.79rem;
+    line-height: 1.65;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 10px;
+    background: var(--paper-strong);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+  }
+
+  .status-pill i {
+    width: 6px;
+    height: 6px;
+    background: #2aaa59;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgb(42 170 89 / 0.12);
+  }
+
+  .sidebar-footer {
+    display: grid;
+    gap: 9px;
+    margin-top: auto;
+    padding: 44px 12px 0;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+  }
+
+  .sidebar-footer a:hover {
+    color: var(--ink);
+  }
+
+  .sidebar-footer p {
+    margin: 12px 0 0;
+    color: var(--faint);
+  }
+
+  @media (max-width: 980px) {
+    .sidebar {
+      display: none;
+    }
+  }
+</style>

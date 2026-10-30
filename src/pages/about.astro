@@ -1,0 +1,347 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../lib/site";
+---
+
+<Layout
+  title={`关于 — ${site.name}`}
+  description="关于这个网站、正在做的事，以及如何联系。"
+>
+  <div class="page-shell about-page">
+    <header class="about-hero">
+      <div>
+        <p class="eyebrow">About / Personal space</p>
+        <h1>保持好奇，<br />认真做东西。</h1>
+      </div>
+      <div class="monogram" aria-hidden="true">
+        <span>0x</span>
+        <i>✦</i>
+        <span>330</span>
+      </div>
+    </header>
+
+    <section class="about-intro">
+      <p class="section-index">01 / 关于这里</p>
+      <div>
+        <p class="lead">
+          这是一个用于存放作品、笔记和长期思考的个人空间。
+        </p>
+        <p>
+          我关注设计如何让信息更清楚，也关注代码如何把想法真正做出来。
+          这里不会追逐每一个新工具，而会记录那些经过使用、验证和反复回看的经验。
+        </p>
+      </div>
+    </section>
+
+    <section class="about-grid">
+      <article>
+        <p class="section-index">02 / 此刻</p>
+        <h2>正在做的事</h2>
+        <ul>
+          <li><span>01</span>重新整理个人网站的内容与结构</li>
+          <li><span>02</span>记录前端开发和界面设计中的实践</li>
+          <li><span>03</span>把零散想法整理成可以分享的文章</li>
+        </ul>
+      </article>
+      <article>
+        <p class="section-index">03 / 关键词</p>
+        <h2>最近关注</h2>
+        <div class="keyword-cloud">
+          <span>Astro</span>
+          <span>Interface</span>
+          <span>Typography</span>
+          <span>Open source</span>
+          <span>Writing</span>
+          <span>Tools for thought</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="contact-panel">
+      <div>
+        <p class="eyebrow">Get in touch</p>
+        <h2>有想法，<br />可以聊聊。</h2>
+      </div>
+      <div class="contact-links">
+        <a href={site.email}>
+          <span>Email</span>
+          <strong>1022260464@qq.com</strong>
+          <i>↗</i>
+        </a>
+        <a href={site.github} target="_blank" rel="noreferrer">
+          <span>GitHub</span>
+          <strong>@1022260464</strong>
+          <i>↗</i>
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .about-page {
+    padding-top: 78px;
+  }
+
+  .about-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.6fr);
+    gap: 48px;
+    align-items: center;
+    min-height: 470px;
+  }
+
+  h1 {
+    margin: 32px 0 0;
+    font-size: clamp(4rem, 8vw, 7.2rem);
+    font-weight: 750;
+    letter-spacing: -0.06em;
+    line-height: 0.94;
+  }
+
+  .monogram {
+    position: relative;
+    display: grid;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, transparent 47%, var(--line) 48%, transparent 48.5%),
+      var(--paper-strong);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.16em;
+  }
+
+  .monogram::after {
+    position: absolute;
+    inset: 11%;
+    border: 1px dashed var(--line-strong);
+    border-radius: 50%;
+    content: "";
+  }
+
+  .monogram span:first-child {
+    position: absolute;
+    top: 27%;
+  }
+
+  .monogram span:last-child {
+    position: absolute;
+    bottom: 27%;
+  }
+
+  .monogram i {
+    color: var(--blue);
+    font-size: 1.5rem;
+    font-style: normal;
+  }
+
+  .about-intro {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.32fr) minmax(0, 1fr);
+    gap: 56px;
+    padding: 60px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .section-index {
+    margin: 0;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .about-intro p {
+    max-width: 680px;
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .about-intro .lead {
+    color: var(--ink);
+    font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+    font-weight: 620;
+    letter-spacing: -0.035em;
+    line-height: 1.35;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    padding-bottom: 74px;
+  }
+
+  .about-grid article {
+    min-height: 330px;
+    padding: 26px;
+    background: rgb(255 255 255 / 0.62);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .about-grid h2 {
+    margin: 28px 0 32px;
+    font-size: 1.7rem;
+    letter-spacing: -0.03em;
+  }
+
+  .about-grid ul {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .about-grid li {
+    display: flex;
+    gap: 10px;
+    padding: 13px 0;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .about-grid li span {
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+  }
+
+  .keyword-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .keyword-cloud span {
+    padding: 8px 11px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.75rem;
+  }
+
+  .contact-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    padding: 52px;
+    color: white;
+    background: var(--ink);
+    border-radius: var(--radius);
+  }
+
+  .contact-panel .eyebrow {
+    color: rgb(255 255 255 / 0.45);
+  }
+
+  .contact-panel h2 {
+    margin: 24px 0 0;
+    font-size: clamp(2.6rem, 5vw, 4.2rem);
+    letter-spacing: -0.055em;
+    line-height: 0.98;
+  }
+
+  .contact-links {
+    display: grid;
+    align-content: end;
+  }
+
+  .contact-links a {
+    display: grid;
+    grid-template-columns: 70px 1fr 20px;
+    gap: 12px;
+    align-items: center;
+    padding: 18px 0;
+    border-top: 1px solid rgb(255 255 255 / 0.2);
+  }
+
+  .contact-links a:last-child {
+    border-bottom: 1px solid rgb(255 255 255 / 0.2);
+  }
+
+  .contact-links span {
+    color: rgb(255 255 255 / 0.45);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+  }
+
+  .contact-links strong {
+    overflow: hidden;
+    font-size: 0.84rem;
+    font-weight: 550;
+    text-overflow: ellipsis;
+  }
+
+  .contact-links i {
+    color: #ffdc62;
+    font-style: normal;
+    transition: transform 160ms ease;
+  }
+
+  .contact-links a:hover i {
+    transform: translate(2px, -2px);
+  }
+
+  @media (max-width: 820px) {
+    .about-hero {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      padding-bottom: 64px;
+    }
+
+    .monogram {
+      display: none;
+    }
+
+    .about-intro {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-panel {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .about-page {
+      padding-top: 32px;
+    }
+
+    .about-hero {
+      padding-bottom: 48px;
+    }
+
+    h1 {
+      font-size: clamp(3.4rem, 17vw, 5rem);
+    }
+
+    .about-grid article {
+      min-height: 0;
+      padding: 21px;
+    }
+
+    .contact-panel {
+      padding: 28px 20px;
+    }
+
+    .contact-links a {
+      grid-template-columns: 58px minmax(0, 1fr) 20px;
+    }
+  }
+</style>

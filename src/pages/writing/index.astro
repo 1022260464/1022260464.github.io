@@ -1,0 +1,105 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import PostList from "../../components/PostList.astro";
+import { site } from "../../lib/site";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<Layout
+  title={`文章 — ${site.name}`}
+  description="关于设计、代码和日常学习的文章与笔记。"
+>
+  <div class="page-shell listing-page">
+    <header class="page-header">
+      <p class="eyebrow">Writing / Archive</p>
+      <div class="page-title-row">
+        <h1>写下来的<br />一切。</h1>
+        <p>
+          关于设计、代码与日常的笔记。<br />
+          目前共有 {posts.length} 篇公开文章。
+        </p>
+      </div>
+    </header>
+
+    <section aria-label="全部文章">
+      <div class="list-caption">
+        <span>按时间倒序</span>
+        <a href="/writing.xml">RSS 订阅 ↗</a>
+      </div>
+      <PostList posts={posts} />
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .listing-page {
+    padding-top: 78px;
+  }
+
+  .page-header {
+    padding-bottom: 76px;
+  }
+
+  .page-title-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(240px, 0.55fr);
+    gap: 50px;
+    align-items: end;
+    margin-top: 36px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(4rem, 9vw, 7.5rem);
+    font-weight: 760;
+    letter-spacing: -0.055em;
+    line-height: 0.86;
+  }
+
+  .page-title-row > p {
+    max-width: 280px;
+    margin: 0 0 4px;
+    color: var(--muted);
+    font-size: 0.93rem;
+    line-height: 1.7;
+  }
+
+  .list-caption {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 13px;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .list-caption a:hover {
+    color: var(--ink);
+  }
+
+  @media (max-width: 760px) {
+    .listing-page {
+      padding-top: 34px;
+    }
+
+    .page-header {
+      padding-bottom: 54px;
+    }
+
+    .page-title-row {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    h1 {
+      font-size: clamp(3.6rem, 20vw, 5.5rem);
+    }
+  }
+</style>
