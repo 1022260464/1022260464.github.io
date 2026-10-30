@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <rss version="2.0">
       <channel>
-        <title>0x330 — 设计、代码与日常</title>
+        <title>0x330 — 代码、生活与 AI 笔记</title>
         <link>https://1022260464.github.io/</link>
-        <description>记录设计、代码与日常学习的个人空间。</description>
+        <description>记录代码学习、日常生活，以及前端、后端、算法与 AI 知识的个人网站。</description>
         <language>zh-CN</language>
         <item>
           <title>从一张空白页开始</title>
