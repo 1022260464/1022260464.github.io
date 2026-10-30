@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "deploy": "astro build && gh-pages -d dist",
+    "deploy": "astro build && gh-pages -d dist --nojekyll",
     "preview": "astro preview",
     "astro": "astro"
   },
