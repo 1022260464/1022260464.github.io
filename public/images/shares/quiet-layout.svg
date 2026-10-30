@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Quiet layout</title>
+  <desc id="desc">Cream layout study with a red accent and restrained typographic geometry.</desc>
+  <rect width="1200" height="900" fill="#f2ead8"/>
+  <g stroke="#22231f" stroke-opacity=".13">
+    <path d="M0 110h1200M0 220h1200M0 330h1200M0 440h1200M0 550h1200M0 660h1200M0 770h1200"/>
+    <path d="M120 0v900M240 0v900M360 0v900M480 0v900M600 0v900M720 0v900M840 0v900M960 0v900M1080 0v900"/>
+  </g>
+  <rect x="118" y="132" width="964" height="630" fill="#faf7ef" stroke="#24251f" stroke-opacity=".18"/>
+  <rect x="162" y="184" width="186" height="36" rx="18" fill="#ef5b47"/>
+  <path d="M162 270h745M162 304h420" stroke="#24251f" stroke-width="8" stroke-linecap="round"/>
+  <path d="M162 404h430M162 436h368M162 468h396" stroke="#24251f" stroke-opacity=".28" stroke-width="3"/>
+  <circle cx="934" cy="326" r="98" fill="none" stroke="#24251f" stroke-width="3"/>
+  <circle cx="934" cy="326" r="11" fill="#2458ff"/>
+  <path d="M826 668h794M162 612h400" stroke="#24251f" stroke-width="2"/>
+  <rect x="865" y="592" width="140" height="52" rx="26" fill="#24251f"/>
+  <circle cx="920" cy="618" r="5" fill="#ffd84d"/>
+</svg>

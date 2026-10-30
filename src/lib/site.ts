@@ -13,5 +13,6 @@ export const site = {
 export const navigation = [
   { href: "/", label: "首页", index: "01" },
   { href: "/writing", label: "文章", index: "02" },
-  { href: "/about", label: "关于", index: "03" },
+  { href: "/gallery", label: "分享", index: "03" },
+  { href: "/about", label: "关于", index: "04" },
 ];
