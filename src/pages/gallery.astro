@@ -1,8 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ShareGallery from "../components/gallery/ShareGallery";
-import { shares } from "../lib/shares";
+import { countShareNodes, getShareYears, shares } from "../lib/shares";
 import { site } from "../lib/site";
+
+const totalShares = countShareNodes(shares);
+const shareYears = getShareYears(shares).join(" / ");
 ---
 
 <Layout
@@ -23,8 +26,8 @@ import { site } from "../lib/site";
             它们不追求完整，只记录此刻真正打动我的部分。
           </p>
           <p class="gallery-count">
-            <span>{String(shares.length).padStart(2, "0")}</span>
-            Collected notes · 2026
+            <span>{String(totalShares).padStart(2, "0")}</span>
+            {shares.length} collections · {shareYears}
           </p>
         </div>
       </div>
