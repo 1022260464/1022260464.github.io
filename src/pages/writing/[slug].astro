@@ -5,6 +5,7 @@ import {
   type CollectionEntry,
 } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import ReadingProgress from "../../components/ReadingProgress.astro";
 import { site } from "../../lib/site";
 
 export async function getStaticPaths() {
@@ -46,6 +47,7 @@ const updatedDate = post.data.updatedDate
   description={post.data.description}
   type="article"
 >
+  <ReadingProgress />
   <article class="article-shell">
     <header class="article-header">
       <a class="back-link" href="/writing" data-enter>← 返回文章</a>
@@ -54,7 +56,7 @@ const updatedDate = post.data.updatedDate
         <span aria-hidden="true">/</span>
         <span>{post.data.tags[0] ?? "写作"}</span>
       </div>
-      <h1 data-enter>{post.data.title}</h1>
+      <h1 data-split="chars">{post.data.title}</h1>
       {post.data.description && (
         <p class="article-description" data-enter>{post.data.description}</p>
       )}
@@ -63,6 +65,18 @@ const updatedDate = post.data.updatedDate
         <span>{Math.max(1, Math.ceil((post.body ?? "").length / 500))} 分钟阅读</span>
       </div>
     </header>
+
+    {
+      post.data.cover && (
+        <figure class="article-cover" data-cover>
+          <img
+            src={post.data.cover}
+            alt={post.data.coverAlt ?? ""}
+            loading="eager"
+          />
+        </figure>
+      )
+    }
 
     {
       headings.length > 0 && (
@@ -178,6 +192,24 @@ const updatedDate = post.data.updatedDate
     color: var(--faint);
     font-family: var(--font-mono);
     font-size: 0.65rem;
+  }
+
+  .article-cover {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 16 / 8;
+    margin: 38px 0 4px;
+    background: var(--paper-strong);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .article-cover img {
+    width: 100%;
+    height: 112%;
+    object-fit: cover;
+    transform-origin: center;
+    will-change: transform;
   }
 
   .toc {
@@ -335,6 +367,11 @@ const updatedDate = post.data.updatedDate
 
     .article-grid {
       padding-top: 38px;
+    }
+
+    .article-cover {
+      aspect-ratio: 4 / 3;
+      margin-top: 30px;
     }
 
     .article-nav {

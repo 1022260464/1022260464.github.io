@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Spark from "../components/Spark.astro";
 import { site } from "../lib/site";
 ---
 
@@ -11,11 +12,14 @@ import { site } from "../lib/site";
     <header class="about-hero">
       <div>
         <p class="eyebrow" data-enter>About / Personal space</p>
-        <h1 data-enter>保持好奇，<br />认真做东西。</h1>
+        <h1>
+          <span data-enter>保持好奇，</span>
+          <span data-enter>认真做东西。</span>
+        </h1>
       </div>
       <div class="monogram" aria-hidden="true" data-enter>
         <span>0x</span>
-        <i data-spin>✦</i>
+        <i><Spark size={24} data-spin /></i>
         <span>330</span>
       </div>
     </header>
@@ -34,7 +38,7 @@ import { site } from "../lib/site";
     </section>
 
     <section class="about-grid">
-      <article data-reveal>
+      <article data-reveal data-tilt>
         <p class="section-index">02 / 此刻</p>
         <h2>正在做的事</h2>
         <ul>
@@ -43,7 +47,7 @@ import { site } from "../lib/site";
           <li><span>03</span>把零散想法整理成可以分享的文章</li>
         </ul>
       </article>
-      <article data-reveal>
+      <article data-reveal data-tilt>
         <p class="section-index">03 / 关键词</p>
         <h2>最近关注</h2>
         <div class="keyword-cloud">
@@ -63,12 +67,12 @@ import { site } from "../lib/site";
         <h2>有想法，<br />可以聊聊。</h2>
       </div>
       <div class="contact-links">
-        <a href={site.email}>
+        <a href={site.email} data-magnetic>
           <span>Email</span>
           <strong>1022260464@qq.com</strong>
           <i>↗</i>
         </a>
-        <a href={site.github} target="_blank" rel="noreferrer">
+        <a href={site.github} target="_blank" rel="noreferrer" data-magnetic>
           <span>GitHub</span>
           <strong>@1022260464</strong>
           <i>↗</i>
@@ -97,6 +101,10 @@ import { site } from "../lib/site";
     font-weight: 750;
     letter-spacing: -0.06em;
     line-height: 0.94;
+  }
+
+  h1 span {
+    display: block;
   }
 
   .monogram {
@@ -133,8 +141,9 @@ import { site } from "../lib/site";
   }
 
   .monogram i {
+    display: grid;
+    place-items: center;
     color: var(--blue);
-    font-size: 1.5rem;
     font-style: normal;
   }
 

@@ -1,15 +1,179 @@
-import { animate, inView, stagger } from "motion";
+import { animate, inView, scroll, stagger } from "motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const revealed = new WeakSet<Element>();
 let revealStops: Array<() => void> = [];
+let scrollStops: Array<() => void> = [];
+let interactionStops: Array<() => void> = [];
 let playbackControls: Array<{ stop: () => void }> = [];
 
 const clearPageEffects = () => {
   revealStops.forEach((stop) => stop());
+  scrollStops.forEach((stop) => stop());
+  interactionStops.forEach((stop) => stop());
   playbackControls.forEach((controls) => controls.stop());
   revealStops = [];
+  scrollStops = [];
+  interactionStops = [];
   playbackControls = [];
+};
+
+const splitText = (element: HTMLElement) => {
+  if (element.dataset.splitReady === "true") return [];
+
+  const text = element.textContent?.replace(/\s+/g, " ").trim();
+  if (!text) return [];
+
+  const fragment = document.createDocumentFragment();
+  const characters: HTMLElement[] = [];
+
+  element.setAttribute("aria-label", text);
+  element.textContent = "";
+
+  Array.from(text).forEach((character) => {
+    const span = document.createElement("span");
+    span.className = "motion-char";
+    span.setAttribute("aria-hidden", "true");
+    span.textContent = character === " " ? "\u00a0" : character;
+    fragment.append(span);
+    characters.push(span);
+  });
+
+  element.append(fragment);
+  element.dataset.splitReady = "true";
+  return characters;
+};
+
+const setupReadingProgress = () => {
+  const progress = document.querySelector<HTMLElement>(
+    ".reading-progress span",
+  );
+  if (!progress) return;
+
+  const controls = animate(
+    progress,
+    { scaleX: [0, 1] },
+    { ease: "linear" },
+  );
+  playbackControls.push(controls);
+  scrollStops.push(scroll(controls, { axis: "y" }));
+};
+
+const setupCoverMotion = () => {
+  const cover = document.querySelector<HTMLElement>("[data-cover]");
+  const image = cover?.querySelector<HTMLImageElement>("img");
+  if (!cover || !image) return;
+
+  playbackControls.push(
+    animate(
+      cover,
+      {
+        opacity: [0, 1],
+        clipPath: ["inset(0 0 100% 0)", "inset(0 0 0% 0)"],
+      },
+      {
+        duration: 1.05,
+        delay: 0.3,
+        ease,
+      },
+    ),
+  );
+
+  scrollStops.push(
+    scroll(
+      (progress) => {
+        image.style.transform = `translate3d(0, ${(progress - 0.5) * 20}px, 0) scale(1.08)`;
+      },
+      {
+        target: cover,
+        offset: ["start end", "end start"],
+      },
+    ),
+  );
+};
+
+const setupSvgDrawing = () => {
+  document.querySelectorAll<SVGPathElement>("[data-draw]").forEach((path) => {
+    const length = path.getTotalLength();
+    path.style.strokeDasharray = `${length}`;
+    path.style.strokeDashoffset = `${length}`;
+
+    playbackControls.push(
+      animate(
+        path,
+        { strokeDashoffset: [length, 0] },
+        {
+          duration: 0.85,
+          delay: 0.18,
+          ease,
+        },
+      ),
+    );
+  });
+};
+
+const setupPointerEffects = () => {
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+  document.querySelectorAll<HTMLElement>("[data-tilt]").forEach((element) => {
+    const onPointerMove = (event: PointerEvent) => {
+      const rect = element.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      animate(
+        element,
+        {
+          rotateX: -((y / rect.height) - 0.5) * 3.2,
+          rotateY: ((x / rect.width) - 0.5) * 3.2,
+          transformPerspective: 800,
+        },
+        { duration: 0.22, ease: "ease-out" },
+      );
+    };
+
+    const onPointerLeave = () => {
+      animate(
+        element,
+        { rotateX: 0, rotateY: 0 },
+        { duration: 0.45, ease },
+      );
+    };
+
+    element.addEventListener("pointermove", onPointerMove);
+    element.addEventListener("pointerleave", onPointerLeave);
+    interactionStops.push(() => {
+      element.removeEventListener("pointermove", onPointerMove);
+      element.removeEventListener("pointerleave", onPointerLeave);
+    });
+  });
+
+  document
+    .querySelectorAll<HTMLElement>("[data-magnetic]")
+    .forEach((element) => {
+      const onPointerMove = (event: PointerEvent) => {
+        const rect = element.getBoundingClientRect();
+        const x = event.clientX - (rect.left + rect.width / 2);
+        const y = event.clientY - (rect.top + rect.height / 2);
+
+        animate(
+          element,
+          { x: x * 0.12, y: y * 0.12 },
+          { duration: 0.22, ease: "ease-out" },
+        );
+      };
+
+      const onPointerLeave = () => {
+        animate(element, { x: 0, y: 0 }, { duration: 0.45, ease });
+      };
+
+      element.addEventListener("pointermove", onPointerMove);
+      element.addEventListener("pointerleave", onPointerLeave);
+      interactionStops.push(() => {
+        element.removeEventListener("pointermove", onPointerMove);
+        element.removeEventListener("pointerleave", onPointerLeave);
+      });
+    });
 };
 
 const setupMotion = () => {
@@ -21,6 +185,30 @@ const setupMotion = () => {
     document.documentElement.classList.remove("motion-enabled");
     return;
   }
+
+  document.querySelectorAll<HTMLElement>("[data-split]").forEach((element) => {
+    const characters = splitText(element);
+    if (characters.length === 0) return;
+
+    element.style.opacity = "1";
+    playbackControls.push(
+      animate(
+        characters,
+        {
+          opacity: [0, 1],
+          transform: [
+            "translateY(0.45em) rotate(2deg)",
+            "translateY(0px) rotate(0deg)",
+          ],
+        },
+        {
+          duration: 0.62,
+          delay: stagger(0.024),
+          ease,
+        },
+      ),
+    );
+  });
 
   const enterElements = Array.from(
     document.querySelectorAll<HTMLElement>("[data-enter]"),
@@ -88,8 +276,14 @@ const setupMotion = () => {
     revealStops.push(stop);
   });
 
+  setupReadingProgress();
+  setupCoverMotion();
+  setupSvgDrawing();
+  setupPointerEffects();
+
   requestAnimationFrame(() => {
     document.documentElement.classList.remove("motion-pending");
+    window.dispatchEvent(new Event("scroll"));
   });
 };
 

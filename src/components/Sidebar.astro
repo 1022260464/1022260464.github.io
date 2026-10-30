@@ -1,5 +1,6 @@
 ---
 import { navigation, site } from "../lib/site";
+import Spark from "./Spark.astro";
 
 const pathname = Astro.url.pathname;
 const isActive = (href: string) =>
@@ -10,7 +11,7 @@ const isActive = (href: string) =>
   <div class="sidebar-inner">
     <a class="brand" href="/" aria-label={`${site.name} 首页`}>
       <span>{site.name}</span>
-      <span class="brand-mark" aria-hidden="true">✦</span>
+      <Spark class="brand-mark" size={16} data-spin />
     </a>
 
     <div class="identity">
@@ -87,7 +88,7 @@ const isActive = (href: string) =>
 
   .brand-mark {
     color: #ffdc62;
-    font-size: 1rem;
+    overflow: visible;
   }
 
   .identity {

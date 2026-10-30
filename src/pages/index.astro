@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import PostList from "../components/PostList.astro";
+import Spark from "../components/Spark.astro";
 import { site } from "../lib/site";
 
 const posts = (await getCollection("blog", ({ data }) => !data.draft))
@@ -14,21 +15,21 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 		<section class="hero" aria-labelledby="hero-title">
 			<div class="hero-copy">
 				<p class="eyebrow" data-enter>Design × Code × Notes</p>
-				<h1 id="hero-title" data-enter>
-					<span class="hero-mark" aria-hidden="true" data-spin>✦</span>
-					<span>0x330</span>
+				<h1 id="hero-title">
+					<Spark class="hero-mark" size={48} data-spin />
+					<span class="hero-word" data-enter>0x330</span>
 				</h1>
-				<p class="hero-lede" data-enter>
-					把设计、代码与日常放进同一个空间。<br />
-					保持好奇，认真做东西，也认真生活。
+				<p class="hero-lede">
+					<span data-enter>把设计、代码与日常放进同一个空间。</span>
+					<span data-enter>保持好奇，认真做东西，也认真生活。</span>
 				</p>
 				<div class="hero-actions" data-enter>
-					<a class="button-link" href="/writing">阅读文章</a>
-					<a class="button-link secondary" href="/about">关于我</a>
+					<a class="button-link" href="/writing" data-magnetic>阅读文章</a>
+					<a class="button-link secondary" href="/about" data-magnetic>关于我</a>
 				</div>
 			</div>
 
-			<aside class="hero-note" aria-label="站点简介" data-enter>
+			<aside class="hero-note" aria-label="站点简介" data-enter data-tilt>
 				<p class="note-index">01 / PERSONAL SPACE</p>
 				<p>{site.intro}</p>
 				<div class="note-rule"></div>
@@ -89,9 +90,12 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 	}
 
 	.hero-mark {
+		flex: 0 0 auto;
+		width: 3rem;
+		height: 3rem;
 		color: var(--blue);
-		font-size: 3rem;
 		line-height: 1;
+		overflow: visible;
 	}
 
 	.hero-lede {
@@ -100,6 +104,10 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 		color: #373a34;
 		font-size: 1.48rem;
 		line-height: 1.65;
+	}
+
+	.hero-lede span {
+		display: block;
 	}
 
 	.hero-actions {
@@ -224,7 +232,8 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 		}
 
 		.hero-mark {
-			font-size: 2rem;
+			width: 2rem;
+			height: 2rem;
 		}
 
 		.hero-lede {

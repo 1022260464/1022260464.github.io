@@ -1,0 +1,32 @@
+<div class="reading-progress" aria-hidden="true">
+  <span></span>
+</div>
+
+<style>
+  .reading-progress {
+    position: fixed;
+    z-index: 40;
+    top: 0;
+    right: 0;
+    left: var(--sidebar-width);
+    height: 2px;
+    pointer-events: none;
+  }
+
+  .reading-progress span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--blue);
+    box-shadow: 0 0 12px rgb(31 94 255 / 0.28);
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  @media (max-width: 980px) {
+    .reading-progress {
+      top: 64px;
+      left: 0;
+    }
+  }
+</style>

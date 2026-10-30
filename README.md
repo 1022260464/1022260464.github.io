@@ -27,6 +27,8 @@ description: "用于列表和搜索引擎的一句话简介"
 pubDate: 2026-10-30
 tags: ["随笔", "设计"]
 draft: false
+cover: "/images/article-cover.jpg"
+coverAlt: "文章封面的替代文本"
 ---
 
 正文从此开始。
@@ -46,11 +48,20 @@ draft: false
 <!-- 滚动进入视口时出现 -->
 <article data-reveal>内容</article>
 
+<!-- 逐字拆分并依次出现 -->
+<h1 data-split="chars">逐字出现的标题</h1>
+
 <!-- 旋转缩放进入，适合装饰性图标 -->
-<span data-spin>✦</span>
+<svg data-spin>...</svg>
+
+<!-- 桌面端鼠标悬停时的轻微倾斜和磁性跟随 -->
+<div data-tilt>卡片</div>
+<a data-magnetic>按钮</a>
 ```
 
 `prefers-reduced-motion: reduce` 开启时，页面会跳过动画并直接显示内容。页面之间的切换由 Astro 的 `ClientRouter` 完成。
+
+文章设置 `cover` 后会显示封面，并自动启用遮罩展开和滚动视差。封面图片放在 `public/images`，路径从 `/images/...` 开始。
 
 ## 发布
 

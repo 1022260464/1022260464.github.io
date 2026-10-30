@@ -46,6 +46,25 @@ html.motion-enabled [data-reveal] {
   transform: translateY(20px);
 }
 
+html.motion-enabled [data-split] {
+  opacity: 0;
+}
+
+html.motion-enabled [data-cover] {
+  clip-path: inset(0 0 100% 0);
+  opacity: 0;
+}
+
+.motion-char {
+  display: inline-block;
+  transform-origin: center bottom;
+}
+
+[data-tilt] {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
 ::view-transition-old(root) {
   animation: page-out 180ms ease both;
 }
@@ -294,5 +313,11 @@ img {
   html.motion-enabled [data-reveal] {
     opacity: 1;
     transform: none;
+  }
+
+  html.motion-enabled [data-split],
+  html.motion-enabled [data-cover] {
+    clip-path: none;
+    opacity: 1;
   }
 }

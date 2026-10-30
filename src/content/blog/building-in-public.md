@@ -4,6 +4,8 @@ description: "把想法写下来，是让模糊的事情逐渐变得具体的第
 pubDate: 2026-10-30
 tags: ["随笔", "开始"]
 draft: false
+cover: "/images/from-blank-page.svg"
+coverAlt: "网格纸张上由圆形、线条和星形组成的抽象构图"
 ---
 
 做网站最困难的时刻，往往不是写下第一行代码，而是面对一张空白页时，不知道应该先放什么。
