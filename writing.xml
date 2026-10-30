@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <rss version="2.0">
+      <channel>
+        <title>0x330 — 设计、代码与日常</title>
+        <link>https://1022260464.github.io/</link>
+        <description>记录设计、代码与日常学习的个人空间。</description>
+        <language>zh-CN</language>
+        <item>
+          <title>从一张空白页开始</title>
+          <link>https://1022260464.github.io/writing/building-in-public/</link>
+          <guid>https://1022260464.github.io/writing/building-in-public/</guid>
+          <pubDate>Fri, 30 Oct 2026 00:00:00 GMT</pubDate>
+          <description>把想法写下来，是让模糊的事情逐渐变得具体的第一步。</description>
+        </item>
+        <item>
+          <title>为什么用 Astro 重做这个网站</title>
+          <link>https://1022260464.github.io/writing/why-astro/</link>
+          <guid>https://1022260464.github.io/writing/why-astro/</guid>
+          <pubDate>Wed, 28 Oct 2026 00:00:00 GMT</pubDate>
+          <description>内容优先、默认零客户端 JavaScript，以及足够自由的页面结构。</description>
+        </item>
+        <item>
+          <title>让界面安静下来的几个决定</title>
+          <link>https://1022260464.github.io/writing/notes-on-design/</link>
+          <guid>https://1022260464.github.io/writing/notes-on-design/</guid>
+          <pubDate>Sat, 24 Oct 2026 00:00:00 GMT</pubDate>
+          <description>减少颜色和装饰之后，信息层级反而更容易被感受到。</description>
+        </item>
+      </channel>
+    </rss>
