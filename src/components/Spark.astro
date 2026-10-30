@@ -3,10 +3,11 @@ interface Props {
   class?: string;
   size?: number;
   delay?: number;
+  spin?: boolean;
   [key: string]: unknown;
 }
 
-const { class: className, size = 20, delay = 0, ...rest } = Astro.props;
+const { class: className, size = 20, delay = 0, spin = true, ...rest } = Astro.props;
 
 const sparkId = crypto.randomUUID().replaceAll("-", "");
 const gradientId = `spark-paint-${sparkId}`;
@@ -15,7 +16,7 @@ const highlightId = `spark-highlight-${sparkId}`;
 
 <svg
   {...rest}
-  class:list={["spark-icon", className]}
+  class:list={["spark-icon", className, { "spark-static": !spin }]}
   width={size}
   height={size}
   viewBox="0 0 24 24"
@@ -73,8 +74,8 @@ const highlightId = `spark-highlight-${sparkId}`;
     will-change: transform;
   }
 
-  .spark-icon:hover .spark-rotor {
-    animation-duration: 7s;
+  .spark-static .spark-rotor {
+    animation: none;
   }
 
   @keyframes spark-turn {
@@ -84,8 +85,7 @@ const highlightId = `spark-highlight-${sparkId}`;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .spark-rotor,
-    .spark-icon:hover .spark-rotor {
+    .spark-rotor {
       animation: none;
     }
   }
