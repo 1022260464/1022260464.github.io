@@ -10,6 +10,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "deploy": "astro build && gh-pages -d dist --nojekyll",
+    "new:post": "node scripts/new-post.mjs",
+    "content:map": "node scripts/content-map.mjs",
+    "content:check": "node scripts/content-check.mjs",
+    "image:single": "node scripts/image-tool.mjs single",
+    "image:batch": "node scripts/image-tool.mjs batch",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -23,6 +28,7 @@
   "devDependencies": {
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "gh-pages": "^6.3.0"
+    "gh-pages": "^6.3.0",
+    "sharp": "^0.35.5"
   }
 }

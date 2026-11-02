@@ -2,9 +2,9 @@
 title: "让界面安静下来的几个决定"
 description: "减少颜色和装饰之后，信息层级反而更容易被感受到。"
 pubDate: 2026-10-24
-tags: ["设计", "观察"]
-category: "设计与观察"
-order: 1
+tags: ["前端", "界面设计"]
+category: "前端开发"
+order: 3
 draft: false
 ---
 

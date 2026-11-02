@@ -220,15 +220,39 @@ const clipId = `planet-clip-${uid}`;
 </span>
 
 <style>
+	@property --planet-size {
+		syntax: "<length>";
+		inherits: true;
+		initial-value: 1rem;
+	}
+
+	@property --second-planet-size {
+		syntax: "<length>";
+		inherits: true;
+		initial-value: 0.8rem;
+	}
+
+	@property --orbit-duration {
+		syntax: "<time>";
+		inherits: true;
+		initial-value: 40s;
+	}
+
+	@property --counter-direction {
+		syntax: "<custom-ident>";
+		inherits: true;
+		initial-value: normal;
+	}
+
 	.planet {
 		position: absolute;
 		left: 50%;
 		display: block;
-		width: var(--planet-size);
+		width: var(--planet-size, 1rem);
 		aspect-ratio: 1;
 		translate: -50% 0;
-		animation: planet-counter-spin var(--orbit-duration) linear infinite;
-		animation-direction: var(--counter-direction);
+		animation: planet-counter-spin var(--orbit-duration, 40s) linear infinite;
+		animation-direction: var(--counter-direction, normal);
 	}
 
 	.planet svg {
@@ -240,12 +264,12 @@ const clipId = `planet-clip-${uid}`;
 	}
 
 	.planet-primary {
-		top: calc(var(--planet-size) / -2);
+		top: calc(var(--planet-size, 1rem) / -2);
 	}
 
 	.planet-secondary {
-		bottom: calc(var(--second-planet-size) / -2);
-		width: var(--second-planet-size);
+		bottom: calc(var(--second-planet-size, 0.8rem) / -2);
+		width: var(--second-planet-size, 0.8rem);
 	}
 
 	@keyframes planet-counter-spin {

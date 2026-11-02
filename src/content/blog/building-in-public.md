@@ -3,7 +3,7 @@ title: "从一张空白页开始"
 description: "把想法写下来，是让模糊的事情逐渐变得具体的第一步。"
 pubDate: 2026-10-30
 tags: ["随笔", "开始"]
-category: "建站手记"
+category: "前端开发"
 order: 1
 draft: false
 cover: "/images/from-blank-page.svg"
