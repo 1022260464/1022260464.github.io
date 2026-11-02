@@ -6,6 +6,13 @@
         <description>记录代码学习、日常生活，以及前端、后端、算法与 AI 知识的个人网站。</description>
         <language>zh-CN</language>
         <item>
+          <title>J-Space：语言模型内部的全局工作空间</title>
+          <link>https://1022260464.github.io/writing/j-space-share/</link>
+          <guid>https://1022260464.github.io/writing/j-space-share/</guid>
+          <pubDate>Mon, 02 Nov 2026 00:00:00 GMT</pubDate>
+          <description>Anthropic 在 Claude 内部发现了一组可被报告、控制和用于推理的隐性概念表征，并探索了它在大模型可解释性与安全监控中的价值。</description>
+        </item>
+        <item>
           <title>从一张空白页开始</title>
           <link>https://1022260464.github.io/writing/building-in-public/</link>
           <guid>https://1022260464.github.io/writing/building-in-public/</guid>
