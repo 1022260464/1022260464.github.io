@@ -11,6 +11,7 @@
     "build": "astro build",
     "deploy": "astro build && gh-pages -d dist --nojekyll",
     "new:post": "node scripts/new-post.mjs",
+    "new:share": "node scripts/new-share.mjs",
     "content:map": "node scripts/content-map.mjs",
     "content:check": "node scripts/content-check.mjs",
     "image:single": "node scripts/image-tool.mjs single",

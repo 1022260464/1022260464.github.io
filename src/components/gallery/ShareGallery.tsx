@@ -11,6 +11,7 @@ import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import {
   countShareNodes,
   getShareDate,
+  getLookbookShares,
   getShareYears,
   type Share,
 } from "../../lib/shares";
@@ -198,28 +199,66 @@ function ArchiveIndexBranch({
             : `${parentPath}.${index + 1}`;
 
         return (
-          <div className="archive-index-node" key={node.id}>
-            <a
-              className={activeShare === node.id ? "active" : undefined}
-              href={`#share-${node.id}`}
-              aria-current={activeShare === node.id ? "true" : undefined}
-              style={{ "--index-depth": depth } as CSSProperties}
-            >
-              <span className="archive-index-sequence">{path}</span>
-              <strong>{node.title}</strong>
-              <time dateTime={node.date}>{getShareDate(node.date).value}</time>
-            </a>
-            {node.children?.length ? (
-              <ArchiveIndexBranch
-                nodes={node.children}
-                activeShare={activeShare}
-                parentPath={path}
-                depth={depth + 1}
-              />
-            ) : null}
-          </div>
+          <ArchiveIndexNode
+            key={node.id}
+            node={node}
+            activeShare={activeShare}
+            path={path}
+            depth={depth}
+          />
         );
       })}
+    </div>
+  );
+}
+
+function ArchiveIndexNode({
+  node,
+  activeShare,
+  path,
+  depth,
+}: {
+  node: Share;
+  activeShare: string;
+  path: string;
+  depth: number;
+}) {
+  const [isOpen, setIsOpen] = useState(true);
+  const canCollapse = Boolean(node.children?.length);
+
+  return (
+    <div className="archive-index-node">
+      <div className="archive-index-row">
+        <a
+          className={activeShare === node.id ? "active" : undefined}
+          href={`#share-${node.id}`}
+          aria-current={activeShare === node.id ? "true" : undefined}
+          style={{ "--index-depth": depth } as CSSProperties}
+        >
+          <span className="archive-index-sequence">{path}</span>
+          <strong>{node.title}</strong>
+          <time dateTime={node.date}>{getShareDate(node.date).value}</time>
+        </a>
+        {canCollapse ? (
+          <button
+            type="button"
+            className="archive-index-toggle"
+            aria-expanded={isOpen}
+            aria-label={`${isOpen ? "收起" : "展开"}${node.title}目录`}
+            onClick={() => setIsOpen((open) => !open)}
+          >
+            {isOpen ? "−" : "+"}
+          </button>
+        ) : null}
+      </div>
+      {node.children?.length && isOpen ? (
+        <ArchiveIndexBranch
+          nodes={node.children}
+          activeShare={activeShare}
+          parentPath={path}
+          depth={depth + 1}
+        />
+      ) : null}
     </div>
   );
 }
@@ -305,9 +344,15 @@ function ArchiveNode({
           <i></i>
         </span>
         <span className="archive-sequence">{path}</span>
-        <span className="archive-thumb">
-          <img src={share.cover} alt="" />
-        </span>
+        {share.cover ? (
+          <span className="archive-thumb">
+            <img src={share.cover} alt="" />
+          </span>
+        ) : (
+          <span className="archive-thumb archive-thumb-empty">
+            No image
+          </span>
+        )}
         <span className="archive-group-copy">
           <span className="archive-meta">
             {share.category} · {nodeCount} nested notes
@@ -435,7 +480,10 @@ function Archive({
 }
 
 export default function ShareGallery({ shares }: ShareGalleryProps) {
-  const [mode, setMode] = useState<GalleryMode>("lookbook");
+  const lookbookShares = getLookbookShares(shares);
+  const [mode, setMode] = useState<GalleryMode>(
+    lookbookShares.length > 0 ? "lookbook" : "archive",
+  );
   const [pendingShare, setPendingShare] = useState<string | null>(null);
   const totalShares = countShareNodes(shares);
   const yearLabel = getShareYears(shares).join(" / ");
@@ -462,49 +510,51 @@ export default function ShareGallery({ shares }: ShareGalleryProps) {
                 {shares.length} collections / {totalShares} entries
               </span>
             </p>
-            <div
-              className="gallery-mode-switch"
-              role="group"
-              aria-label="切换分享展示方式"
-            >
-              <button
-                type="button"
-                aria-pressed={mode === "lookbook"}
-                className={mode === "lookbook" ? "active" : undefined}
-                onClick={() => setMode("lookbook")}
+            {lookbookShares.length > 0 ? (
+              <div
+                className="gallery-mode-switch"
+                role="group"
+                aria-label="切换分享展示方式"
               >
-                {mode === "lookbook" && (
-                  <motion.span
-                    className="gallery-mode-background"
-                    layoutId="gallery-mode-background"
-                    transition={spring}
-                  />
-                )}
-                <span>Lookbook</span>
-              </button>
-              <button
-                type="button"
-                aria-pressed={mode === "archive"}
-                className={mode === "archive" ? "active" : undefined}
-                onClick={() => setMode("archive")}
-              >
-                {mode === "archive" && (
-                  <motion.span
-                    className="gallery-mode-background"
-                    layoutId="gallery-mode-background"
-                    transition={spring}
-                  />
-                )}
-                <span>Archive</span>
-              </button>
-            </div>
+                <button
+                  type="button"
+                  aria-pressed={mode === "lookbook"}
+                  className={mode === "lookbook" ? "active" : undefined}
+                  onClick={() => setMode("lookbook")}
+                >
+                  {mode === "lookbook" && (
+                    <motion.span
+                      className="gallery-mode-background"
+                      layoutId="gallery-mode-background"
+                      transition={spring}
+                    />
+                  )}
+                  <span>Lookbook</span>
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={mode === "archive"}
+                  className={mode === "archive" ? "active" : undefined}
+                  onClick={() => setMode("archive")}
+                >
+                  {mode === "archive" && (
+                    <motion.span
+                      className="gallery-mode-background"
+                      layoutId="gallery-mode-background"
+                      transition={spring}
+                    />
+                  )}
+                  <span>Archive</span>
+                </button>
+              </div>
+            ) : null}
           </div>
 
           <AnimatePresence mode="wait" initial={false}>
             {mode === "lookbook" ? (
               <Lookbook
                 key="lookbook"
-                shares={shares}
+                shares={lookbookShares}
                 onOpen={openCollection}
               />
             ) : (

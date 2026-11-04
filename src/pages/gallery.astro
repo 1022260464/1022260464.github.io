@@ -1,9 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ShareGallery from "../components/gallery/ShareGallery";
-import { countShareNodes, getShareYears, shares } from "../lib/shares";
+import { getShares } from "../lib/share-content";
+import { countShareNodes, getShareYears } from "../lib/shares";
 import { site } from "../lib/site";
 
+const shares = await getShares();
 const totalShares = countShareNodes(shares);
 const shareYears = getShareYears(shares).join(" / ");
 ---

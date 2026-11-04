@@ -29,6 +29,20 @@ const viewOptions: Array<{ id: ViewMode; label: string; index: string }> = [
   { id: "calendar", label: "日历", index: "03" },
 ];
 
+const categoryPriority = [
+  "AI 与 Agent",
+  "后端开发",
+  "算法",
+  "计算机视觉",
+  "前端开发",
+  "随笔与生活",
+];
+
+const getCategoryRank = (category: string) => {
+  const index = categoryPriority.indexOf(category);
+  return index === -1 ? categoryPriority.length : index;
+};
+
 const weekdays = ["一", "二", "三", "四", "五", "六", "日"];
 const monthFormatter = new Intl.DateTimeFormat("zh-CN", {
   year: "numeric",
@@ -167,9 +181,11 @@ function OutlineView({ posts }: { posts: WritingArchivePost[] }) {
       groups.set(post.category, group);
     });
 
-    return Array.from(groups.entries()).sort(([a], [b]) =>
-      a.localeCompare(b, "zh-CN"),
-    );
+    return Array.from(groups.entries()).sort(([a], [b]) => {
+      const rankDifference = getCategoryRank(a) - getCategoryRank(b);
+      if (rankDifference !== 0) return rankDifference;
+      return a.localeCompare(b, "zh-CN");
+    });
   }, [posts]);
 
   if (!categories.length) {

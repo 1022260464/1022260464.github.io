@@ -1,7 +1,10 @@
 import { loadArticles, writeContentMap } from "./content-lib.mjs";
+import { createShareMap, loadShares } from "./share-lib.mjs";
 
 const articles = await loadArticles();
-const contentMap = await writeContentMap(articles);
+const shares = await loadShares();
+const shareMap = createShareMap(shares);
+const contentMap = await writeContentMap(articles, shareMap);
 
 console.log("内容地图");
 console.log("");

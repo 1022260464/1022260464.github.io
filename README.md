@@ -61,17 +61,23 @@ git pull --rebase origin astro
 ├─ CONTENT_MAP.md               # 自动生成的文字内容层级地图
 ├─ scripts/
 │  ├─ new-post.mjs              # pnpm new:post
+│  ├─ new-share.mjs             # pnpm new:share
 │  ├─ content-map.mjs           # pnpm content:map
-│  └─ content-lib.mjs           # 文章读取与层级解析
+│  ├─ content-check.mjs         # pnpm content:check
+│  ├─ content-lib.mjs           # 文章读取与层级解析
+│  ├─ share-lib.mjs             # 分享读取、校验与 Lookbook 规则
+│  └─ image-tool.mjs            # 单张和批量图片处理
 └─ src/
    ├─ content/
-   │  └─ blog/                  # 文章正文
-   │     ├─ building-in-public.md
-   │     ├─ notes-on-design.md
-   │     └─ why-astro.md
+   │  ├─ blog/                  # 文章正文
+   │  │  ├─ building-in-public.md
+   │  │  ├─ notes-on-design.md
+   │  │  └─ why-astro.md
+   │  └─ shares/                # 分享条目，每篇一个 Markdown
    ├─ lib/
    │  ├─ site.ts                # 网站名称、简介、邮箱、导航
-   │  └─ shares.ts              # 分享条目的标题和说明
+   │  ├─ shares.ts              # 分享类型、日期和 Lookbook 筛选
+   │  └─ share-content.ts       # 读取 Markdown 并构建分享树
    ├─ pages/
    │  ├─ index.astro            # 全屏入口页文字
    │  ├─ home/
@@ -105,8 +111,9 @@ pnpm new:post
 - 输入 `0` 新建模块
 - 直接输入一个不存在的模块名称
 
-选择上级文章时，终端会同时显示完整层级路径和文章 ID。创建完成后还会再次
-回显所选模块、父文章 ID、自动顺序和最终网址。
+选择上级文章时，终端会按 `01`、`01.01` 的形式显示树状层级和文章 ID，
+可以直接输入层级路径或 ID。创建完成后还会再次回显所选模块、父文章 ID、
+自动顺序和最终网址。
 
 脚本会自动：
 
@@ -115,24 +122,34 @@ pnpm new:post
 - 计算同一模块、同一父级下的下一个 `order`
 - 更新 `CONTENT_MAP.md`
 
-需要重新查看文章模块和父子关系时运行：
+新建分享使用：
+
+```powershell
+pnpm new:share
+```
+
+脚本会处理分类、日期、来源、链接、封面、上层目录、同级顺序、Lookbook
+开关和草稿状态。上层目录同样按树状层级显示，可用 `02.01` 这样的路径
+或分享 ID 选择，并自动更新内容地图。
+
+需要重新查看文章和分享的模块、目录及父子关系时运行：
 
 ```powershell
 pnpm content:map
 ```
 
-终端会输出当前层级树，同时刷新根目录的 `CONTENT_MAP.md`。层级树会显示
-每篇文章的 `id`，Markdown 中的文章名称可以直接点击打开对应源文件。该文件
-由脚本生成，不应手动编辑，否则会被下次生成覆盖。
+终端会输出文章和分享的完整层级树，同时刷新根目录的 `CONTENT_MAP.md`。
+层级树会显示内容 `id`，Markdown 中的名称可以直接点击打开对应源文件。
+该文件由脚本生成，不应手动编辑，否则会被下次生成覆盖。
 
-提交或发布前检查文章数据：
+提交或发布前统一检查文章与分享数据：
 
 ```powershell
 pnpm content:check
 ```
 
-检查内容包括重复 `order`、重复文件名、缺失父文章、父子循环、模块不一致、
-缺失标题和无效日期。
+检查内容包括重复 `order`、重复文件名、缺失父级、父子循环、模块不一致、
+缺失标题、无效日期、缺失封面和外部链接配置。
 
 ### 日常写作功能
 
@@ -229,7 +246,7 @@ pnpm image:batch -- "D:\Pictures\article-images" `
 | 关于页文字 | `src/pages/about.astro` |
 | 分享页开场文字 | `src/pages/gallery.astro` |
 | 笔记归档页标题与介绍 | `src/pages/writing/index.astro` |
-| 分享条目的标题、说明与来源 | `src/lib/shares.ts` |
+| 分享条目的标题、说明、分类与层级 | `src/content/shares/*.md` |
 | 文章详情的目录、翻页和标签固定文字 | `src/pages/writing/[slug].astro` |
 | 归档页搜索、视图切换与空状态文字 | `src/components/WritingArchive.tsx` |
 | 桌面端身份状态和页脚文字 | `src/components/Sidebar.astro` |
@@ -386,40 +403,62 @@ order: 2                 # 同一层级内的排序
 分享模块位于 `/gallery`，与文章内容完全分开。桌面端默认显示 3D 楼梯
 Lookbook，可切换到带粘性索引的 Archive 列表；手机端默认显示 Archive。
 
-在 `src/lib/shares.ts` 中维护分享树。每个顶层条目是一组分享，
-通过递归的 `children` 支持任意层级：
+新建分享：
 
-```ts
-{
-  id: "collection-id",
-  title: "分享合集",
-  description: "合集说明",
-  category: "Design",
-  date: "2026-10-30",
-  source: "来源名称",
-  cover: "/images/shares/cover.svg",
-  coverAlt: "封面图片描述",
-  children: [
-    {
-      id: "entry-id",
-      title: "层级中的一条分享",
-      description: "简短说明",
-      category: "Note",
-      date: "2026-10-29",
-      href: "https://example.com",
-      source: "Example",
-      cover: "/images/shares/entry-cover.svg",
-      coverAlt: "条目封面描述",
-      external: true,
-      children: [],
-    },
-  ],
-}
+```powershell
+pnpm new:share
 ```
 
-Lookbook 展示顶层合集；Archive 展示完整树并可逐层展开。站内链接将
-`external` 省略或设为 `false`。日期统一使用 `YYYY-MM-DD`，页面和索引会
-自动格式化显示。分享封面放在 `public/images/shares`，交互组件位于
+分享内容与文章一样，使用 `src/content/shares` 下的 Markdown 文件维护。
+每个文件对应一个目录或分享条目：
+
+```md
+---
+title: "前端工具收藏"
+description: "平时使用和关注的前端工具。"
+category: "前端开发"
+date: "2026-11-02"
+source: "个人收藏"
+cover: "/images/shares/frontend-tools.svg"
+coverAlt: "前端工具收藏封面"
+parent: "可选的上层分享-id"
+order: 1
+lookbook: true
+lookbookOrder: 1
+draft: false
+---
+```
+
+常用字段：
+
+| 字段 | 作用 |
+| --- | --- |
+| `title` | 目录或分享标题 |
+| `description` | Archive 列表中的说明 |
+| `category` | 分类标签，不负责目录分组 |
+| `date` | 日期，格式为 `YYYY-MM-DD` |
+| `source` | 来源名称 |
+| `href` | 点击分享后的链接 |
+| `external` | 是否为外部链接，默认 `false` |
+| `cover` / `coverAlt` | 可选封面和替代文本 |
+| `parent` | 上层分享的文件 ID；省略表示顶层目录 |
+| `order` | 同级展示顺序 |
+| `lookbook` | 是否允许进入 Lookbook |
+| `lookbookOrder` | Lookbook 单独排序 |
+| `draft` | 草稿不会出现在线上 |
+
+目录层级由 `parent` 决定，不需要创建多层文件夹。Archive 会展示全部条目，
+左侧目录和正文分组都可以逐层折叠。
+
+Lookbook 默认规则：
+
+- 有 `cover` 且没有设置 `lookbook: false` 的顶层分享才会显示
+- 没有封面的分享仍会出现在 Archive，但不会进入 Lookbook
+- 设置 `lookbook: false` 可以主动从 Lookbook 隐藏
+- 使用 `lookbookOrder` 调整卡片顺序，数字越小越靠前
+
+`category` 当前只是显示标签，不会自动把相同分类合并成目录，也不会自动应用
+分类专属颜色。分享封面放在 `public/images/shares`，交互组件位于
 `src/components/gallery`。
 
 ## 发布

@@ -6,6 +6,12 @@ import {
   loadArticles,
   writeContentMap,
 } from "./content-lib.mjs";
+import {
+  buildHierarchyOptions,
+  findHierarchyOption,
+  printHierarchyOptions,
+} from "./interactive-lib.mjs";
+import { createShareMap, loadShares } from "./share-lib.mjs";
 
 const rl = createInterface({
   input: process.stdin,
@@ -126,47 +132,21 @@ try {
 
   const isNewCategory = !categories.includes(category);
 
-  const possibleParents = articles
-    .filter((article) => article.category === category)
-    .sort((left, right) =>
-      left.hierarchyPath.localeCompare(right.hierarchyPath, "zh-CN"),
-    );
-
-  if (possibleParents.length > 0) {
-    console.log("");
-    console.log(`“${category}”下可选上级文章：`);
-    possibleParents.forEach((article, index) => {
-      console.log(
-        `${String(index + 1).padStart(2, "0")}. ${article.hierarchyPath}`,
-      );
-      console.log(`    id: ${article.id}`);
-    });
-  }
+  const parentOptions = buildHierarchyOptions(
+    articles.filter((article) => article.category === category),
+  );
+  printHierarchyOptions(parentOptions, `“${category}”下可选上级文章`);
 
   let parentArticle = null;
 
   while (true) {
     const answer = (
-      await rl.question("上级文章编号或 ID（回车表示顶级）：")
+      await rl.question("上级路径、编号或 ID（回车表示顶级）：")
     ).trim();
 
     if (!answer) break;
 
-    const numericIndex = Number(answer);
-    if (
-      Number.isInteger(numericIndex) &&
-      numericIndex >= 1 &&
-      numericIndex <= possibleParents.length
-    ) {
-      parentArticle = possibleParents[numericIndex - 1];
-      break;
-    }
-
-    parentArticle =
-      possibleParents.find(
-        (article) =>
-          article.id === answer || article.slug === answer,
-      ) ?? null;
+    parentArticle = findHierarchyOption(parentOptions, answer)?.item ?? null;
 
     if (parentArticle) break;
     console.log("没有找到对应文章，请重新输入。");
@@ -234,7 +214,8 @@ try {
 
   await mkdir(blogDir, { recursive: true });
   await writeFile(outputPath, source, { encoding: "utf8", flag: "wx" });
-  const contentMap = await writeContentMap(await loadArticles());
+  const shareMap = createShareMap(await loadShares());
+  const contentMap = await writeContentMap(await loadArticles(), shareMap);
 
   console.log("");
   console.log(`已创建：${path.relative(process.cwd(), outputPath)}`);
@@ -259,6 +240,13 @@ try {
 
   console.log("");
   console.log("下一步：打开 Markdown 写正文，然后运行 pnpm run dev 预览。");
+} catch (error) {
+  if (error.code === "ABORT_ERR") {
+    console.log("");
+    console.log("已取消。");
+  } else {
+    throw error;
+  }
 } finally {
   rl.close();
 }

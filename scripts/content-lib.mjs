@@ -8,7 +8,7 @@ export const projectRoot = path.resolve(scriptsDir, "..");
 export const blogDir = path.join(projectRoot, "src", "content", "blog");
 export const contentMapPath = path.join(projectRoot, "CONTENT_MAP.md");
 
-function parseScalar(rawValue) {
+export function parseScalar(rawValue) {
   const value = rawValue.trim();
 
   if (!value) return "";
@@ -44,11 +44,11 @@ function parseScalar(rawValue) {
   return value;
 }
 
-function parseFrontmatter(source, relativePath) {
+export function parseFrontmatter(source, relativePath) {
   const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
 
   if (!match) {
-    throw new Error(`Article is missing frontmatter: ${relativePath}`);
+    throw new Error(`Markdown file is missing frontmatter: ${relativePath}`);
   }
 
   const data = {};
@@ -64,7 +64,7 @@ function parseFrontmatter(source, relativePath) {
   return data;
 }
 
-async function findMarkdownFiles(directory) {
+export async function findMarkdownFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = [];
 
@@ -396,8 +396,18 @@ export function createContentMap(articles) {
   };
 }
 
-export async function writeContentMap(articles) {
+export async function writeContentMap(articles, shareContent = null) {
   const contentMap = createContentMap(articles);
-  await writeFile(contentMapPath, contentMap.markdown, "utf8");
-  return contentMap;
+  const markdown = shareContent
+    ? `${contentMap.markdown.trimEnd()}\n\n---\n\n${shareContent.markdown.trim()}\n`
+    : contentMap.markdown;
+  const terminal = shareContent
+    ? `${contentMap.terminal}\n\n${shareContent.terminal}`
+    : contentMap.terminal;
+  const warnings = shareContent
+    ? [...contentMap.warnings, ...shareContent.warnings]
+    : contentMap.warnings;
+
+  await writeFile(contentMapPath, markdown, "utf8");
+  return { markdown, terminal, warnings };
 }
