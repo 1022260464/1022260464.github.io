@@ -6,6 +6,13 @@
         <description>记录代码学习、日常生活，以及前端、后端、算法与 AI 知识的个人网站。</description>
         <language>zh-CN</language>
         <item>
+          <title>A2UI：让 Agent 用组件协议生成界面</title>
+          <link>https://1022260464.github.io/writing/a2ui-agent-ui-notes/</link>
+          <guid>https://1022260464.github.io/writing/a2ui-agent-ui-notes/</guid>
+          <pubDate>Fri, 13 Nov 2026 00:00:00 GMT</pubDate>
+          <description>从协议定位、核心概念到快速开始和本地部署，整理 A2UI 的工作方式、最小实现与能力边界。</description>
+        </item>
+        <item>
           <title>J-Space：语言模型内部的全局工作空间</title>
           <link>https://1022260464.github.io/writing/j-space-share/</link>
           <guid>https://1022260464.github.io/writing/j-space-share/</guid>

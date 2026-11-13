@@ -1,0 +1,583 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.4.4"><meta name="description" content="从协议定位、核心概念到快速开始和本地部署，整理 A2UI 的工作方式、最小实现与能力边界。"><meta name="theme-color" content="#f8f9f6"><meta property="og:title" content="A2UI：让 Agent 用组件协议生成界面 — 0x330"><meta property="og:description" content="从协议定位、核心概念到快速开始和本地部署，整理 A2UI 的工作方式、最小实现与能力边界。"><meta property="og:type" content="article"><meta property="og:url" content="https://1022260464.github.io/writing/a2ui-agent-ui-notes/"><meta property="og:site_name" content="0x330"><link rel="canonical" href="https://1022260464.github.io/writing/a2ui-agent-ui-notes/"><link rel="alternate" type="application/rss+xml" title="0x330 RSS" href="/writing.xml"><title>A2UI：让 Agent 用组件协议生成界面 — 0x330</title><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DXqcZz58.js"></script><script>
+			document.documentElement.classList.add("motion-pending");
+			document.documentElement.classList.add("motion-enabled");
+			window.setTimeout(() => {
+				if (document.documentElement.dataset.motionReady !== "true") {
+					document.documentElement.classList.remove("motion-enabled");
+				}
+			}, 1800);
+		</script><link rel="stylesheet" href="/_astro/PageCurtain.aCXEYLlv.css"><link rel="stylesheet" href="/_astro/_slug_.DM5EmN1t.css"><link rel="stylesheet" href="/_astro/Layout.C1lvO3Je.css"></head><body><a class="skip-link" href="#content">跳到主要内容</a><div class="site-frame"><aside class="sidebar" aria-label="站点导航" data-astro-cid-wv7whodv><div class="sidebar-inner" data-astro-cid-wv7whodv><a class="brand" href="/home/" aria-label="0x330 首页" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>0x330</span><svg data-spin="true" data-astro-cid-wv7whodv="true" class="spark-icon brand-mark" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="--spark-delay: -3s" data-astro-cid-vlrgvanf><defs data-astro-cid-vlrgvanf><linearGradient id="spark-paint-5072fa13d57b458983b280ea3f97479b" x1="4" y1="2.5" x2="20" y2="21.5" gradientUnits="userSpaceOnUse" data-astro-cid-vlrgvanf><stop stop-color="#4d8dff" data-astro-cid-vlrgvanf></stop><stop offset="0.3" stop-color="#8c6cff" data-astro-cid-vlrgvanf></stop><stop offset="0.56" stop-color="#ed68a8" data-astro-cid-vlrgvanf></stop><stop offset="0.78" stop-color="#ff8b55" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffd75c" data-astro-cid-vlrgvanf></stop></linearGradient><radialGradient id="spark-highlight-5072fa13d57b458983b280ea3f97479b" cx="0" cy="0" r="1" data-astro-cid-vlrgvanf><stop stop-color="#ffffff" stop-opacity="0.92" data-astro-cid-vlrgvanf></stop><stop offset="0.34" stop-color="#ffffff" stop-opacity="0.28" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffffff" stop-opacity="0" data-astro-cid-vlrgvanf></stop></radialGradient></defs><g class="spark-rotor" data-astro-cid-vlrgvanf><path d="M12 2.15C12.9 8.7 15.3 11.1 21.85 12C15.3 12.9 12.9 15.3 12 21.85C11.1 15.3 8.7 12.9 2.15 12C8.7 11.1 11.1 8.7 12 2.15Z" fill="url(#spark-paint-5072fa13d57b458983b280ea3f97479b)" data-astro-cid-vlrgvanf></path><path d="M12 6.2C12.5 10.2 13.8 11.5 17.8 12C13.8 12.5 12.5 13.8 12 17.8C11.5 13.8 10.2 12.5 6.2 12C10.2 11.5 11.5 10.2 12 6.2Z" fill="url(#spark-paint-5072fa13d57b458983b280ea3f97479b)" opacity="0.45" data-astro-cid-vlrgvanf></path><circle cx="9.1" cy="8.4" r="3.3" fill="url(#spark-highlight-5072fa13d57b458983b280ea3f97479b)" data-astro-cid-vlrgvanf></circle></g></svg></a><div class="identity" data-astro-cid-wv7whodv><div class="avatar" data-astro-cid-wv7whodv><img src="/images/avatar-code-notes.jpg" alt="" width="40" height="40" data-astro-cid-wv7whodv></div><div data-astro-cid-wv7whodv><p class="identity-name" data-astro-cid-wv7whodv>0x330</p><p class="identity-role" data-astro-cid-wv7whodv>代码 · 生活 · 技术笔记</p></div></div><nav class="nav-list" aria-label="主导航" data-astro-cid-wv7whodv><a class="nav-link" href="/home/" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>首页</span><span class="nav-index" data-astro-cid-wv7whodv>01</span></a><a class="nav-link active" href="/writing" aria-current="page" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>笔记</span><span class="nav-index" data-astro-cid-wv7whodv>02</span></a><a class="nav-link" href="/gallery" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>分享</span><span class="nav-index" data-astro-cid-wv7whodv>03</span></a><a class="nav-link" href="/about" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>关于</span><span class="nav-index" data-astro-cid-wv7whodv>04</span></a></nav><div class="sidebar-rule" data-astro-cid-wv7whodv></div><section class="status" aria-labelledby="status-title" data-astro-cid-wv7whodv><p class="eyebrow" id="status-title" data-astro-cid-wv7whodv>Now</p><p data-astro-cid-wv7whodv>持续记录前端、后端、算法与 AI 学习，也留下日常生活。</p><span class="status-pill" data-astro-cid-wv7whodv><i data-astro-cid-wv7whodv></i> Learning in public</span></section><div class="sidebar-footer" data-astro-cid-wv7whodv><a href="https://github.com/1022260464" target="_blank" rel="noreferrer" data-astro-cid-wv7whodv>GitHub ↗</a><a href="/writing.xml" data-astro-cid-wv7whodv>RSS ↗</a><p data-astro-cid-wv7whodv>© 2026 0x330</p></div></div></aside><header class="mobile-header" data-astro-cid-hghorjjy><a class="mobile-brand" href="/home/" data-astro-cid-hghorjjy><img class="mobile-avatar" src="/images/avatar-code-notes.jpg" alt="" width="26" height="26" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>0x330</span><svg data-spin="true" data-astro-cid-hghorjjy="true" class="spark-icon mobile-mark" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="--spark-delay: -3s" data-astro-cid-vlrgvanf><defs data-astro-cid-vlrgvanf><linearGradient id="spark-paint-2db915b7328f4b5698eb8a515fa376df" x1="4" y1="2.5" x2="20" y2="21.5" gradientUnits="userSpaceOnUse" data-astro-cid-vlrgvanf><stop stop-color="#4d8dff" data-astro-cid-vlrgvanf></stop><stop offset="0.3" stop-color="#8c6cff" data-astro-cid-vlrgvanf></stop><stop offset="0.56" stop-color="#ed68a8" data-astro-cid-vlrgvanf></stop><stop offset="0.78" stop-color="#ff8b55" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffd75c" data-astro-cid-vlrgvanf></stop></linearGradient><radialGradient id="spark-highlight-2db915b7328f4b5698eb8a515fa376df" cx="0" cy="0" r="1" data-astro-cid-vlrgvanf><stop stop-color="#ffffff" stop-opacity="0.92" data-astro-cid-vlrgvanf></stop><stop offset="0.34" stop-color="#ffffff" stop-opacity="0.28" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffffff" stop-opacity="0" data-astro-cid-vlrgvanf></stop></radialGradient></defs><g class="spark-rotor" data-astro-cid-vlrgvanf><path d="M12 2.15C12.9 8.7 15.3 11.1 21.85 12C15.3 12.9 12.9 15.3 12 21.85C11.1 15.3 8.7 12.9 2.15 12C8.7 11.1 11.1 8.7 12 2.15Z" fill="url(#spark-paint-2db915b7328f4b5698eb8a515fa376df)" data-astro-cid-vlrgvanf></path><path d="M12 6.2C12.5 10.2 13.8 11.5 17.8 12C13.8 12.5 12.5 13.8 12 17.8C11.5 13.8 10.2 12.5 6.2 12C10.2 11.5 11.5 10.2 12 6.2Z" fill="url(#spark-paint-2db915b7328f4b5698eb8a515fa376df)" opacity="0.45" data-astro-cid-vlrgvanf></path><circle cx="9.1" cy="8.4" r="3.3" fill="url(#spark-highlight-2db915b7328f4b5698eb8a515fa376df)" data-astro-cid-vlrgvanf></circle></g></svg></a><details class="mobile-menu" data-astro-cid-hghorjjy><summary data-astro-cid-hghorjjy>菜单</summary><nav aria-label="移动端导航" data-astro-cid-hghorjjy><a href="/home/" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>首页</span><span data-astro-cid-hghorjjy>01</span></a><a href="/writing" class="active" aria-current="page" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>笔记</span><span data-astro-cid-hghorjjy>02</span></a><a href="/gallery" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>分享</span><span data-astro-cid-hghorjjy>03</span></a><a href="/about" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>关于</span><span data-astro-cid-hghorjjy>04</span></a></nav></details></header><main class="site-main" id="content"><div class="reading-progress" aria-hidden="true" data-astro-cid-kw4rgypl><span data-astro-cid-kw4rgypl></span></div><article class="article-shell" data-astro-cid-7mn2gw7j><header class="article-header" data-astro-cid-7mn2gw7j><nav class="article-path" aria-label="笔记层级" data-enter data-astro-cid-7mn2gw7j><a href="/writing" data-astro-cid-7mn2gw7j>笔记</a><span aria-hidden="true" data-astro-cid-7mn2gw7j>/</span><span data-astro-cid-7mn2gw7j>AI 与 Agent</span></nav><div class="article-kicker" data-enter data-astro-cid-7mn2gw7j><time datetime="2026-11-13T00:00:00.000Z" data-astro-cid-7mn2gw7j>2026年11月13日</time><span aria-hidden="true" data-astro-cid-7mn2gw7j>/</span><span data-astro-cid-7mn2gw7j>AI</span></div><h1 data-split="chars" data-astro-cid-7mn2gw7j>A2UI：让 Agent 用组件协议生成界面</h1><p class="article-description" data-typewriter data-astro-cid-7mn2gw7j>从协议定位、核心概念到快速开始和本地部署，整理 A2UI 的工作方式、最小实现与能力边界。</p><div class="article-meta" data-enter data-astro-cid-7mn2gw7j><span data-astro-cid-7mn2gw7j>笔记 / 0x330</span><span data-astro-cid-7mn2gw7j>26 分钟阅读</span></div></header><aside class="toc" aria-label="笔记目录" data-reveal data-astro-cid-7mn2gw7j><p data-astro-cid-7mn2gw7j>On this page</p><ol data-astro-cid-7mn2gw7j><li data-astro-cid-7mn2gw7j><a href="#先说结论" data-astro-cid-7mn2gw7j>先说结论</a></li><li data-astro-cid-7mn2gw7j><a href="#为什么需要-a2ui" data-astro-cid-7mn2gw7j>为什么需要 A2UI</a></li><li data-astro-cid-7mn2gw7j><a href="#核心概念" data-astro-cid-7mn2gw7j>核心概念</a></li><li data-astro-cid-7mn2gw7j><a href="#catalog-决定能力范围" data-astro-cid-7mn2gw7j>Catalog 决定能力范围</a></li><li data-astro-cid-7mn2gw7j><a href="#常见消息" data-astro-cid-7mn2gw7j>常见消息</a></li><li data-astro-cid-7mn2gw7j><a href="#快速开始" data-astro-cid-7mn2gw7j>快速开始</a></li><li data-astro-cid-7mn2gw7j><a href="#方式一先运行官方示例" data-astro-cid-7mn2gw7j>方式一：先运行官方示例</a></li><li data-astro-cid-7mn2gw7j><a href="#方式二从空项目搭一个最小应用" data-astro-cid-7mn2gw7j>方式二：从空项目搭一个最小应用</a></li><li data-astro-cid-7mn2gw7j><a href="#本地项目部署实践" data-astro-cid-7mn2gw7j>本地项目部署实践</a></li><li data-astro-cid-7mn2gw7j><a href="#1-项目结构" data-astro-cid-7mn2gw7j>1. 项目结构</a></li><li data-astro-cid-7mn2gw7j><a href="#2-安装-python-依赖" data-astro-cid-7mn2gw7j>2. 安装 Python 依赖</a></li><li data-astro-cid-7mn2gw7j><a href="#3-初始化-a2ui-generator" data-astro-cid-7mn2gw7j>3. 初始化 A2UI Generator</a></li><li data-astro-cid-7mn2gw7j><a href="#4-流式调用模型" data-astro-cid-7mn2gw7j>4. 流式调用模型</a></li><li data-astro-cid-7mn2gw7j><a href="#5-把模型流交给-a2ui-processor" data-astro-cid-7mn2gw7j>5. 把模型流交给 A2UI Processor</a></li><li data-astro-cid-7mn2gw7j><a href="#6-用-sse-返回消息" data-astro-cid-7mn2gw7j>6. 用 SSE 返回消息</a></li><li data-astro-cid-7mn2gw7j><a href="#7-接入-react-renderer" data-astro-cid-7mn2gw7j>7. 接入 React Renderer</a></li><li data-astro-cid-7mn2gw7j><a href="#8-配置开发代理" data-astro-cid-7mn2gw7j>8. 配置开发代理</a></li><li data-astro-cid-7mn2gw7j><a href="#9-启动本地服务" data-astro-cid-7mn2gw7j>9. 启动本地服务</a></li><li data-astro-cid-7mn2gw7j><a href="#10-生产部署" data-astro-cid-7mn2gw7j>10. 生产部署</a></li><li data-astro-cid-7mn2gw7j><a href="#ai-到底能改什么" data-astro-cid-7mn2gw7j>AI 到底能改什么</a></li><li data-astro-cid-7mn2gw7j><a href="#能力边界" data-astro-cid-7mn2gw7j>能力边界</a></li><li data-astro-cid-7mn2gw7j><a href="#实践建议" data-astro-cid-7mn2gw7j>实践建议</a></li><li data-astro-cid-7mn2gw7j><a href="#资源" data-astro-cid-7mn2gw7j>资源</a></li></ol></aside><div class="article-grid" data-astro-cid-7mn2gw7j><div class="article-body prose" data-astro-cid-7mn2gw7j><p>传统聊天机器人主要返回文字。用户如果想修改对应前端界面，通常还要在聊天窗口之外寻找对应页面。A2UI 想解决的问题是：<strong>让 Agent 用一套受控的组件协议描述界面，再由客户端把这些描述渲染成真正的交互控件。</strong></p>
+<p>A2UI 不是网页生成器，也不是一个新的前端框架。它更接近“Agent 时代的声明式 UI 协议”：模型决定当前需要什么界面，SDK 负责生成和校验协议消息，客户端负责映射到已有组件。通俗点来讲，就是在组件库和前端展示之间加了一层映射，用户可以根据所选组件去进行对应修改。</p>
+<figure>
+  <img src="/images/a2ui/a2ui-playground.webp" alt="A2UI Playground 根据自然语言生成月度注册数据仪表盘，并在右侧显示对应的 A2UI Express 声明" width="1600" height="889" loading="lazy" decoding="async" />
+  <figcaption>A2UI Playground 中，左侧是根据自然语言生成的仪表盘，右侧是对应的 A2UI Express 声明。模型描述组件、属性和数据关系，由客户端渲染成真实界面。</figcaption>
+</figure>
+<h2 id="先说结论">先说结论</h2>
+<p>A2UI 的核心链路是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>用户意图</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Agent 调用模型</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>模型根据 Catalog 生成 UI 声明</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>A2UI SDK 编译和校验</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>JSON 消息</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>客户端 Renderer 渲染组件</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>用户操作作为 Action 返回 Agent</span></span></code></pre>
+<p>它带来的主要能力是：</p>
+<ul>
+<li>根据上下文动态组合界面。</li>
+<li>只开放应用允许使用的组件和属性。</li>
+<li>支持组件树更新、数据绑定和用户操作回传。</li>
+<li>让同一套 Agent 输出适配不同客户端或不同组件体系。</li>
+<li>避免把模型生成的 HTML、JavaScript 或任意 React/Vue 代码直接执行。</li>
+</ul>
+<p>它不负责：</p>
+<ul>
+<li>自动生成完整网站。</li>
+<li>自动扫描并复用项目中任意现有组件。</li>
+<li>直接修改前端源码。</li>
+<li>代替数据库、权限系统或业务接口。</li>
+<li>保证任意视觉设计都能精确还原。</li>
+</ul>
+<h2 id="为什么需要-a2ui">为什么需要 A2UI</h2>
+<p>纯文本界面适合解释和问答，但很多任务天然需要结构化交互，例如：</p>
+<ul>
+<li>选择日期和人员。</li>
+<li>填写一组参数。</li>
+<li>对比多个方案。</li>
+<li>确认有风险的操作。</li>
+<li>分步骤完成一项任务。</li>
+<li>展示进度、错误和最终结果。</li>
+</ul>
+<p>如果让模型直接生成 HTML 或 JavaScript，会带来几个问题：</p>
+<ol>
+<li>安全边界不清晰。</li>
+<li>样式和交互难以保持一致。</li>
+<li>不同客户端难以复用。</li>
+<li>模型输出的结构难以可靠校验。</li>
+<li>前端组件和业务能力容易被模型绕过。</li>
+</ol>
+<p>A2UI 的做法是先定义组件 Catalog，再把模型限制在这个白名单中。模型描述“要显示什么”和“组件之间怎样组合”，但不直接控制浏览器执行什么代码。</p>
+<h2 id="核心概念">核心概念</h2>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Catalog</td>
+<td>当前客户端支持的组件、属性和函数清单</td>
+</tr>
+<tr>
+<td>Surface</td>
+<td>一块独立的动态 UI 区域</td>
+</tr>
+<tr>
+<td>Component</td>
+<td>Surface 中的一个逻辑组件节点</td>
+</tr>
+<tr>
+<td>Component ID</td>
+<td>组件在组件树中的逻辑标识，不是 DOM 选择器</td>
+</tr>
+<tr>
+<td>Data Model</td>
+<td>表单、选项、列表等界面数据</td>
+</tr>
+<tr>
+<td>Action</td>
+<td>用户点击、提交或选择后回传给 Agent 的事件</td>
+</tr>
+<tr>
+<td>Renderer</td>
+<td>把 A2UI 消息映射成真实 React、Flutter 等组件的客户端</td>
+</tr>
+<tr>
+<td>Processor</td>
+<td>接收协议消息、校验并维护 Surface 状态的前端处理器</td>
+</tr>
+</tbody>
+</table>
+<p>可以把 A2UI 的“定位”理解为逻辑定位：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>surfaceId      定位一块动态界面</span></span>
+<span class="line"><span>componentId    定位组件树中的一个节点</span></span>
+<span class="line"><span>parent/children 描述节点之间的层级</span></span>
+<span class="line"><span>data path      定位一项界面数据</span></span></code></pre>
+<p>它不使用 CSS Selector 查找 DOM，也不会告诉代码编辑器修改某个源文件。客户端收到更新消息后，由 Renderer 找到对应的 Surface 和 Component，再重新渲染。</p>
+<h2 id="catalog-决定能力范围">Catalog 决定能力范围</h2>
+<p>Catalog 是 A2UI 最重要的边界。它声明客户端愿意接受哪些组件、属性和动作。</p>
+<p>例如，一个很小的 Catalog 可以只包含：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Text</span></span>
+<span class="line"><span>Button</span></span>
+<span class="line"><span>TextField</span></span>
+<span class="line"><span>Card</span></span>
+<span class="line"><span>Column</span></span></code></pre>
+<p>模型可以组合出标题、说明、输入框和提交按钮，但不能使用没有注册的图表、地图或视频组件。</p>
+<p>如果应用需要自己的业务组件，例如“素材审核卡”或“商品对比表”，需要同时完成三件事：</p>
+<ol>
+<li>在 Catalog 中声明组件名、属性和数据结构。</li>
+<li>实现真实的前端组件。</li>
+<li>在 Renderer 中建立 A2UI 组件到真实组件的映射。</li>
+</ol>
+<p>因此，“复用现有组件”是正确的，但这是有条件的复用：组件必须经过封装、注册和映射，A2UI 不会自己识别项目中的任意组件文件。</p>
+<h2 id="常见消息">常见消息</h2>
+<p>A2UI 的协议会围绕 Surface 的创建、组件更新、数据更新和用户动作展开。实际字段应以所锁定的协议版本为准，整体思路如下：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "surfaceId"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"profile-form"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  "components"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"title"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Text"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "props"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">        "text"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"完善个人资料"</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"name"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"TextField"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "props"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">        "label"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"姓名"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">        "value"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">          "path"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"/name"</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#79B8FF">      "id"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"save"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"Button"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "props"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">        "label"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"保存"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">        "action"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">          "name"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"saveProfile"</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  ]</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>前端 Renderer 在内部把这些声明映射成：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Text       → 项目中的文本组件</span></span>
+<span class="line"><span>TextField  → 项目中的输入组件</span></span>
+<span class="line"><span>Button     → 项目中的按钮组件</span></span></code></pre>
+<p>模型更新界面时，可以增加组件、修改属性、调整组件树或更新数据模型。它仍然只能在 Catalog 允许的范围内操作。</p>
+<h2 id="快速开始">快速开始</h2>
+<h3 id="方式一先运行官方示例">方式一：先运行官方示例</h3>
+<p>官方仓库包含完整示例和可运行客户端，适合用来观察协议消息与实际渲染效果。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">git clone https:</span><span style="color:#F97583">//</span><span style="color:#79B8FF">github.com</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">a2ui</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">project</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">a2ui.git</span></span>
+<span class="line"><span style="color:#E1E4E8">cd a2ui</span></span>
+<span class="line"><span style="color:#79B8FF">Get-Content</span><span style="color:#E1E4E8"> README.md</span></span></code></pre>
+<p>仓库和示例会持续更新，因此先阅读 README，确认当前推荐使用的客户端示例、Node 版本和包管理器，再进入对应目录安装依赖。示例主要用于理解：</p>
+<ul>
+<li>Catalog 如何定义。</li>
+<li>模型输出如何转换成 A2UI 消息。</li>
+<li>客户端如何维护 Surface。</li>
+<li>用户 Action 如何返回 Agent。</li>
+</ul>
+<p>如果只是想体验 A2UI，不建议从完整业务示例开始。先找到最小的基础 Catalog 示例，确认一条 <code>createSurface</code> 或组件更新消息能够显示出来。</p>
+<h3 id="方式二从空项目搭一个最小应用">方式二：从空项目搭一个最小应用</h3>
+<p>推荐的最小组合是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>浏览器 React Renderer</span></span>
+<span class="line"><span>        │ Action / 用户消息</span></span>
+<span class="line"><span>        ▼</span></span>
+<span class="line"><span>Python FastAPI Agent</span></span>
+<span class="line"><span>        │</span></span>
+<span class="line"><span>        └── A2UI 消息 + SSE ──&gt; 浏览器</span></span></code></pre>
+<p>本地开发时启动两个进程：</p>
+<ul>
+<li>FastAPI：<code>127.0.0.1:8080</code></li>
+<li>Vite：<code>127.0.0.1:5173</code></li>
+</ul>
+<p>Vite 把 <code>/api</code> 代理到 FastAPI。生产环境可以先构建前端，再由 FastAPI 托管静态文件，最终只暴露一个端口。</p>
+<h2 id="本地项目部署实践">本地项目部署实践</h2>
+<p>下面是一套不依赖特定业务示例的最小实践。它使用 BasicCatalog、Python Agent、React Renderer 和 SSE。</p>
+<h3 id="1-项目结构">1. 项目结构</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>a2ui-local/</span></span>
+<span class="line"><span>├─ server/</span></span>
+<span class="line"><span>│  ├─ app/</span></span>
+<span class="line"><span>│  │  ├─ main.py</span></span>
+<span class="line"><span>│  │  ├─ model.py</span></span>
+<span class="line"><span>│  │  └─ session.py</span></span>
+<span class="line"><span>│  └─ requirements.txt</span></span>
+<span class="line"><span>├─ web/</span></span>
+<span class="line"><span>│  ├─ src/</span></span>
+<span class="line"><span>│  │  ├─ App.tsx</span></span>
+<span class="line"><span>│  │  ├─ agent-client.ts</span></span>
+<span class="line"><span>│  │  └─ AgentSurface.tsx</span></span>
+<span class="line"><span>│  ├─ vite.config.ts</span></span>
+<span class="line"><span>│  └─ package.json</span></span>
+<span class="line"><span>└─ README.md</span></span></code></pre>
+<h3 id="2-安装-python-依赖">2. 安装 Python 依赖</h3>
+<p>建议在虚拟环境中锁定 A2UI SDK 和其他依赖的版本：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">python </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">m venv .venv</span></span>
+<span class="line"><span style="color:#E1E4E8">.\.venv\Scripts\Activate.ps1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">python </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">m pip install fastapi uvicorn openai a2ui</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">agent</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">sdk</span></span>
+<span class="line"><span style="color:#E1E4E8">python </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">m pip freeze </span><span style="color:#F97583">&gt;</span><span style="color:#E1E4E8"> requirements.txt</span></span></code></pre>
+<p>A2UI SDK 的 API 仍在演进。项目中不要只写宽松版本范围，应把实际验证通过的版本写入 <code>requirements.txt</code>。</p>
+<h3 id="3-初始化-a2ui-generator">3. 初始化 A2UI Generator</h3>
+<p>首版直接使用 <code>BasicCatalog</code>，不要先设计自定义组件。Generator 负责把 Catalog 信息加入系统提示词，并对模型输出进行编译和校验。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> a2ui.core.basic_catalog </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> BasicCatalog</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> a2ui.core.schema </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> ProtocolVersion</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> a2ui.inference_formats </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> ExpressFormatFactory</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> a2ui.processor </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> A2uiGenerator, CatalogConfig</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">catalogs </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [BasicCatalog(ProtocolVersion.V1_0)]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">generator </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> A2uiGenerator(</span></span>
+<span class="line"><span style="color:#FFAB70">    catalogs</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">[</span></span>
+<span class="line"><span style="color:#E1E4E8">        CatalogConfig(</span><span style="color:#FFAB70">catalog</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">catalog)</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> catalog </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> catalogs</span></span>
+<span class="line"><span style="color:#E1E4E8">    ],</span></span>
+<span class="line"><span style="color:#FFAB70">    inference_format_factory</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">ExpressFormatFactory(),</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>每个会话都需要独立的 <code>RendererState</code>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> a2ui.utils </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> RendererState</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">state </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> RendererState(catalogs)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">processor </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> generator.create_processor(</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#9ECBFF">        "1.0"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#9ECBFF">            "supportedCatalogIds"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#E1E4E8">                catalog.catalog_id</span></span>
+<span class="line"><span style="color:#F97583">                for</span><span style="color:#E1E4E8"> catalog </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> catalogs</span></span>
+<span class="line"><span style="color:#E1E4E8">            ],</span></span>
+<span class="line"><span style="color:#E1E4E8">        },</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#FFAB70">    state</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">state,</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">system_prompt </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#9ECBFF">    "你是一个界面 Agent。当交互界面比纯文本更合适时，"</span></span>
+<span class="line"><span style="color:#9ECBFF">    "返回 A2UI。只使用当前 Catalog 中存在的组件。</span><span style="color:#79B8FF">\n\n</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    f</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">processor.prompt_snippet</span><span style="color:#79B8FF">}</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>同一浏览器会话后续更新组件时，必须复用同一个 <code>state</code>。如果每次请求都创建新状态，后续更新可能找不到之前的 Surface。</p>
+<p>本地演示可以先用字典保存会话：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#E1E4E8">sessions: dict[</span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, RendererState] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {}</span></span></code></pre>
+<p>生产环境应改为 Redis 或其他共享存储，并设置过期时间和并发保护。</p>
+<h3 id="4-流式调用模型">4. 流式调用模型</h3>
+<p>A2UI 与模型供应商解耦。只要适配层能输出文本流，就可以接入 OpenAI、Gemini、DeepSeek 或其他兼容模型。</p>
+<p>下面使用 OpenAI 兼容接口作为示例：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> os</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> openai </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> AsyncOpenAI</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">client </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> AsyncOpenAI(</span></span>
+<span class="line"><span style="color:#FFAB70">    api_key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">os.environ[</span><span style="color:#9ECBFF">"LLM_API_KEY"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#FFAB70">    base_url</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">os.environ.get(</span><span style="color:#9ECBFF">"LLM_BASE_URL"</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> call_model</span><span style="color:#E1E4E8">(system_prompt: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">, user_message: </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">    response </span><span style="color:#F97583">=</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> client.chat.completions.create(</span></span>
+<span class="line"><span style="color:#FFAB70">        model</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">os.environ[</span><span style="color:#9ECBFF">"LLM_MODEL"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#FFAB70">        messages</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">[</span></span>
+<span class="line"><span style="color:#E1E4E8">            {</span></span>
+<span class="line"><span style="color:#9ECBFF">                "role"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"system"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "content"</span><span style="color:#E1E4E8">: system_prompt,</span></span>
+<span class="line"><span style="color:#E1E4E8">            },</span></span>
+<span class="line"><span style="color:#E1E4E8">            {</span></span>
+<span class="line"><span style="color:#9ECBFF">                "role"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"user"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "content"</span><span style="color:#E1E4E8">: user_message,</span></span>
+<span class="line"><span style="color:#E1E4E8">            },</span></span>
+<span class="line"><span style="color:#E1E4E8">        ],</span></span>
+<span class="line"><span style="color:#FFAB70">        stream</span><span style="color:#F97583">=</span><span style="color:#79B8FF">True</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    )</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    async</span><span style="color:#F97583"> for</span><span style="color:#E1E4E8"> chunk </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> response:</span></span>
+<span class="line"><span style="color:#E1E4E8">        text </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> chunk.choices[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">].delta.content</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> text:</span></span>
+<span class="line"><span style="color:#F97583">            yield</span><span style="color:#E1E4E8"> text</span></span></code></pre>
+<p>如果模型提供商使用不同的接口，只需要替换 <code>call_model</code>。前端 Renderer、Catalog 和 A2UI 消息格式不应跟着改变。</p>
+<p>如果还需要工具调用，适配层必须额外处理：</p>
+<ul>
+<li>区分普通文本和 <code>tool_calls</code>。</li>
+<li>拼接分片的工具参数。</li>
+<li>把工具结果重新送回模型。</li>
+<li>限制工具循环轮数、总时长和最大费用。</li>
+<li>记录模型和工具调用结果。</li>
+</ul>
+<p>首版先不要加入工具调用，这样可以单独验证 A2UI 链路。</p>
+<h3 id="5-把模型流交给-a2ui-processor">5. 把模型流交给 A2UI Processor</h3>
+<p>模型返回的内容不能直接发给前端当 HTML 使用。它要先进入 A2UI Processor，生成经过校验的协议消息。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#E1E4E8">stream </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> processor.open_stream()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> for</span><span style="color:#E1E4E8"> chunk </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> call_model(system_prompt, user_message):</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> part </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> stream.feed(chunk):</span></span>
+<span class="line"><span style="color:#6A737D">        # SDK 版本不同，A2uiPart 的导入位置和类型判断方式可能不同。</span></span>
+<span class="line"><span style="color:#6A737D">        # 只转发包含 A2UI 消息的 part。</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> is_a2ui_part(part):</span></span>
+<span class="line"><span style="color:#F97583">            for</span><span style="color:#E1E4E8"> message </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> part.a2ui:</span></span>
+<span class="line"><span style="color:#F97583">                yield</span><span style="color:#E1E4E8"> message</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> part </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> stream.close():</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> is_a2ui_part(part):</span></span>
+<span class="line"><span style="color:#F97583">        for</span><span style="color:#E1E4E8"> message </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> part.a2ui:</span></span>
+<span class="line"><span style="color:#F97583">            yield</span><span style="color:#E1E4E8"> message</span></span></code></pre>
+<p>实际项目中应从锁定版本的 SDK 导入 <code>A2uiPart</code>，不要把这里的 <code>is_a2ui_part</code> 当作正式辅助函数。</p>
+<h3 id="6-用-sse-返回消息">6. 用 SSE 返回消息</h3>
+<p>首版用 SSE 就足够。用户提交消息时使用 <code>POST + fetch</code>，因为：</p>
+<ul>
+<li>请求体可以携带会话 ID 和用户文本。</li>
+<li>可以发送认证 Header。</li>
+<li>不需要把敏感信息放进 URL。</li>
+<li>服务端可以持续推送多个 A2UI 消息。</li>
+</ul>
+<p>浏览器原生 <code>EventSource</code> 只支持 GET，因此复杂请求通常使用 <code>fetch</code> 读取 <code>ReadableStream</code>。</p>
+<p>后端发送前要序列化为协议 JSON：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> json</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> to_sse</span><span style="color:#E1E4E8">(message) -&gt; </span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">    payload </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> message.model_dump(</span></span>
+<span class="line"><span style="color:#FFAB70">        by_alias</span><span style="color:#F97583">=</span><span style="color:#79B8FF">True</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">        exclude_unset</span><span style="color:#F97583">=</span><span style="color:#79B8FF">True</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    )</span></span>
+<span class="line"><span style="color:#E1E4E8">    text </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> json.dumps(payload, </span><span style="color:#FFAB70">ensure_ascii</span><span style="color:#F97583">=</span><span style="color:#79B8FF">False</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#F97583"> f</span><span style="color:#9ECBFF">"data: </span><span style="color:#79B8FF">{</span><span style="color:#E1E4E8">text</span><span style="color:#79B8FF">}\n\n</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<p>FastAPI 路由示意：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> fastapi </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> FastAPI</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> fastapi.responses </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> StreamingResponse</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> pydantic </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> BaseModel</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">app </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> FastAPI()</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> AgentRequest</span><span style="color:#E1E4E8">(</span><span style="color:#B392F0">BaseModel</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">    session_id: </span><span style="color:#79B8FF">str</span></span>
+<span class="line"><span style="color:#E1E4E8">    message: </span><span style="color:#79B8FF">str</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@app.post</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/api/agent"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> agent</span><span style="color:#E1E4E8">(request: AgentRequest):</span></span>
+<span class="line"><span style="color:#F97583">    async</span><span style="color:#F97583"> def</span><span style="color:#B392F0"> events</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#F97583">        async</span><span style="color:#F97583"> for</span><span style="color:#E1E4E8"> message </span><span style="color:#F97583">in</span><span style="color:#E1E4E8"> run_agent(request):</span></span>
+<span class="line"><span style="color:#F97583">            yield</span><span style="color:#E1E4E8"> to_sse(message)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> StreamingResponse(</span></span>
+<span class="line"><span style="color:#E1E4E8">        events(),</span></span>
+<span class="line"><span style="color:#FFAB70">        media_type</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text/event-stream"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">        headers</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#9ECBFF">            "Cache-Control"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"no-cache"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">            "X-Accel-Buffering"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"no"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        },</span></span>
+<span class="line"><span style="color:#E1E4E8">    )</span></span></code></pre>
+<p><code>X-Accel-Buffering: no</code> 可以避免 Nginx 等反向代理缓存流式响应。</p>
+<h3 id="7-接入-react-renderer">7. 接入 React Renderer</h3>
+<p>创建 React 工程并安装客户端依赖：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">pnpm create vite web </span><span style="color:#F97583">--</span><span style="color:#E1E4E8">template react</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">ts</span></span>
+<span class="line"><span style="color:#E1E4E8">cd web</span></span>
+<span class="line"><span style="color:#E1E4E8">pnpm add @a2ui</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">react @a2ui</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">web_core @a2ui</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">markdown</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">it zod</span></span></code></pre>
+<p>初始化 Markdown 渲染、基础样式和消息处理器：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="tsx"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { renderMarkdown } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@a2ui/markdown-it"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  MessageProcessor,</span></span>
+<span class="line"><span style="color:#E1E4E8">  basicCatalog,</span></span>
+<span class="line"><span style="color:#E1E4E8">  injectBasicCatalogStyles,</span></span>
+<span class="line"><span style="color:#E1E4E8">  setMarkdownRenderer,</span></span>
+<span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@a2ui/web_core/v1_0"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">injectBasicCatalogStyles</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#B392F0">setMarkdownRenderer</span><span style="color:#E1E4E8">(renderMarkdown);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> const</span><span style="color:#79B8FF"> processor</span><span style="color:#F97583"> =</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> MessageProcessor</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#E1E4E8">  [basicCatalog],</span></span>
+<span class="line"><span style="color:#E1E4E8">  (</span><span style="color:#FFAB70">action</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#B392F0">    fetch</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/api/agent"</span><span style="color:#E1E4E8">, {</span></span>
+<span class="line"><span style="color:#E1E4E8">      method: </span><span style="color:#9ECBFF">"POST"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">      headers: {</span></span>
+<span class="line"><span style="color:#9ECBFF">        "Content-Type"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"application/json"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">      },</span></span>
+<span class="line"><span style="color:#E1E4E8">      body: </span><span style="color:#79B8FF">JSON</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">stringify</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#E1E4E8">        session_id: </span><span style="color:#9ECBFF">"demo"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        action,</span></span>
+<span class="line"><span style="color:#E1E4E8">      }),</span></span>
+<span class="line"><span style="color:#E1E4E8">    });</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">);</span></span></code></pre>
+<p>渲染时，普通聊天文字由自己的页面负责，A2UI 只负责动态区域：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="tsx"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { A2uiSurface } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@a2ui/react"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> function</span><span style="color:#B392F0"> AgentSurface</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">surfaces</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> surfaces.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">surface</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &lt;</span><span style="color:#79B8FF">A2uiSurface</span></span>
+<span class="line"><span style="color:#B392F0">      key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{surface.id}</span></span>
+<span class="line"><span style="color:#B392F0">      surface</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{surface}</span></span>
+<span class="line"><span style="color:#E1E4E8">    /&gt;</span></span>
+<span class="line"><span style="color:#E1E4E8">  ));</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>不同 SDK 版本暴露 Surface 状态的方式可能不同。以锁定版本的类型定义为准，但职责始终是：</p>
+<ol>
+<li>接收服务端 JSON。</li>
+<li>经过 <code>MessageProcessor</code> 校验。</li>
+<li>更新 Surface 和 Data Model。</li>
+<li>用 <code>A2uiSurface</code> 渲染。</li>
+<li>把 Action 发回后端。</li>
+</ol>
+<h3 id="8-配置开发代理">8. 配置开发代理</h3>
+<p>前端不要直接保存模型 Key。Vite 只负责代理请求：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> default</span><span style="color:#B392F0"> defineConfig</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#E1E4E8">  server: {</span></span>
+<span class="line"><span style="color:#E1E4E8">    proxy: {</span></span>
+<span class="line"><span style="color:#9ECBFF">      "/api"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"http://127.0.0.1:8080"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span></code></pre>
+<p>密钥放在后端环境变量中：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">$</span><span style="color:#79B8FF">env:</span><span style="color:#E1E4E8">LLM_API_KEY </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "your-api-key"</span></span>
+<span class="line"><span style="color:#E1E4E8">$</span><span style="color:#79B8FF">env:</span><span style="color:#E1E4E8">LLM_BASE_URL </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "https://api.example.com/v1"</span></span>
+<span class="line"><span style="color:#E1E4E8">$</span><span style="color:#79B8FF">env:</span><span style="color:#E1E4E8">LLM_MODEL </span><span style="color:#F97583">=</span><span style="color:#9ECBFF"> "your-model"</span></span></code></pre>
+<p>不要使用 <code>VITE_LLM_API_KEY</code>。所有以 <code>VITE_</code> 开头的变量都会被构建进浏览器资源。</p>
+<h3 id="9-启动本地服务">9. 启动本地服务</h3>
+<p>终端一：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">cd server</span></span>
+<span class="line"><span style="color:#E1E4E8">.\.venv\Scripts\Activate.ps1</span></span>
+<span class="line"><span style="color:#E1E4E8">uvicorn app.main:app </span><span style="color:#F97583">--</span><span style="color:#E1E4E8">host </span><span style="color:#79B8FF">127.0</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">0.1</span><span style="color:#F97583"> --</span><span style="color:#E1E4E8">port </span><span style="color:#79B8FF">8080</span><span style="color:#F97583"> --</span><span style="color:#E1E4E8">reload</span></span></code></pre>
+<p>终端二：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">cd web</span></span>
+<span class="line"><span style="color:#E1E4E8">pnpm dev</span></span></code></pre>
+<p>打开 Vite 输出的地址，先验证纯文本对话，再验证 A2UI Surface，最后测试按钮 Action。</p>
+<h3 id="10-生产部署">10. 生产部署</h3>
+<p>构建前端：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">cd web</span></span>
+<span class="line"><span style="color:#E1E4E8">pnpm build</span></span></code></pre>
+<p>让 FastAPI 先注册 <code>/api</code> 路由，再托管 <code>web/dist</code>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> fastapi.staticfiles </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> StaticFiles</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># API 路由必须放在静态文件挂载之前</span></span>
+<span class="line"><span style="color:#E1E4E8">app.mount(</span></span>
+<span class="line"><span style="color:#9ECBFF">    "/"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    StaticFiles(</span><span style="color:#FFAB70">directory</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"../web/dist"</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">html</span><span style="color:#F97583">=</span><span style="color:#79B8FF">True</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#FFAB70">    name</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"web"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>最终可以用一个 FastAPI 进程和一个访问端口部署。但浏览器中仍然运行 Renderer，所以“一个访问地址”不等于“只有一个技术组件”。</p>
+<p>生产环境还要补充：</p>
+<ul>
+<li>用户登录和会话鉴权。</li>
+<li>Action 的服务端权限校验。</li>
+<li>Catalog 和协议版本管理。</li>
+<li>会话 TTL、并发锁和断线恢复。</li>
+<li>SSE 超时、取消和模型费用限制。</li>
+<li>日志脱敏、限流和错误监控。</li>
+<li>模型不可用时的普通表单或文本降级。</li>
+</ul>
+<h2 id="ai-到底能改什么">AI 到底能改什么</h2>
+<p>在运行时，Agent 可以根据用户意图修改允许范围内的界面：</p>
+<ul>
+<li>添加、删除或移动组件。</li>
+<li>修改标题、说明和按钮文字。</li>
+<li>根据数据决定显示卡片、表格或列表。</li>
+<li>创建筛选器、确认框和多步骤表单。</li>
+<li>更新表单默认值、选项和校验提示。</li>
+<li>根据任务状态显示进度、错误和结果。</li>
+<li>根据 Action 更新已有 Surface。</li>
+</ul>
+<p>例如用户说：</p>
+<blockquote>
+<p>把结果改成表格，并增加一个“只看失败项”的筛选器。</p>
+</blockquote>
+<p>只要 Catalog 中存在 Table、Checkbox 等组件，Agent 就可以返回新的组件树。前端无需重新部署。</p>
+<p>但 Agent <strong>不能</strong>直接：</p>
+<ul>
+<li>生成任意 HTML。</li>
+<li>执行模型生成的 JavaScript。</li>
+<li>修改 React 或 Vue 源文件。</li>
+<li>创建 Catalog 中不存在的组件。</li>
+<li>使用未声明的组件属性。</li>
+<li>绕过业务后端的权限检查。</li>
+<li>直接访问数据库、文件系统或任意网络。</li>
+<li>理解页面全部 DOM 并随意调整 CSS。</li>
+</ul>
+<p>Action 也不是自动执行。按钮点击只是产生一个事件，真正的删除、支付、上传等操作仍要调用普通后端接口，并经过身份、权限和状态校验。</p>
+<h2 id="能力边界">能力边界</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>适合程度</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agent 动态筛选面板</td>
+<td>高</td>
+<td>组件少、交互结构明确</td>
+</tr>
+<tr>
+<td>任务确认和参数收集</td>
+<td>高</td>
+<td>适合表单、按钮和状态更新</td>
+</tr>
+<tr>
+<td>根据结果展示卡片或表格</td>
+<td>高</td>
+<td>结构化数据容易映射</td>
+</tr>
+<tr>
+<td>多步骤工作流</td>
+<td>高</td>
+<td>Surface 可持续更新</td>
+</tr>
+<tr>
+<td>不同客户端复用同一类交互</td>
+<td>高</td>
+<td>Catalog 和 Renderer 负责适配</td>
+</tr>
+<tr>
+<td>高度定制的品牌官网</td>
+<td>低</td>
+<td>依赖精确布局、动画和视觉控制</td>
+</tr>
+<tr>
+<td>复杂可视化编辑器</td>
+<td>中低</td>
+<td>需要大量自定义组件和状态协议</td>
+</tr>
+<tr>
+<td>直接生成并部署网页</td>
+<td>不适合</td>
+<td>A2UI 不是代码生成或建站工具</td>
+</tr>
+<tr>
+<td>替代业务后端</td>
+<td>不适合</td>
+<td>协议不提供业务权限和数据能力</td>
+</tr>
+</tbody>
+</table>
+<p>它不是“AI 万能画页面”。更准确的理解是：</p>
+<blockquote>
+<p>应用把所有可组合的 UI 能力预先开放给 Agent，Agent 只在白名单中决定怎样组合、何时更新，以及如何把用户操作返回业务流程。</p>
+</blockquote>
+<h2 id="实践建议">实践建议</h2>
+<ol>
+<li><strong>从 BasicCatalog 开始。</strong> 先跑通渲染、流式消息和 Action，再做自定义组件。</li>
+<li><strong>把聊天和动态 UI 分开。</strong> 普通文字仍由聊天组件显示，A2UI Surface 只承载结构化交互。</li>
+<li><strong>Catalog 要小。</strong> 只暴露真实需要、可维护、可授权的组件。</li>
+<li><strong>ID 要保持稳定。</strong> 同一个逻辑组件的 <code>componentId</code> 不应随请求随机变化。</li>
+<li><strong>状态放在服务端。</strong> 同一个会话复用 RendererState，并为状态设置 TTL。</li>
+<li><strong>Action 必须重新鉴权。</strong> 前端传来的组件上下文不能被视为可信权限。</li>
+<li><strong>锁定依赖版本。</strong> A2UI 仍处于快速发展阶段，SDK、协议和示例 API 可能变化。</li>
+<li><strong>准备降级路径。</strong> 模型超时或输出校验失败时，回退到普通表单或固定页面。</li>
+<li><strong>用固定消息测试 Renderer。</strong> 在不调用模型的情况下手工发送 A2UI JSON，可以先定位客户端问题。</li>
+<li><strong>记录协议消息。</strong> 调试时记录 Catalog 版本、消息类型、Surface ID 和校验错误，但不要记录密钥和敏感表单数据。</li>
+</ol>
+<h2 id="资源">资源</h2>
+<ul>
+<li><a href="https://developers.googleblog.com/a2ui-10-build-delightful-fast-reliable-agentic-experiences/">A2UI 1.0 官方介绍：Build delightful, fast, reliable agentic experiences</a></li>
+<li><a href="https://github.com/a2ui-project/a2ui">A2UI GitHub 仓库</a></li>
+<li><a href="https://a2ui.org/">A2UI 官方文档</a></li>
+<li><a href="https://a2ui.org/concepts/overview/">A2UI 项目概览</a></li>
+<li><a href="https://a2ui.org/guides/agent-integration/">Agent 集成指南</a></li>
+<li><a href="https://a2ui.org/guides/client-integration/">客户端集成指南</a></li>
+</ul>
+<p>A2UI 最值得关注的地方，不是让模型多了一种输出格式，而是给 Agent 的动态界面建立了一条可校验、可复用、可授权的边界。界面仍然属于应用，模型获得的是在受控 Catalog 中编排界面的能力。</p>
+</div><aside class="article-aside" data-reveal data-astro-cid-7mn2gw7j><p class="eyebrow" data-astro-cid-7mn2gw7j>Filed under</p><div class="tag-list" data-astro-cid-7mn2gw7j><span data-astro-cid-7mn2gw7j>AI</span><span data-astro-cid-7mn2gw7j>Agent</span><span data-astro-cid-7mn2gw7j>A2UI</span><span data-astro-cid-7mn2gw7j>前端</span></div></aside></div><nav class="article-nav" aria-label="笔记翻页" data-reveal data-astro-cid-7mn2gw7j><a href="/writing/j-space-share" data-astro-cid-7mn2gw7j><span data-astro-cid-7mn2gw7j>上一篇</span><strong data-astro-cid-7mn2gw7j>J-Space：语言模型内部的全局工作空间</strong></a><div data-astro-cid-7mn2gw7j></div></nav></article></main></div><script type="module" src="/_astro/Layout.astro_astro_type_script_index_0_lang.CYCgXV3R.js"></script><div data-astro-transition-persist="site-page-curtain" class="page-curtain" data-page-curtain data-state="open" aria-hidden="true" data-astro-cid-zo45weup><svg class="page-curtain-panel" viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-zo45weup><path d="M -300 0 L 1030 0 C 1260 280 1260 720 1030 1000 L -300 1000 C -70 720 -70 280 -300 0 Z" fill="#ffda3d" data-astro-cid-zo45weup></path></svg><div class="page-curtain-content" data-astro-cid-zo45weup><div class="page-curtain-mark" data-astro-cid-zo45weup><svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-astro-cid-zo45weup><rect x="1.5" y="1.5" width="93" height="93" rx="27" fill="#11130f" data-astro-cid-zo45weup></rect><ellipse cx="48" cy="49" rx="36" ry="13" fill="none" stroke="#f8f9f6" stroke-opacity="0.3" transform="rotate(-20 48 49)" data-astro-cid-zo45weup></ellipse><ellipse cx="48" cy="49" rx="33" ry="11" fill="none" stroke="#ffda3d" stroke-opacity="0.34" transform="rotate(58 48 49)" data-astro-cid-zo45weup></ellipse><circle cx="20" cy="62" r="2.8" fill="#ffda3d" data-astro-cid-zo45weup></circle><circle cx="76" cy="26" r="2.4" fill="#7ca3ff" data-astro-cid-zo45weup></circle><circle cx="64" cy="76" r="2.1" fill="#ff9d73" data-astro-cid-zo45weup></circle><path d="M48 17C51.2 33.7 58.4 41.2 76 44.8 58.4 48.4 51.2 55.9 48 72.6 44.8 55.9 37.6 48.4 20 44.8 37.6 41.2 44.8 33.7 48 17Z" fill="#f8f9f6" data-astro-cid-zo45weup></path></svg></div><h2 class="page-curtain-title" data-curtain-title data-text="记录代码与生活" data-astro-cid-zo45weup>记录代码与生活</h2><p class="page-curtain-outline" data-astro-cid-zo45weup>前端 · 后端 · 算法 · AI</p></div></div><script type="module" src="/_astro/PageCurtain.astro_astro_type_script_index_0_lang.DqvMDfgE.js"></script></body></html>
