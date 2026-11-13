@@ -1,7 +1,7 @@
 # 内容地图
 
 > 此文件由 `pnpm content:map` 自动生成，请勿手动编辑。
-> 共 4 篇文章，2 个模块。
+> 共 5 篇文章，2 个模块。
 
 ## 前端开发
 
@@ -12,6 +12,7 @@
 ## AI 与 Agent
 
 - `01` [J-Space：语言模型内部的全局工作空间](<./src/content/blog/j-space-share.md>) · `id: j-space-share`
+- `02` [A2UI：让 Agent 用组件协议生成界面](<./src/content/blog/a2ui-agent-ui-notes.md>) · `id: a2ui-agent-ui-notes`
 
 ---
 
