@@ -446,111 +446,14 @@ Agent 越自主、越独立，记忆就增长得越快。有用的 Harness 必�
 下面这张图是整理者根据全文补充的概念地图，不属于原论文正文。图中的方法并不是互相替代关系：它们分别在优化上下文、工作流、Harness 自身和模型权重。越往右侧，优化对象通常越接近完整的自我改进系统。
 
 <figure>
-  <svg viewBox="0 0 1200 840" role="img" aria-labelledby="harness-map-title harness-map-desc" style="display:block;width:100%;height:auto;">
-    <title id="harness-map-title">Harness 与递归自我改进研究谱系</title>
-    <desc id="harness-map-desc">递归自我改进分为上下文、工作流、Harness 自身和模型权重四条优化路线，并由搜索算法、评估与验证基础设施共同支撑。</desc>
-
-    <rect x="420" y="16" width="360" height="60" rx="16" fill="#11130f" />
-    <text x="600" y="53" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700">Recursive Self-Improvement</text>
-
-    <path d="M600 76 V96 M162 96 H1038 M162 96 V118 M450 96 V118 M738 96 V118 M1038 96 V118"
-          fill="none" stroke="#9ba096" stroke-width="2" />
-    <path d="M162 112 L156 101 L168 101 Z M450 112 L444 101 L456 101 Z M738 112 L732 101 L744 101 Z M1038 112 L1032 101 L1044 101 Z"
-          fill="#9ba096" />
-
-    <g font-family="Segoe UI, sans-serif">
-      <rect x="32" y="118" width="260" height="76" rx="14" fill="#fff3bf" stroke="#d9ae16" stroke-width="2" />
-      <text x="162" y="148" text-anchor="middle" fill="#11130f" font-size="20" font-weight="700">改上下文</text>
-      <text x="162" y="173" text-anchor="middle" fill="#63685f" font-size="14">模型每一轮看到什么</text>
-
-      <rect x="320" y="118" width="260" height="76" rx="14" fill="#e8eeff" stroke="#8ba4ee" stroke-width="2" />
-      <text x="450" y="148" text-anchor="middle" fill="#11130f" font-size="20" font-weight="700">改工作流</text>
-      <text x="450" y="173" text-anchor="middle" fill="#63685f" font-size="14">按什么步骤执行任务</text>
-
-      <rect x="608" y="118" width="260" height="76" rx="14" fill="#f0f1ec" stroke="#aeb3aa" stroke-width="2" />
-      <text x="738" y="148" text-anchor="middle" fill="#11130f" font-size="20" font-weight="700">改 Harness 自身</text>
-      <text x="738" y="173" text-anchor="middle" fill="#63685f" font-size="14">系统怎样修改自己的运行结构</text>
-
-      <rect x="908" y="118" width="260" height="76" rx="14" fill="#f5e7e2" stroke="#c89583" stroke-width="2" />
-      <text x="1038" y="148" text-anchor="middle" fill="#11130f" font-size="20" font-weight="700">改模型权重</text>
-      <text x="1038" y="173" text-anchor="middle" fill="#63685f" font-size="14">参数和能力是否同步更新</text>
-    </g>
-
-    <g font-family="Segoe UI, sans-serif">
-      <rect x="32" y="220" width="260" height="66" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="52" y="247" fill="#11130f" font-size="18" font-weight="700">ACE</text>
-      <text x="52" y="270" fill="#63685f" font-size="13">从轨迹增量整理上下文手册</text>
-
-      <path d="M162 286 V304" stroke="#b6bab2" stroke-width="2" />
-      <path d="M162 304 L156 294 L168 294 Z" fill="#b6bab2" />
-      <rect x="32" y="304" width="260" height="66" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="52" y="331" fill="#11130f" font-size="18" font-weight="700">MCE</text>
-      <text x="52" y="354" fill="#63685f" font-size="13">进化“怎样管理上下文”的技能</text>
-
-      <path d="M162 370 V388" stroke="#b6bab2" stroke-width="2" />
-      <path d="M162 388 L156 378 L168 378 Z" fill="#b6bab2" />
-      <rect x="32" y="388" width="260" height="66" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="52" y="415" fill="#11130f" font-size="18" font-weight="700">Meta-Harness</text>
-      <text x="52" y="438" fill="#63685f" font-size="13">优化保存、检索与呈现信息的代码</text>
-
-      <rect x="320" y="220" width="260" height="66" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="340" y="247" fill="#11130f" font-size="18" font-weight="700">AI Scientist</text>
-      <text x="340" y="270" fill="#63685f" font-size="13">专家设计端到端科研流程</text>
-
-      <path d="M450 286 V304" stroke="#b6bab2" stroke-width="2" />
-      <path d="M450 304 L444 294 L456 294 Z" fill="#b6bab2" />
-      <rect x="320" y="304" width="260" height="66" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="340" y="331" fill="#11130f" font-size="18" font-weight="700">ADAS</text>
-      <text x="340" y="354" fill="#63685f" font-size="13">搜索并生成 Agent 工作流代码</text>
-
-      <path d="M450 370 V388" stroke="#b6bab2" stroke-width="2" />
-      <path d="M450 388 L444 378 L456 378 Z" fill="#b6bab2" />
-      <rect x="320" y="388" width="260" height="66" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="340" y="415" fill="#11130f" font-size="18" font-weight="700">AFlow</text>
-      <text x="340" y="438" fill="#63685f" font-size="13">把工作流表示为图并用 MCTS 搜索</text>
-
-      <rect x="608" y="220" width="260" height="58" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="628" y="245" fill="#11130f" font-size="18" font-weight="700">STOP</text>
-      <text x="628" y="266" fill="#63685f" font-size="13">改进器递归地改进自己</text>
-
-      <rect x="608" y="294" width="260" height="58" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="628" y="319" fill="#11130f" font-size="18" font-weight="700">Self-Harness</text>
-      <text x="628" y="340" fill="#63685f" font-size="13">弱点挖掘、受限修改、回归验证</text>
-
-      <rect x="608" y="368" width="260" height="58" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="628" y="393" fill="#11130f" font-size="18" font-weight="700">AHE</text>
-      <text x="628" y="414" fill="#63685f" font-size="13">组件可观测性与证据驱动修改</text>
-
-      <rect x="608" y="442" width="260" height="58" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="628" y="467" fill="#11130f" font-size="18" font-weight="700">DGM</text>
-      <text x="628" y="488" fill="#63685f" font-size="13">进化完整的 Harness 代码仓库</text>
-
-      <rect x="908" y="220" width="260" height="66" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="928" y="247" fill="#11130f" font-size="18" font-weight="700">SIA</text>
-      <text x="928" y="270" fill="#63685f" font-size="13">决定修改 Harness 还是更新权重</text>
-
-      <rect x="908" y="304" width="260" height="66" rx="12" fill="#ffffff" stroke="#dfe2db" />
-      <text x="928" y="331" fill="#11130f" font-size="18" font-weight="700">Continual Harness</text>
-      <text x="928" y="354" fill="#63685f" font-size="13">长期任务中的在线共学习</text>
-    </g>
-
-    <rect x="32" y="566" width="1136" height="104" rx="16" fill="#fff8d6" stroke="#d9ae16" stroke-width="2" />
-    <g font-family="Segoe UI, sans-serif">
-      <text x="56" y="600" fill="#11130f" font-size="18" font-weight="700">通用搜索与进化工具</text>
-      <text x="56" y="630" fill="#4d514a" font-size="15">Promptbreeder · GEPA · AlphaEvolve · ShinkaEvolve · ThetaEvolve · DemoEvolve</text>
-      <text x="56" y="653" fill="#6d7269" font-size="13">它们不是独立优化层，而是可以被不同层用来搜索提示词、代码或 Harness 候选。</text>
-    </g>
-
-    <rect x="32" y="700" width="1136" height="82" rx="16" fill="#ffffff" stroke="#cfd3cb" />
-    <g font-family="Segoe UI, sans-serif">
-      <text x="56" y="732" fill="#11130f" font-size="18" font-weight="700">自我改进的共同基础设施</text>
-      <text x="56" y="760" fill="#5f645b" font-size="14">可执行评估 · held-out 回归 · 轨迹可观测 · 权限隔离 · 人类监督</text>
-    </g>
-
-    <text x="600" y="818" text-anchor="middle" fill="#63685f" font-family="Segoe UI, sans-serif" font-size="14">
-      越往右：越不只是修改提示词，越接近系统级的递归自我改进
-    </text>
-  </svg>
+  <img
+    src="/images/harness-self-improvement/harness-research-map.svg"
+    alt="Harness 与递归自我改进研究谱系：上下文、工作流、Harness 自身、模型权重四条优化路线"
+    width="1200"
+    height="840"
+    loading="lazy"
+    decoding="async"
+  />
   <figcaption>Harness 研究的四条优化路线与两项共同基础。搜索算法负责提出候选，评估、观测和权限边界负责阻止系统通过“钻指标空子”获得虚假进步。</figcaption>
 </figure>
 

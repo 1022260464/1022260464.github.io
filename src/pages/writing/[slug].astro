@@ -113,24 +113,23 @@ const updatedDate = post.data.updatedDate
       )
     }
 
-    {
-      headings.length > 0 && (
-        <aside class="toc" aria-label="笔记目录" data-reveal>
-          <p>On this page</p>
-          <ol>
-            {headings
-              .filter((heading) => heading.depth <= 3)
-              .map((heading) => (
-                <li>
-                  <a href={`#${heading.slug}`}>{heading.text}</a>
-                </li>
-              ))}
-          </ol>
-        </aside>
-      )
-    }
-
     <div class="article-grid">
+      {
+        headings.length > 0 && (
+          <aside class="toc" aria-label="笔记目录" data-reveal>
+            <p>On this page</p>
+            <ol>
+              {headings
+                .filter((heading) => heading.depth <= 3)
+                .map((heading) => (
+                  <li>
+                    <a href={`#${heading.slug}`}>{heading.text}</a>
+                  </li>
+                ))}
+            </ol>
+          </aside>
+        )
+      }
       <div class="article-body prose">
         <Content />
       </div>
@@ -191,13 +190,13 @@ const updatedDate = post.data.updatedDate
 
 <style>
   .article-shell {
-    width: min(100%, 1080px);
+    width: min(100%, 1240px);
     margin: 0 auto;
     padding: 72px 0 54px;
   }
 
   .article-header {
-    max-width: 940px;
+    max-width: 1000px;
     padding-bottom: 52px;
     border-bottom: 1px solid var(--line);
   }
@@ -276,12 +275,17 @@ const updatedDate = post.data.updatedDate
   }
 
   .toc {
-    float: right;
-    width: 190px;
-    margin: 54px 0 28px 42px;
-    padding: 15px 0;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 28px;
+    grid-area: toc;
+    align-self: start;
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
+    padding: 15px;
+    background: rgb(248 249 246 / 0.94);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    backdrop-filter: blur(12px);
   }
 
   .toc p {
@@ -312,17 +316,22 @@ const updatedDate = post.data.updatedDate
 
   .article-grid {
     display: grid;
-    grid-template-columns: minmax(0, 940px);
-    gap: 0;
+    grid-template-columns: minmax(0, 1fr) 184px;
+    grid-template-areas:
+      "body toc"
+      "aside toc";
+    column-gap: 34px;
+    align-items: start;
     padding-top: 52px;
   }
 
   .article-body {
+    grid-area: body;
     min-width: 0;
   }
 
   .article-body.prose {
-    max-width: 940px;
+    max-width: none;
   }
 
   .prose figure {
@@ -347,9 +356,10 @@ const updatedDate = post.data.updatedDate
   .article-aside {
     display: flex;
     flex-wrap: wrap;
+    grid-area: aside;
     gap: 12px 28px;
     align-items: flex-start;
-    width: min(100%, 940px);
+    width: 100%;
     margin-top: 64px;
     padding-top: 24px;
     border-top: 1px solid var(--line);
@@ -466,11 +476,40 @@ const updatedDate = post.data.updatedDate
 
   @media (max-width: 900px) {
     .toc {
-      display: none;
+      top: 76px;
+      order: -1;
+      align-self: stretch;
+      width: 100%;
+      max-height: none;
+      margin-bottom: 28px;
+      padding: 11px 13px 9px;
+      overflow: hidden;
+    }
+
+    .toc p {
+      margin-bottom: 8px;
+    }
+
+    .toc ol {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 3px;
+      scrollbar-width: thin;
+    }
+
+    .toc li {
+      flex: 0 0 auto;
+    }
+
+    .toc a {
+      display: block;
+      white-space: nowrap;
     }
 
     .article-grid {
-      display: block;
+      display: flex;
+      flex-direction: column;
     }
 
     .article-aside {
