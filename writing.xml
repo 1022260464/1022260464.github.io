@@ -6,6 +6,13 @@
         <description>记录代码学习、日常生活，以及前端、后端、算法与 AI 知识的个人网站。</description>
         <language>zh-CN</language>
         <item>
+          <title>Harness 工程与自我改进：模型外围的递归进化</title>
+          <link>https://1022260464.github.io/writing/harness-engineering-self-improvement/</link>
+          <guid>https://1022260464.github.io/writing/harness-engineering-self-improvement/</guid>
+          <pubDate>Wed, 18 Nov 2026 00:00:00 GMT</pubDate>
+          <description>完整翻译 Lilian Weng 的 Harness Engineering for Self-Improvement，梳理上下文工程、工作流搜索、Code Agent、自我改进闭环与模型权重联合优化。</description>
+        </item>
+        <item>
           <title>A2UI：让 Agent 用组件协议生成界面</title>
           <link>https://1022260464.github.io/writing/a2ui-agent-ui-notes/</link>
           <guid>https://1022260464.github.io/writing/a2ui-agent-ui-notes/</guid>

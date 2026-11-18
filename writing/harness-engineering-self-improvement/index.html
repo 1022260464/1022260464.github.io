@@ -1,0 +1,397 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.4.4"><meta name="description" content="完整翻译 Lilian Weng 的 Harness Engineering for Self-Improvement，梳理上下文工程、工作流搜索、Code Agent、自我改进闭环与模型权重联合优化。"><meta name="theme-color" content="#f8f9f6"><meta property="og:title" content="Harness 工程与自我改进：模型外围的递归进化 — 0x330"><meta property="og:description" content="完整翻译 Lilian Weng 的 Harness Engineering for Self-Improvement，梳理上下文工程、工作流搜索、Code Agent、自我改进闭环与模型权重联合优化。"><meta property="og:type" content="article"><meta property="og:url" content="https://1022260464.github.io/writing/harness-engineering-self-improvement/"><meta property="og:site_name" content="0x330"><link rel="canonical" href="https://1022260464.github.io/writing/harness-engineering-self-improvement/"><link rel="alternate" type="application/rss+xml" title="0x330 RSS" href="/writing.xml"><title>Harness 工程与自我改进：模型外围的递归进化 — 0x330</title><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DXqcZz58.js"></script><script>
+			document.documentElement.classList.add("motion-pending");
+			document.documentElement.classList.add("motion-enabled");
+			window.setTimeout(() => {
+				if (document.documentElement.dataset.motionReady !== "true") {
+					document.documentElement.classList.remove("motion-enabled");
+				}
+			}, 1800);
+		</script><link rel="stylesheet" href="/_astro/PageCurtain.aCXEYLlv.css"><link rel="stylesheet" href="/_astro/_slug_.DM5EmN1t.css"><link rel="stylesheet" href="/_astro/Layout.C1lvO3Je.css"></head><body><a class="skip-link" href="#content">跳到主要内容</a><div class="site-frame"><aside class="sidebar" aria-label="站点导航" data-astro-cid-wv7whodv><div class="sidebar-inner" data-astro-cid-wv7whodv><a class="brand" href="/home/" aria-label="0x330 首页" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>0x330</span><svg data-spin="true" data-astro-cid-wv7whodv="true" class="spark-icon brand-mark" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="--spark-delay: -3s" data-astro-cid-vlrgvanf><defs data-astro-cid-vlrgvanf><linearGradient id="spark-paint-c57391e1938c4b4d956d5f4b6945f36a" x1="4" y1="2.5" x2="20" y2="21.5" gradientUnits="userSpaceOnUse" data-astro-cid-vlrgvanf><stop stop-color="#4d8dff" data-astro-cid-vlrgvanf></stop><stop offset="0.3" stop-color="#8c6cff" data-astro-cid-vlrgvanf></stop><stop offset="0.56" stop-color="#ed68a8" data-astro-cid-vlrgvanf></stop><stop offset="0.78" stop-color="#ff8b55" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffd75c" data-astro-cid-vlrgvanf></stop></linearGradient><radialGradient id="spark-highlight-c57391e1938c4b4d956d5f4b6945f36a" cx="0" cy="0" r="1" data-astro-cid-vlrgvanf><stop stop-color="#ffffff" stop-opacity="0.92" data-astro-cid-vlrgvanf></stop><stop offset="0.34" stop-color="#ffffff" stop-opacity="0.28" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffffff" stop-opacity="0" data-astro-cid-vlrgvanf></stop></radialGradient></defs><g class="spark-rotor" data-astro-cid-vlrgvanf><path d="M12 2.15C12.9 8.7 15.3 11.1 21.85 12C15.3 12.9 12.9 15.3 12 21.85C11.1 15.3 8.7 12.9 2.15 12C8.7 11.1 11.1 8.7 12 2.15Z" fill="url(#spark-paint-c57391e1938c4b4d956d5f4b6945f36a)" data-astro-cid-vlrgvanf></path><path d="M12 6.2C12.5 10.2 13.8 11.5 17.8 12C13.8 12.5 12.5 13.8 12 17.8C11.5 13.8 10.2 12.5 6.2 12C10.2 11.5 11.5 10.2 12 6.2Z" fill="url(#spark-paint-c57391e1938c4b4d956d5f4b6945f36a)" opacity="0.45" data-astro-cid-vlrgvanf></path><circle cx="9.1" cy="8.4" r="3.3" fill="url(#spark-highlight-c57391e1938c4b4d956d5f4b6945f36a)" data-astro-cid-vlrgvanf></circle></g></svg></a><div class="identity" data-astro-cid-wv7whodv><div class="avatar" data-astro-cid-wv7whodv><img src="/images/avatar-code-notes.jpg" alt="" width="40" height="40" data-astro-cid-wv7whodv></div><div data-astro-cid-wv7whodv><p class="identity-name" data-astro-cid-wv7whodv>0x330</p><p class="identity-role" data-astro-cid-wv7whodv>代码 · 生活 · 技术笔记</p></div></div><nav class="nav-list" aria-label="主导航" data-astro-cid-wv7whodv><a class="nav-link" href="/home/" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>首页</span><span class="nav-index" data-astro-cid-wv7whodv>01</span></a><a class="nav-link active" href="/writing" aria-current="page" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>笔记</span><span class="nav-index" data-astro-cid-wv7whodv>02</span></a><a class="nav-link" href="/gallery" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>分享</span><span class="nav-index" data-astro-cid-wv7whodv>03</span></a><a class="nav-link" href="/about" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>关于</span><span class="nav-index" data-astro-cid-wv7whodv>04</span></a></nav><div class="sidebar-rule" data-astro-cid-wv7whodv></div><section class="status" aria-labelledby="status-title" data-astro-cid-wv7whodv><p class="eyebrow" id="status-title" data-astro-cid-wv7whodv>Now</p><p data-astro-cid-wv7whodv>持续记录前端、后端、算法与 AI 学习，也留下日常生活。</p><span class="status-pill" data-astro-cid-wv7whodv><i data-astro-cid-wv7whodv></i> Learning in public</span></section><div class="sidebar-footer" data-astro-cid-wv7whodv><a href="https://github.com/1022260464" target="_blank" rel="noreferrer" data-astro-cid-wv7whodv>GitHub ↗</a><a href="/writing.xml" data-astro-cid-wv7whodv>RSS ↗</a><p data-astro-cid-wv7whodv>© 2026 0x330</p></div></div></aside><header class="mobile-header" data-astro-cid-hghorjjy><a class="mobile-brand" href="/home/" data-astro-cid-hghorjjy><img class="mobile-avatar" src="/images/avatar-code-notes.jpg" alt="" width="26" height="26" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>0x330</span><svg data-spin="true" data-astro-cid-hghorjjy="true" class="spark-icon mobile-mark" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="--spark-delay: -3s" data-astro-cid-vlrgvanf><defs data-astro-cid-vlrgvanf><linearGradient id="spark-paint-daa96e9794d24d8eae1c82bb023d3620" x1="4" y1="2.5" x2="20" y2="21.5" gradientUnits="userSpaceOnUse" data-astro-cid-vlrgvanf><stop stop-color="#4d8dff" data-astro-cid-vlrgvanf></stop><stop offset="0.3" stop-color="#8c6cff" data-astro-cid-vlrgvanf></stop><stop offset="0.56" stop-color="#ed68a8" data-astro-cid-vlrgvanf></stop><stop offset="0.78" stop-color="#ff8b55" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffd75c" data-astro-cid-vlrgvanf></stop></linearGradient><radialGradient id="spark-highlight-daa96e9794d24d8eae1c82bb023d3620" cx="0" cy="0" r="1" data-astro-cid-vlrgvanf><stop stop-color="#ffffff" stop-opacity="0.92" data-astro-cid-vlrgvanf></stop><stop offset="0.34" stop-color="#ffffff" stop-opacity="0.28" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffffff" stop-opacity="0" data-astro-cid-vlrgvanf></stop></radialGradient></defs><g class="spark-rotor" data-astro-cid-vlrgvanf><path d="M12 2.15C12.9 8.7 15.3 11.1 21.85 12C15.3 12.9 12.9 15.3 12 21.85C11.1 15.3 8.7 12.9 2.15 12C8.7 11.1 11.1 8.7 12 2.15Z" fill="url(#spark-paint-daa96e9794d24d8eae1c82bb023d3620)" data-astro-cid-vlrgvanf></path><path d="M12 6.2C12.5 10.2 13.8 11.5 17.8 12C13.8 12.5 12.5 13.8 12 17.8C11.5 13.8 10.2 12.5 6.2 12C10.2 11.5 11.5 10.2 12 6.2Z" fill="url(#spark-paint-daa96e9794d24d8eae1c82bb023d3620)" opacity="0.45" data-astro-cid-vlrgvanf></path><circle cx="9.1" cy="8.4" r="3.3" fill="url(#spark-highlight-daa96e9794d24d8eae1c82bb023d3620)" data-astro-cid-vlrgvanf></circle></g></svg></a><details class="mobile-menu" data-astro-cid-hghorjjy><summary data-astro-cid-hghorjjy>菜单</summary><nav aria-label="移动端导航" data-astro-cid-hghorjjy><a href="/home/" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>首页</span><span data-astro-cid-hghorjjy>01</span></a><a href="/writing" class="active" aria-current="page" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>笔记</span><span data-astro-cid-hghorjjy>02</span></a><a href="/gallery" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>分享</span><span data-astro-cid-hghorjjy>03</span></a><a href="/about" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>关于</span><span data-astro-cid-hghorjjy>04</span></a></nav></details></header><main class="site-main" id="content"><div class="reading-progress" aria-hidden="true" data-astro-cid-kw4rgypl><span data-astro-cid-kw4rgypl></span></div><article class="article-shell" data-astro-cid-7mn2gw7j><header class="article-header" data-astro-cid-7mn2gw7j><nav class="article-path" aria-label="笔记层级" data-enter data-astro-cid-7mn2gw7j><a href="/writing" data-astro-cid-7mn2gw7j>笔记</a><span aria-hidden="true" data-astro-cid-7mn2gw7j>/</span><span data-astro-cid-7mn2gw7j>AI 与 Agent</span></nav><div class="article-kicker" data-enter data-astro-cid-7mn2gw7j><time datetime="2026-11-18T00:00:00.000Z" data-astro-cid-7mn2gw7j>2026年11月18日</time><span aria-hidden="true" data-astro-cid-7mn2gw7j>/</span><span data-astro-cid-7mn2gw7j>AI</span></div><h1 data-split="chars" data-astro-cid-7mn2gw7j>Harness 工程与自我改进：模型外围的递归进化</h1><p class="article-description" data-typewriter data-astro-cid-7mn2gw7j>完整翻译 Lilian Weng 的 Harness Engineering for Self-Improvement，梳理上下文工程、工作流搜索、Code Agent、自我改进闭环与模型权重联合优化。</p><div class="article-meta" data-enter data-astro-cid-7mn2gw7j><span data-astro-cid-7mn2gw7j>笔记 / 0x330</span><span data-astro-cid-7mn2gw7j>49 分钟阅读</span></div></header><figure class="article-cover" data-cover data-astro-cid-7mn2gw7j><img src="/images/harness-self-improvement/fig-05-meta-harness-loop.webp" alt="Meta-Harness 通过外层循环搜索和优化模型外围的 Harness" loading="eager" data-astro-cid-7mn2gw7j></figure><aside class="toc" aria-label="笔记目录" data-reveal data-astro-cid-7mn2gw7j><p data-astro-cid-7mn2gw7j>On this page</p><ol data-astro-cid-7mn2gw7j><li data-astro-cid-7mn2gw7j><a href="#harness-设计模式" data-astro-cid-7mn2gw7j>Harness 设计模式</a></li><li data-astro-cid-7mn2gw7j><a href="#模式-1工作流自动化" data-astro-cid-7mn2gw7j>模式 1：工作流自动化</a></li><li data-astro-cid-7mn2gw7j><a href="#模式-2把文件系统作为持久记忆" data-astro-cid-7mn2gw7j>模式 2：把文件系统作为持久记忆</a></li><li data-astro-cid-7mn2gw7j><a href="#模式-3子-agent-与后台任务" data-astro-cid-7mn2gw7j>模式 3：子 Agent 与后台任务</a></li><li data-astro-cid-7mn2gw7j><a href="#案例研究编码-agent-harness" data-astro-cid-7mn2gw7j>案例研究：编码 Agent Harness</a></li><li data-astro-cid-7mn2gw7j><a href="#harness-层与核心智能谁更重要" data-astro-cid-7mn2gw7j>Harness 层与核心智能，谁更重要？</a></li><li data-astro-cid-7mn2gw7j><a href="#harness-优化" data-astro-cid-7mn2gw7j>Harness 优化</a></li><li data-astro-cid-7mn2gw7j><a href="#上下文工程" data-astro-cid-7mn2gw7j>上下文工程</a></li><li data-astro-cid-7mn2gw7j><a href="#工作流设计" data-astro-cid-7mn2gw7j>工作流设计</a></li><li data-astro-cid-7mn2gw7j><a href="#自我改进的-harness" data-astro-cid-7mn2gw7j>自我改进的 Harness</a></li><li data-astro-cid-7mn2gw7j><a href="#进化搜索" data-astro-cid-7mn2gw7j>进化搜索</a></li><li data-astro-cid-7mn2gw7j><a href="#与模型权重联合优化" data-astro-cid-7mn2gw7j>与模型权重联合优化</a></li><li data-astro-cid-7mn2gw7j><a href="#未来挑战" data-astro-cid-7mn2gw7j>未来挑战</a></li><li data-astro-cid-7mn2gw7j><a href="#1-评估器薄弱且模糊" data-astro-cid-7mn2gw7j>1. 评估器薄弱且模糊</a></li><li data-astro-cid-7mn2gw7j><a href="#2-上下文和记忆的生命周期" data-astro-cid-7mn2gw7j>2. 上下文和记忆的生命周期</a></li><li data-astro-cid-7mn2gw7j><a href="#3-负面结果" data-astro-cid-7mn2gw7j>3. 负面结果</a></li><li data-astro-cid-7mn2gw7j><a href="#4-多样性坍塌" data-astro-cid-7mn2gw7j>4. 多样性坍塌</a></li><li data-astro-cid-7mn2gw7j><a href="#5-reward-hacking" data-astro-cid-7mn2gw7j>5. Reward hacking</a></li><li data-astro-cid-7mn2gw7j><a href="#6-长期成功" data-astro-cid-7mn2gw7j>6. 长期成功</a></li><li data-astro-cid-7mn2gw7j><a href="#7-人类角色" data-astro-cid-7mn2gw7j>7. 人类角色</a></li><li data-astro-cid-7mn2gw7j><a href="#引用" data-astro-cid-7mn2gw7j>引用</a></li><li data-astro-cid-7mn2gw7j><a href="#附录一些有用的基准" data-astro-cid-7mn2gw7j>附录：一些有用的基准</a></li><li data-astro-cid-7mn2gw7j><a href="#参考文献" data-astro-cid-7mn2gw7j>参考文献</a></li></ol></aside><div class="article-grid" data-astro-cid-7mn2gw7j><div class="article-body prose" data-astro-cid-7mn2gw7j><blockquote>
+<p>本文是 Lilian Weng 于 2026 年 7 月发布的 <a href="https://lilianweng.github.io/posts/2026-07-04-harness/">Harness Engineering for Self-Improvement</a> 的中文翻译与术语整理。原文版权归作者所有，涉及方法细节时建议结合原文阅读。</p>
+</blockquote>
+<p><strong>递归自我改进（recursive self-improvement，RSI）</strong> 的概念可以追溯到 I. J. Good（1965）。他把“超智能机器”定义为一个能够在所有智力活动中超越人类，并能设计出更好的机器来改进自身的系统。Yudkowsky（2008）则用“递归自我改进”描述一个更具体的反馈回路：AI 使用当前的智能，去改进产生这种智能的认知机制。</p>
+<p>在现代 AI 中，这个反馈回路既可能表现为模型直接改写自己的权重，也可能表现得更宽泛：模型改进训练管线和部署系统，进而产生一个在具有经济价值的任务上表现更好的后继模型。前沿实验室的研究进展已经表明，AI 研究本身的开发速度可以被显著加速。</p>
+<p>这里特别提到“部署系统”，是因为原始模型与真实世界上下文之间的那一层，似乎和模型的原始智能同样重要。预训练完成后的评测分数只是模型能力的一部分；真正部署时，模型如何被组织、约束和调用，同样会影响最终表现。Claude Code 和 Codex 等编码 Agent 产品的成功已经证明了这一点。所谓 <strong>Harness</strong>，就是包围基础模型的系统：它负责编排执行过程，决定模型如何思考和规划、如何调用工具并行动、如何感知和管理上下文、如何保存产物，以及如何评估结果。</p>
+<p>本文将聚焦 Harness 工程及其对 RSI 的贡献。近期许多关于自动化科研、自我改进 Agent 和程序进化搜索的工作，都可以围绕这个问题组织起来。模型自对弈、合成数据、测试时训练以及持续学习等方向同样属于 RSI 的愿景，但不在本文重点范围内。</p>
+<h2 id="harness-设计模式">Harness 设计模式</h2>
+<p>与早期“Agent = LLM + 记忆 + 工具 + 规划 + 行动”的框架相比，Harness 工程进一步加入了工作流设计、评估、权限控制和持久状态管理。它不再只是提示词模板，而更接近运行时和软件系统设计：模型如何观察、行动、记忆、检查自己，并持续改进。</p>
+<p>设计应当有意保持简单和通用，以便获得更强的泛化能力；同时应尽量复用已有软件工程实践，让模型能够利用预训练阶段积累的知识。Harness 与操作系统也有很强的类比关系：和 OS 一样，Harness 应该封装复杂逻辑，同时保持接口简单。配置文件、工具接口和其他协议，未来也可能逐渐在行业内部标准化。</p>
+<h3 id="模式-1工作流自动化">模式 1：工作流自动化</h3>
+<p>定义一个让模型能够执行、测试和迭代的工作流，是实现自动化的关键设计。Karpathy 的 <a href="https://github.com/karpathy/autoresearch"><code>autoresearch</code></a> 仓库就是一个清晰例子。常见工作流遵循目标导向的循环：规划、执行、观察或测试、改进，再次执行，直到目标达成。在任务描述或执行偏好不够明确时，流程还可以主动向用户发起澄清请求。</p>
+<p>一个简化的 Codex Agent 循环如下：Agent 调用工具，工具返回的结果影响模型的下一次生成。工作流图强调模型分析自己的轨迹和失败案例，再通过“Agent 运行时”推进，而不是依赖静态提示词模板。</p>
+<figure>
+  <img src="/images/harness-self-improvement/fig-01-codex-agent-loop.webp" alt="简化的 Codex Agent 循环" width="497" height="224" loading="lazy" decoding="async" />
+  <figcaption>一个简化的 Codex Agent 循环：Agent 调用工具，工具响应影响模型的下一轮生成。图片来自 OpenAI 的 Codex Agent 文章。</figcaption>
+</figure>
+<h3 id="模式-2把文件系统作为持久记忆">模式 2：把文件系统作为持久记忆</h3>
+<p>长期运行的 Agent 系统反复出现一个模式：用简单的控制方式管理丰富的状态与产物。Harness 不应该把完整工作流和全部日志都塞进上下文，而应把持久状态保存在文件里。在长时间运行中，实验日志、代码差异、论文摘要、错误轨迹和过去的 rollout，往往远长于模型训练时使用的上下文窗口。</p>
+<p>读写和编辑文件系统——通常通过 shell 命令完成——是 LLM 的基础能力。因此，以文件这种简单形式管理持久记忆，自然能够受益于核心模型能力的提升。</p>
+<h3 id="模式-3子-agent-与后台任务">模式 3：子 Agent 与后台任务</h3>
+<p>Harness 可以启动多个子 Agent 并行执行，并监控后台任务。当主 Agent 需要同时搜索多个假设、并发运行实验，或者委派相互隔离的子任务而不污染主上下文时，这种模式很有价值。</p>
+<p>此时，父 Agent 需要一个轻量的进程管理器：启动任务、检查日志、取消失败运行，并把结果合并回主线程。关键设计是让并行关系显式且可检查。如果子 Agent 的输出只存在于短暂的聊天上下文中，它们很快会过时且难以发现；如果输出被写成文件、日志和状态记录，模型就能在中断后恢复，并推理自己的执行历史。</p>
+<h3 id="案例研究编码-agent-harness">案例研究：编码 Agent Harness</h3>
+<p>Claude Code、Codex、OpenCode 和 Cursor 风格 Agent 的主流编码接口已经逐渐稳定。它们通常采用这样的循环：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>观察任务与仓库状态</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>规划下一步</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>调用文件、Shell、搜索或外部工具</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>读取工具结果和测试反馈</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>修改代码并再次验证</span></span>
+<span class="line"><span>  └──────────────循环──────────────┘</span></span></code></pre>
+<p>拥有一组工具后，编码 Agent 就能在给定仓库中开发和调试问题，类似人类开发者使用 IDE。</p>
+<figure>
+  <img src="/images/harness-self-improvement/fig-02-coding-agent-tools.webp" alt="编码 Agent 使用的工具和外部上下文" width="1600" height="532" loading="lazy" decoding="async" />
+  <figcaption>编码 Agent 可以通过文件、Shell、LSP、Git、MCP、Skills、搜索、产物生成、后台任务和子 Agent 获得行动能力。这里仅作演示，并非完整工具清单。</figcaption>
+</figure>
+<table>
+<thead>
+<tr>
+<th>工具组</th>
+<th>常见工具与用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件系统</td>
+<td><code>glob</code>、<code>grep</code>、<code>ls</code> 发现文件；<code>read</code>、<code>read_many</code> 读取文件；<code>write</code> 新建完整文件；<code>edit</code> 做精确字符串替换；<code>multi_edit</code> 批量编辑；<code>apply_patch</code> 应用结构化补丁或 diff</td>
+</tr>
+<tr>
+<td>Shell 执行</td>
+<td>运行 <code>bash</code>、PowerShell 等命令</td>
+</tr>
+<tr>
+<td>代码与版本状态</td>
+<td>LSP、<code>git_status</code>、<code>git_diff</code>、<code>git_commit</code> 等 Git 工具</td>
+</tr>
+<tr>
+<td>外部上下文</td>
+<td>MCP 工具与 Skills</td>
+</tr>
+<tr>
+<td>Web 搜索</td>
+<td><code>web_search</code>、<code>web_fetch</code>、浏览器工具</td>
+</tr>
+<tr>
+<td>产物</td>
+<td>读取文档和图片；生成 HTML、图片等交付物</td>
+</tr>
+<tr>
+<td>后台进程</td>
+<td>例如 <code>CronCreate</code>、<code>CronDelete</code>、<code>CronList</code></td>
+</tr>
+<tr>
+<td>Agent 委派</td>
+<td>例如 <code>spawn_agent</code>、<code>resume_agent</code>、<code>wait_agent</code>、<code>list_agents</code>、<code>close_agent</code>、<code>interrupt_agent</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="harness-层与核心智能谁更重要">Harness 层与核心智能，谁更重要？</h2>
+<p>未来 RSI 会在多大程度上依赖 Harness 工程，目前很难预测。但近期 RSI 不太可能从“模型直接改写自身权重”开始。作者判断，较实际的短期路径是：</p>
+<blockquote>
+<p>Harness 工程会朝着元方法论的方向发展，也就是改进“获得更好答案的机器”，而不只是改进答案本身。</p>
+</blockquote>
+<p>Harness 系统本身会成为优化目标，启发式规则会减少，通用机制会增多。成熟的 Harness 反过来支持模型自我改进所需的自动化研究；更聪明的模型则能避免 Harness 过度工程化，让系统保持可持续。</p>
+<p>最终，许多 Harness 改进可能会被内化到核心模型行为中，但模型与外部上下文、工具之间的接口仍会存在。提示词工程已经出现过一次较温和的版本：随着指令微调和模型推理能力提升，手工提示技巧不再处于中心位置，但目标、约束、上下文和评估仍然必须被明确表达。</p>
+<h2 id="harness-优化">Harness 优化</h2>
+<p>Harness 系统中被优化的对象，大致会沿着下面的路径演进：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>指令提示词 → 结构化上下文 → 工作流 → Harness 代码 → 优化器代码</span></span></code></pre>
+<p>模型越聪明、能力越强，我们就能把优化目标推向更复杂的对象，并使用更通用的方法。</p>
+<h3 id="上下文工程">上下文工程</h3>
+<p>随着 Agent 任务周期显著变长，如果把每一次工具响应和模型生成都不断追加到上下文中，规模会迅速失控。上下文管理层的任务是构造更结构化、更精简的 LLM 上下文，并管理持久状态。长上下文研究毫无疑问会继续进步，但在当前阶段，长上下文智能和上下文工程有时仍然彼此交织。</p>
+<p><strong>Agentic Context Engineering（ACE；Zhang et al. 2025）</strong> 把上下文看作一份不断演化的“作战手册”，而不是不断变长的提示词。它通过三个组件维护由多个条目组成的上下文手册，每个条目都有标识符和描述：</p>
+<ul>
+<li><strong>Generator（生成器）</strong>：参考条目生成任务轨迹。</li>
+<li><strong>Reflector（反思器）</strong>：从成功和失败轨迹中提炼洞见。</li>
+<li><strong>Curator（整理器）</strong>：以增量、逐项条目的形式更新结构化上下文。</li>
+</ul>
+<figure>
+  <img src="/images/harness-self-improvement/fig-03-ace-framework.webp" alt="Agentic Context Engineering 框架" width="1498" height="550" loading="lazy" decoding="async" />
+  <figcaption>Agentic Context Engineering（ACE）的框架。图片来自 Zhang et al. 2025。</figcaption>
+</figure>
+<p>为了避免迭代改写时出现上下文坍塌和“简短偏置”，ACE 的 Curator 不会重写整块提示词。它输出一组结构化的逐项条目 <code>(identifier, description)</code>，再通过确定性逻辑把这些条目合并到结构化的上下文日志中。条目会周期性地被细化和去重。</p>
+<p>ACE 能从 rollout 中学习洞见，这让我们更接近自我管理的记忆；但它的更新规则和整体工作流仍然由人工设计。为了形成更自我改进的循环，<strong>Meta Context Engineering（MCE；Ye et al. 2026）</strong> 将机制和产物内容分开：在元优化层让技能进化，在基础层优化上下文。</p>
+<p>MCE 技能 $s \in \mathcal{S}$ 定义上下文函数 $c_s=(\rho_s,F_s)$，把输入 $x$ 映射为上下文 $c=F_s(x;\rho_s)$。其中：</p>
+<ul>
+<li>$\rho_s=\{\rho_1,\dots,\rho_m\}$ 是静态组件，例如提示词、知识库和代码库。</li>
+<li>$F_s=\{F_1,\dots,F_k\}$ 是动态算子，例如搜索、选择、过滤和格式化。</li>
+</ul>
+<p>双层优化在内层寻找给定技能下最优的上下文，在外层寻找验证集表现最好的技能：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>内层：c_s* = arg max J_train(c_s; s)</span></span>
+<span class="line"><span>外层：s*   = arg max J_val(c_s*)</span></span></code></pre>
+<p>技能数据库会记录过去的技能、上下文函数和评估指标：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>H_(k-1) = {(s_i, c_i, J_i^train, J_i^val)}，i = 1 ... k-1</span></span></code></pre>
+<p>给定任务 $\tau$，元层 Agent 对历史技能做 Agentic 交叉，产生新技能：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>s_k = crossover(tau, H_(k-1))</span></span></code></pre>
+<p>随后，基础层上下文工程师执行该技能，根据 rollout 反馈 $\mathcal{R}_k$ 学习上下文函数：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>c_k = engineer(tau, s_k; c_(k-1)*, R_k)</span></span></code></pre>
+<figure>
+  <img src="/images/harness-self-improvement/fig-04-mce-framework.webp" alt="Meta Context Engineering 元层与基础层优化" width="1600" height="846" loading="lazy" decoding="async" />
+  <figcaption>Meta Context Engineering（MCE）：元层技能进化负责搜索上下文管理机制，基础层负责优化具体任务上下文。图片来自 Ye et al. 2026。</figcaption>
+</figure>
+<p>MCE 不像 ACE 那样强制指定上下文结构规则。它使用自由形式的技能保存任务中最重要的知识，并让技能与受技能约束的上下文一起迭代。实现上，上下文函数可以实例化为专用目录中的文件集合，同时包含静态组件（如 <code>skill.md</code>）和动态组件（如上下文与数据 rollout）。元层和基础层优化都在具有标准工具的 Agentic 编码环境中运行：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>T = {Read, Write, Edit, Bash, Glob, Grep, TodoWrite}</span></span></code></pre>
+<p><strong>Meta-Harness（Lee et al. 2026）</strong> 又向内推进了一层：被优化的对象变成“决定并优化什么信息应该被保存、检索和呈现给模型”的代码。名字中的“Meta”意味着它是一个用来优化 Harness 的 Harness。</p>
+<p>创建新 Harness 的 proposer 本身就是一个编码 Agent，最终输出是一组位于帕累托前沿的 Harness 候选。完整执行历史可以通过文件系统访问，因此编码 Agent 可以使用 <code>grep</code>、<code>cat</code> 等命令阅读历史，而不必把所有内容塞进单个提示词上下文。每个候选 Harness 都是文件系统中的一个字典，包含自身源码、分数、rollout 轨迹和状态更新。Meta-Harness 循环不断创建新 Harness，只保留合格者。</p>
+<figure>
+  <img src="/images/harness-self-improvement/fig-05-meta-harness-loop.webp" alt="Meta-Harness 外层优化循环" width="1448" height="636" loading="lazy" decoding="async" />
+  <figcaption>Meta-Harness 的外层循环优化算法。图片来自 Lee et al. 2026。</figcaption>
+</figure>
+<figure>
+  <img src="/images/harness-self-improvement/fig-06-meta-harness-results.webp" alt="Meta-Harness 在文本分类和 TerminalBench-2 上的表现" width="1401" height="450" loading="lazy" decoding="async" />
+  <figcaption>Meta-Harness 的性能：左侧是少量迭代下的文本分类，右侧是 TerminalBench-2。TerminalBench-2 实验从 Terminus-KIRA 和 Terminus-2 这两个很强的 Harness 初始化。图片来自 Lee et al. 2026。</figcaption>
+</figure>
+<p>最重要的结论很清楚：一旦 Harness 设计成为可执行的搜索空间，强编码 Agent 就能利用与人类工程师相同的设计空间。</p>
+<h3 id="工作流设计">工作流设计</h3>
+<p>Harness 中的工作流可以由领域专家手工设计。以自动化科研为例，研究者已经提出并测试了多种框架。</p>
+<p><strong>AI Scientist（Lu et al. 2026）</strong> 构建了一条流水线，用于提出研究想法、编写代码、运行实验、分析结果、撰写论文并执行同行评审。<strong>ScientistOne（Meng et al. 2026）</strong> 则把可验证性作为核心设计约束：每个主张，无论是引用、数值、方法还是结论，都必须追溯到证据来源，并由 Chain-of-Evidence 检查审计。</p>
+<figure>
+  <img src="/images/harness-self-improvement/fig-07-ai-scientist-pipeline.webp" alt="AI Scientist 从想法生成到论文评审的流水线" width="1014" height="786" loading="lazy" decoding="async" />
+  <figcaption>AI Scientist 用于想法生成、实验、论文写作和评审的流水线。图片来自 Lu et al. 2026。</figcaption>
+</figure>
+<p><strong>Autodata（Kulikov et al. 2026）</strong> 被设计为一名生成训练和评估数据的数据科学家。主 Agent 管理四个角色：提出问题的 challenger、弱求解器、强求解器，以及验证器或裁判。目标是在“恰到好处”的难度上合成数据：强求解器能成功，弱求解器会失败。</p>
+<figure>
+  <img src="/images/harness-self-improvement/fig-08-autodata-workflow.webp" alt="Autodata 的 challenger、solver 和 verifier 工作流" width="1190" height="664" loading="lazy" decoding="async" />
+  <figcaption>Autodata 围绕 challenger、solver 和 verifier 生成合成训练与评估数据的 Agentic 工作流。图片来自 Kulikov et al. 2026。</figcaption>
+</figure>
+<p>Autodata 会根据求解器和验证器的反馈，迭代更新 challenger 提示词。它的限制在于，合成任务被用来微调弱求解器，而不是强求解器。如果这个循环不能迭代改进强模型，它更像是在生成提示分布上进行间接蒸馏，RSI 色彩并不强。</p>
+<p>工作流设计空间极其庞大，因此自然可以把工作流设计视为搜索问题：不只依赖人工构建，也可以通过算法寻找好方案。<strong>Automated Design of Agentic Systems（ADAS；Hu et al. 2025）</strong> 把 Agent 设计本身表述为优化问题，也就是“元 Agent 搜索”：由元 Agent 提出新的 Agentic 工作流设计。</p>
+<p>ADAS 的流程如下：</p>
+<ol>
+<li>用 CoT、Self-Refine 等简单 Agent 初始化工作流档案库。</li>
+<li>要求元 Agent 参考档案库中已有方案，用代码编写新的 Agent 工作流。元 Agent 先生成高层描述，再实现代码。</li>
+<li>草稿程序经过两个 self-refine 步骤，由模型提供反馈并据此修改，以检查新颖性。</li>
+<li>评估每个新候选，把成功者加入档案库。</li>
+<li>重复上述过程，直到达到最大迭代次数。</li>
+</ol>
+<figure>
+  <img src="/images/harness-self-improvement/fig-09-adas.webp" alt="Automated Design of Agentic Systems 示意" width="1494" height="852" loading="lazy" decoding="async" />
+  <figcaption>Automated Design of Agentic Systems（ADAS）示意。图片来自 Hu et al. 2025。</figcaption>
+</figure>
+<p><strong>AFlow（Zhang et al. 2025）</strong> 把 Agentic 工作流表示为图：节点代表调用 LLM 的动作，边用代码实现逻辑操作。工作流优化依赖蒙特卡洛树搜索（MCTS）：</p>
+<ol>
+<li>用模板初始化树的起始工作流 $W_0$。</li>
+<li>根据分数和均匀探索的软混合选择一个工作流节点。</li>
+<li>提示 LLM 依据评估表现生成修改后的工作流，从而扩展节点。</li>
+<li>执行并评估新工作流。</li>
+<li>如果新工作流在 $N$ 轮预算内有所改进，就把它加回树中。</li>
+<li>重复第 2 至第 5 步，直到前 $k$ 个平均分数进入平台期或耗尽预算。</li>
+</ol>
+<figure>
+  <img src="/images/harness-self-improvement/fig-10-aflow-optimization.webp" alt="AFlow 在候选工作流树上的优化过程" width="1600" height="999" loading="lazy" decoding="async" />
+  <figcaption>AFlow 在候选工作流树上的优化过程。图片来自 Zhang et al. 2025。</figcaption>
+</figure>
+<p>在问答、代码和数学任务上的实验显示，AFlow 相比手工设计的工作流和 ADAS 都有明显提升。</p>
+<figure>
+  <img src="/images/harness-self-improvement/fig-11-aflow-results.webp" alt="AFlow 与手工方法和 ADAS 的实验对比" width="1492" height="492" loading="lazy" decoding="async" />
+  <figcaption>AFlow 与手工方法和 ADAS 的实验对比。图片来自 Zhang et al. 2025。</figcaption>
+</figure>
+<h3 id="自我改进的-harness">自我改进的 Harness</h3>
+<p>无论上下文工程还是工作流设计，都只覆盖 Harness 的一部分。我们需要搜索整个设计空间，联合优化上下文管理逻辑、工作流、权限和其他 Harness 组件。Meta-Harness、ADAS 和 AFlow 等工作表明，<strong>代码</strong>是定义程序和系统的通用语言。换言之，Harness 就是一段代码，它规定提示词、工具调用、子 Agent、控制流、记忆和工作流逻辑如何协同。如果 LLM 能优化执行 Agent 的代码，它就能进入比手写提示词大得多的设计空间。</p>
+<p><strong>Self-Taught Optimizer（STOP；Zelikman et al. 2023）</strong> 是较早的递归脚手架改进案例。步骤 $t=0$ 的种子改进器 $I_0$ 接收初始解 $s$、效用函数 $u$ 和黑盒语言模型 $M$，返回改进后的解 $s’$：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>s' = I(u, s; M)</span></span></code></pre>
+<p>STOP 的目标不是直接改进解 $s$，而是改进改进器 $I$ 本身。首先，定义元效用为改进器 $I$ 在一组下游任务 $\mathcal{D}$ 上的平均效用：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>u_hat(I) = 1 / |D| * E[(u,s) ~ D][u(I(u,s; M))]</span></span></code></pre>
+<p>由于改进改进器本身也是一个优化问题，可以通过自改进更新，根据 $I_{t-1}$ 的元效用递归得到新版本：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>I_t = I_(t-1)(u_hat, I_(t-1); M)</span></span></code></pre>
+<figure>
+  <img src="/images/harness-self-improvement/fig-12-stop-algorithm.webp" alt="Self-Taught Optimizer 算法" width="1438" height="546" loading="lazy" decoding="async" />
+  <figcaption>Self-Taught Optimizer（STOP）的算法。图片来自 Zelikman et al. 2023。</figcaption>
+</figure>
+<p>实验中，被改进的改进器发现了多种策略，例如遗传算法、分而治之、多臂提示老虎机、模拟退火、温度变化以及 beam/tree search。这与把 Harness 工作流作为优化对象非常相似。</p>
+<figure>
+  <img src="/images/harness-self-improvement/fig-13-stop-strategies.webp" alt="STOP 发现的自我改进策略" width="1116" height="252" loading="lazy" decoding="async" />
+  <figcaption>STOP 发现的部分自我改进策略。图片来自 Zelikman et al. 2023。</figcaption>
+</figure>
+<p>Zelikman et al.（2023）还给出了一个警示：STOP 使用 GPT-4 时，平均下游性能可以逐轮提升；使用 GPT-3.5、Mixtral 等较弱模型时反而下降。仅有递归结构并不够，基础模型必须足够有能力，才能改进机制。这说明 Harness 改进能让模型部署得更好，但智能仍然是核心。</p>
+<p>Lin et al.（2026）进一步研究了 Harness 进化对模型能力的依赖，并拆成两个维度：</p>
+<ul>
+<li><strong>Harness updating（Harness 更新能力）</strong>：产生有用 Harness 编辑的能力。</li>
+<li><strong>Harness benefit（Harness 受益能力）</strong>：利用更新后的 Harness 更好解决任务的能力。</li>
+</ul>
+<p>实验观察到，从 Qwen3.5-9B 到 Claude Opus 4.6，不同规模和核心智能的模型，Harness 更新能力反而比较接近；9B 的 Harness proposer/evolver 能写出与 Opus 在程序上同构的技能。若要最大化利用 Harness，模型还必须正确且及时地调用技能和工具，并具备良好的长期指令遵循能力。</p>
+<figure>
+  <img src="/images/harness-self-improvement/fig-14-harness-capability-results.webp" alt="不同模型的 Harness 更新能力和受益能力" width="1600" height="528" loading="lazy" decoding="async" />
+  <figcaption>主要结果：(A) 从 Qwen2-32B 到 Opus 4.6，Harness 更新能力大致持平；(B) Harness 受益能力并非单调，中等层级模型获益最多。图片来自 Lin et al. 2026。</figcaption>
+</figure>
+<p>较新的 <strong>Self-Harness（Zhang et al. 2026）</strong> 让 LLM Agent 通过“提出—评估—接受”的循环改进自身 Harness。</p>
+<figure>
+  <img src="/images/harness-self-improvement/fig-15-self-harness-loop.webp" alt="Self-Harness 的弱点挖掘、受限提案和验证循环" width="1302" height="938" loading="lazy" decoding="async" />
+  <figcaption>Self-Harness 通过弱点挖掘、受限 Harness 提案和验证来更新 Harness。图片来自 Zhang et al. 2026。</figcaption>
+</figure>
+<p>这个循环包含三个阶段：</p>
+<p><strong>1. 弱点挖掘。</strong> 使用当前 Harness $h_t$ 在任务上评估并收集执行轨迹，把失败聚类为“验证器可证实”的失败模式。表面相同的超时或产物缺失，背后可能有不同的因果机制。因此失败记录必须足够丰富，包含验证器层面的最终原因、相关 Agent 行为的因果状态，以及轨迹暴露出的抽象 Agent 机制，才能找到根因。</p>
+<p><strong>2. Harness 提案。</strong> 基于挖掘出的失败模式，提出受约束的 Harness 编辑。由同一个模型在 $h_t$ 下担任 proposer，并提供有限的提案上下文：</p>
+<ul>
+<li>当前 Harness 的可编辑表面。</li>
+<li>评估系统给出的失败模式。</li>
+<li>应该保留的通过行为。</li>
+<li>过去尝试过的编辑摘要。</li>
+</ul>
+<p>Harness 编辑应优先处理能够通过局部修改解决的高频错误；候选编辑要彼此不同且足够多样。</p>
+<p><strong>3. 提案验证。</strong> 评估并合并合格编辑，生成新 Harness $h_{t+1}$。候选编辑会在 held-in 数据 $D_\text{in}$ 上检查弱点是否解决，并在 held-out 数据 $D_\text{out}$ 上检查是否引入新问题。只有两边都没有回归的候选才会被接受。通过者合并进 Harness，被拒绝者也保留日志，但不改变当前 Harness。</p>
+<p>在 Terminal-Bench-2 上使用 MiniMax M2.5、Qwen3.5-35B-A3B 和 GLM-5 时，Self-Harness 能为不同基础模型学习面向其弱点的 Harness 指令，并提升 held-out 通过率。</p>
+<p>不过，这类工作也带来一个担忧：如果程序可以修改操作系统，原有的抽象边界就会被打破。可编辑表面必须经过认真设计，权限控制和安全层必须位于这个循环之外。围绕 reward hacking 的挑战也仍然存在。</p>
+<p><strong>Agentic Harness Engineering（AHE；Lin et al. 2026）</strong> 认为 Harness 进化的瓶颈在可观测性：一次 rollout 失败时，必须知道哪个组件负责；每一次编辑都应建立在证据上。</p>
+<p>该框架通过三个可观测性支柱构成闭环：</p>
+<ul>
+<li><strong>组件可观测性</strong>：每个可编辑 Harness 组件都在文件系统中有对应表示，使动作空间显式且可追溯。Harness 包含七个组件：系统提示词、工具描述、工具实现、中间件、技能、子 Agent 配置和长期记忆。每种失败模式都要映射到一个组件，使编辑更精准。</li>
+<li><strong>经验可观测性</strong>：把大量原始轨迹分析和总结为分层证据与失败模式。每个 Harness 生成 $k$ 条轨迹，“Agent debugger”逐文件分析轨迹，为每个任务生成关于成功或失败根因的报告；所有任务报告再汇总为 benchmark 概览。需要时可以下钻读取原始轨迹。这种分层访问更节省 token。</li>
+<li><strong>决策可观测性</strong>：每次编辑都附带下一轮验证的预测。“Evolve agent”阅读仓库，决定编辑哪个组件，并给出编辑及其理由。每次编辑都是一项文件层面的、可证伪的主张，可在下一轮验证。</li>
+</ul>
+<p>AHE 有两条关键约束：</p>
+<ol>
+<li>编辑只能作用于 Harness workspace。<code>runs</code> 目录、tracer、verifier 和 LLM 配置都是只读的，从而禁止关闭验证器、替换模型或提高推理预算等 reward hacking 行为，确保记录的所有收益都能归因到 Harness 编辑。</li>
+<li>编辑必须由证据驱动，并附带一份 manifest：失败证据名称、推断出的根因、目标修复，以及预期影响，包括预期修复和可能回归。</li>
+</ol>
+<p>在 Terminal-Bench-2 上，AHE 在除 Hard 层和少数自我进化基线之外的多数设置上超过人类设计的 Harness（OpenCode、Terminus-2、Codex）。同一个冻结的 Harness 不继续进化，也能迁移到 SWE-bench-verified，说明进化出的结构可以把工程经验编码进 Harness 组件，而不是只针对某个 benchmark 做特化。</p>
+<h3 id="进化搜索">进化搜索</h3>
+<p>进化搜索受自然选择启发：维护一个解群体，通过变异产生后代，只保留适应度高的个体。它在两种情况下特别合适：</p>
+<ol>
+<li>搜索空间巨大或形状怪异。</li>
+<li>很难直接用梯度优化，但很容易评估解。</li>
+</ol>
+<p>Harness 搜索似乎很符合这两个条件。提示词工程早就开始使用进化搜索。<strong>Promptbreeder（Fernando et al. 2023）</strong> 通过丰富的变异操作优化任务提示词，而且用于指示 LLM 怎样变异提示词的“变异提示词”本身也会进化。<strong>GEPA（Agrawal et al. 2025）</strong> 把反思式提示与进化搜索结合，利用自然语言对试错轨迹进行反思，提出提示词更新。</p>
+<p><strong>AlphaEvolve（Novikov et al. 2025）</strong> 是一个编码 Agent 进化搜索系统。它保存候选程序池，提示冻结的 LLM 生成 diff 进行改进；系统反复评估子程序，保留成功者，随着时间发现更好的解。</p>
+<figure>
+  <img src="/images/harness-self-improvement/fig-16-alphaevolve.webp" alt="AlphaEvolve 的工作方式" width="1420" height="884" loading="lazy" decoding="async" />
+  <figcaption>AlphaEvolve 的工作方式。图片来自 Novikov et al. 2025。</figcaption>
+</figure>
+<p>AlphaEvolve 有几个关键设计细节：</p>
+<ul>
+<li>提示中包括父程序、结果、指令，有时还包括元信息。</li>
+<li>编码 Agent 可以访问完整仓库，但待改进代码区域要用 <code># EVOLVE-BLOCK-START</code> 和 <code># EVOLVE-BLOCK-END</code> 明确标出。</li>
+<li>由 LLM 建议的元提示词会与指令和上下文共同进化，方式类似解程序的进化。</li>
+<li>消融实验验证了进化流程、提示上下文、元提示词、整文件进化和更强 LLM 的价值。</li>
+</ul>
+<figure>
+  <img src="/images/harness-self-improvement/fig-17-alphaevolve-ablations.webp" alt="AlphaEvolve 关键设计的消融实验" width="1600" height="564" loading="lazy" decoding="async" />
+  <figcaption>消融实验显示了 AlphaEvolve 若干设计选择的价值。图片来自 Novikov et al. 2025。</figcaption>
+</figure>
+<p>近期变体 <strong>ThetaEvolve（Wang et al. 2025）</strong> 把进化搜索、强化学习和上下文学习结合；<strong>DemoEvolve（Che et al. 2026）</strong> 把人类专家示范加入自我 rollout 档案，作为 Harness 层诊断和编辑的参考经验。</p>
+<p><strong>ShinkaEvolve（Lange et al. 2025）</strong> 则通过三个新组件提升 LLM 采样效率：</p>
+<ul>
+<li>设计父代采样方式，在性能排名和后代数量之间平衡，以实现更高效的探索。</li>
+<li>基于 embedding 余弦相似度做代码新颖性拒绝采样，丢弃与现有群体过于相似的候选。</li>
+<li>在 meta-scratchpad 中识别成功解的好模式，指导后续变异。</li>
+</ul>
+<p>与上述偏向改进解的方法不同，<strong>Darwin Gödel Machine（DGM；Zhang et al. 2025）</strong> 明确瞄准可编辑 Harness 代码仓库的进化，使用 LLM 编码 Agent 修改自己的 Harness。后续工作 <strong>Hyperagents（Zhang et al. 2026）</strong> 又引入元 Agent，用来控制如何修改现有任务 Agent 以产生新 Agent。</p>
+<p>DGM 的流程如下：</p>
+<ol>
+<li>初始池中只有一个编码 Agent。</li>
+<li>每轮按表现越高、子代越少则概率越大的方式选择一个父代。</li>
+<li>父代检查自己的 benchmark 评估日志，提出对自身 Harness 代码库的改进，生成新版编码 Agent。代码编辑只使用两种基础工具：Shell 和 editor。</li>
+<li>评估新 Agent，只把表现足够好的个体放回池中。</li>
+<li>重复第 2 至第 4 步，直到满足停止条件。</li>
+</ol>
+<p>DGM 是在固定基础模型下的 Harness 进化。以 Claude 3.5 Sonnet 为基础模型并使用简单初始 Harness 时，DGM 发现的 Agent 在 SWE-bench Verified 上从 20% 提升到 50%，在 Polyglot 上从 14.2% 提升到 30.7%，达到或超过手工设计 Agent 的表现。</p>
+<p>这一类方法在候选解能自动评估、适应度容易量化的领域表现较好，例如矩阵乘法、GPU kernel 优化、算法竞赛和数据中心调度。当评估缓慢、含糊或高度依赖启发式判断时，效果会明显受限；进化的计算效率与有效性同样值得关注。</p>
+<h3 id="与模型权重联合优化">与模型权重联合优化</h3>
+<p>Harness 进化改变的是模型周围的非参数系统。为了实现完整自我改进，模型也可以同时更新权重。权重更新可以通过改进训练管线实现，也可以通过测试时持续学习实现。</p>
+<p><strong>SIA（Hebbar et al. 2026）</strong> 是较早尝试在同一个优化循环中结合 Harness 改进与模型参数更新的工作，包含三个组件：</p>
+<ul>
+<li><strong>Meta-Agent</strong>：提出初始 Harness。</li>
+<li><strong>Task-Specific Agent</strong>：执行任务。</li>
+<li><strong>Feedback-Agent</strong>：依据近期轨迹，决定下一轮更新 Harness 还是模型权重。</li>
+</ul>
+<figure>
+  <img src="/images/harness-self-improvement/fig-18-sia-feedback-agent.webp" alt="SIA 的 Feedback-Agent 决定下一轮更新类型" width="1600" height="631" loading="lazy" decoding="async" />
+  <figcaption>SIA 中的 Feedback-Agent 决定下一轮是更新 Harness 还是更新权重。图片来自 Hebbar et al. 2026。</figcaption>
+</figure>
+<p>SIA 的实验存在若干混杂因素，使结果不易解释。例如任务 Agent 比 Meta-Agent 和 Feedback-Agent 使用的模型弱得多（<code>gpt-oss-120b</code> 对 Claude Sonnet 4.6），基线也偏弱，难以与其他方法清晰横向比较。作者认为方向很有意思，但证据仍是初步的；训练稳定性、Goodhart 效应等问题仍未解决。</p>
+<p><strong>Continual Harness（Karten et al. 2026）</strong> 则在长期游戏环境中同时实验 Harness 更新和策略模型共学习，通过在低奖励轨迹上蒸馏强教师模型的标签来学习策略。</p>
+<h2 id="未来挑战">未来挑战</h2>
+<p>AI Scientist 系列工作证明，专家设计的 Harness 能协调自动化研究回路中的很大一部分，并以写研究论文的形式进行了实验。但“生产论文”并不等于“科学发现”。系统可以写出看似合理的稿件，同时却包含捏造的引用、实现漂移或薄弱的实验结果。</p>
+<p>Trehan &amp; Chopra（2026）测试了 LLM 能否只依靠最少的脚手架和基础工具（<code>read_file</code>、<code>write_file</code>、<code>llm_search</code>、<code>list_files</code>）从研究想法走到论文。每个想法有独立 workspace，Agent 可以生成和读取文档作为上下文。实验覆盖世界模型、多 Agent RL 和 AI 安全与对齐三个领域，每个领域有 45 至 50 份高质量种子文档。人类专家最终只选出四个想法运行完整流水线，其中只有一个真正完成成文。</p>
+<p>实验观察到六种反复出现的失败模式：</p>
+<ul>
+<li><strong>偏向训练数据默认值</strong>：使用旧库、过时命令、标准格式，或建立在与实际仓库、数据集无关的假设上。</li>
+<li><strong>执行压力导致实现漂移</strong>：实现变得复杂时，模型会滑向更常见、更简单的方案，而不是原定方法。</li>
+<li><strong>记忆与上下文退化</strong>：长期项目会丢失关键细节，除非日志被写成持久产物。</li>
+<li><strong>过度乐观</strong>：即使实验有噪声或失败，模型仍宣称成功。Bubeck et al.（2025）也观察到类似“p-hacking 和 eureka-ing”的模式，模型会用“数值胶带”补漏洞，在信号仍只是噪声时宣布胜利。</li>
+<li><strong>领域智能不足</strong>：模型缺少隐性工艺知识，例如无法预测实现复杂度、判断实验结果是否合理，或知道哪些基线真正重要。</li>
+<li><strong>科学品味薄弱</strong>：实验可以执行，但回答的不是正确问题。</li>
+</ul>
+<p>研究人员正在向完整 RSI 推进，但仍有若干瓶颈：</p>
+<h3 id="1-评估器薄弱且模糊">1. 评估器薄弱且模糊</h3>
+<p>许多研究主张没有快速、精确的验证器，许多现实任务也是如此。当前自我改进循环最适合那些指标可测量、客观的任务，这与强化学习的工作方式类似。研究品味、新颖性和长期科学价值则很难衡量。研究品味往往混合了问题定义、实验设计，以及判断哪些意外结果值得继续、哪些失败值得重试的能力。</p>
+<h3 id="2-上下文和记忆的生命周期">2. 上下文和记忆的生命周期</h3>
+<p>Agent 越自主、越独立，记忆就增长得越快。有用的 Harness 必须管理上下文与记忆，弥补长上下文生成的现有局限，同时提升长期任务的成功率。人类一生都在维护记忆，因此作者认为上下文工程未来可能成为智能的核心部分，而不应一直停留在软件系统层。</p>
+<h3 id="3-负面结果">3. 负面结果</h3>
+<p>研究者倾向于发表成功结果，导致文献对成功存在偏置。LLM 从海量数据中学习，而数据中的成功与失败案例并不平衡，因此模型可能不擅长决定何时放弃假设、报告负面结果，甚至承认失败。研究 Harness 应让失败尝试容易保存，因为从失败中学习是缩小任务搜索空间的最好方式。</p>
+<h3 id="4-多样性坍塌">4. 多样性坍塌</h3>
+<p>进化和 RL 循环容易利用已知的高奖励模式，最终塌缩成同一个解决方案的大量变体。开放式研究尤其需要防止这种情况，因为最佳路径在早期可能反而表现更差。</p>
+<h3 id="5-reward-hacking">5. Reward hacking</h3>
+<p>自我改进循环会优化它收到的任何信号。如果奖励来自单元测试，Agent 可能过拟合测试；如果来自裁判模型，它可能学会针对该裁判的作弊技巧；如果来自 benchmark 分数，它可能利用 benchmark 伪影。</p>
+<p>评估器和权限控制很可能应该位于 Harness 进化循环之外，并使用 held-out 测试、轨迹审计和关键决策点的人类审查。监督能够扩展到什么程度、自动化到什么程度，仍是开放问题。</p>
+<h3 id="6-长期成功">6. 长期成功</h3>
+<p>外部的优化循环依据训练沙盒中可以模拟的单次 rollout 之外的目标工作。以编码 Agent 为例，它们已经提升了软件工程的日常效率，但许多优化目标仍然过于短期。Agent 经常能完成眼前任务，却不知道怎样维护由数百或数千名工程师共同维护的仓库的长期健康。标准的沙盒式 RLVR 训练很少能捕捉可维护性、所有权边界、迁移成本、向后兼容性和未来调试负担。</p>
+<h3 id="7-人类角色">7. 人类角色</h3>
+<p>人类应该向上移动一层，而不是被移出循环。人类需要在正确时间、正确抽象层次提供监督，系统设计也应当考虑在哪些触点、以什么方式引入人类。</p>
+<p>上述许多挑战都需要人的反馈和引导。毕竟，我们是在为人类更好的未来建设技术，而不是反过来。</p>
+<h2 id="引用">引用</h2>
+<p>原文引用格式：</p>
+<blockquote>
+<p>Weng, Lilian. “Harness Engineering for Self-Improvement.” <em>Lil’Log</em> (Jul 2026). <a href="https://lilianweng.github.io/posts/2026-07-04-harness/">https://lilianweng.github.io/posts/2026-07-04-harness/</a></p>
+</blockquote>
+<p>BibTeX：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bibtex"><code><span class="line"><span style="color:#F97583">@article</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">weng2026harness</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  title</span><span style="color:#E1E4E8"> = </span><span style="color:#9ECBFF">{</span><span style="color:#E1E4E8">Harness Engineering for Self-Improvement</span><span style="color:#9ECBFF">}</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  author</span><span style="color:#E1E4E8"> = </span><span style="color:#9ECBFF">{</span><span style="color:#E1E4E8">Weng, Lilian</span><span style="color:#9ECBFF">}</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  journal</span><span style="color:#E1E4E8"> = </span><span style="color:#9ECBFF">{</span><span style="color:#E1E4E8">lilianweng.github.io</span><span style="color:#9ECBFF">}</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  year</span><span style="color:#E1E4E8"> = </span><span style="color:#9ECBFF">{</span><span style="color:#E1E4E8">2026</span><span style="color:#9ECBFF">}</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  month</span><span style="color:#E1E4E8"> = </span><span style="color:#9ECBFF">{</span><span style="color:#E1E4E8">July</span><span style="color:#9ECBFF">}</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">  url</span><span style="color:#E1E4E8"> = </span><span style="color:#9ECBFF">{</span><span style="color:#E1E4E8">https://lilianweng.github.io/posts/2026-07-04-harness/</span><span style="color:#9ECBFF">}</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<h2 id="附录一些有用的基准">附录：一些有用的基准</h2>
+<p><strong>PaperBench</strong>：从零复现 20 篇 ICML 2024 Spotlight 和 Oral 论文，包括理解论文贡献、开发代码库并成功执行实验。每个复现任务被拆成多个可单独评分的子任务，总共有 8,316 条评分规则，由论文作者共同设计。当时最佳模型 Claude 3.5 Sonnet 约 21%，没有超过机器学习博士。另有 PaperBench Code-Dev 轻量版和 JudgeEval。</p>
+<p><strong>CORE-Bench</strong>：评估已发表研究的计算可复现性。包含来自计算机科学、社会科学和医学的 90 篇论文、共 270 个任务。任务要求使用提供的代码和数据复现结果，包含多个难度层，以及纯语言和视觉语言两类任务。当时最佳 Agent（GPT-4o 与 GPT-4o-mini）在最难任务上的准确率只有 21%。</p>
+<p><strong>ScienceAgentBench</strong>：评估用于数据驱动科学发现的 LLM Agent。从数学、化学、生物学、地理学四个领域的 44 篇同行评审论文中提取 102 个任务，覆盖数据处理、模型开发、数据分析与信息可视化。</p>
+<p><strong>RE-Bench</strong>：在真实 ML 研究工程环境中将前沿 Agent 与人类专家对比。包含 7 个高难度开放式环境，每个环境由打分函数、起始解和参考解组成，可使用不超过 8 块 H100 GPU。常见任务包括优化 kernel、运行 scaling-law 实验、修复 embedding 和为问答微调 GPT-2。数据包括 61 位专家完成的 71 次八小时尝试。专家在 82% 的八小时尝试中得分非零，24% 至少追平强参考解。最佳 AI Agent 在两小时预算下得分约为人类的四倍，但人类对更长预算的收益更高，在八小时和三十二小时设置下超过 Agent。</p>
+<p><strong>MLE-bench</strong>：在离线 Kaggle 竞赛中评估机器学习工程 Agent。包含 75 个 Kaggle ML 工程竞赛，测试训练模型、准备数据集、运行实验和提交预测，以公开排行榜作为人类基线。论文中的最佳配置是 <code>o1-preview + AIDE scaffolding</code>，在 16.9% 的竞赛中达到至少 Kaggle 铜牌水平。</p>
+<p><strong>KernelBench</strong>：评估生成 GPU kernel 的正确性和速度。包含 250 个 PyTorch 任务，核心指标 <code>fast_p</code> 表示生成 kernel 既正确又比基线更快的百分比。</p>
+<h2 id="参考文献">参考文献</h2>
+<ol>
+<li>Good, I. J. “Speculations Concerning the First Ultraintelligent Machine.” <em>Advances in Computers</em>, 6:31–88, 1965.</li>
+<li>Yudkowsky, Eliezer. “Recursive Self-Improvement.” LessWrong, 2008.</li>
+<li>Choi et al. “Anchored Self-Play for Code Repair.” ICML 2026.</li>
+<li>Zhao et al. “Absolute Zero: Reinforced Self-play Reasoning with Zero Data.” arXiv:2505.03335, 2025.</li>
+<li>Yuan et al. “Self-Rewarding Language Models.” arXiv:2401.10020, 2024.</li>
+<li>Chen et al. “Self-Play Fine-Tuning Converts Weak Language Models to Strong Language Models.” ICML 2024.</li>
+<li>Zhang et al. “Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models.” ICLR 2026.</li>
+<li>Ye et al. “Meta Context Engineering via Agentic Skill Evolution.” arXiv:2601.21557, 2026.</li>
+<li>Lee et al. “Meta-Harness: End-to-End Optimization of Model Harnesses.” arXiv:2603.28052, 2026.</li>
+<li>Lu et al. “Towards end-to-end automation of AI research.” <em>Nature</em>, 651:914–919, 2026.</li>
+<li>Meng et al. “ScientistOne: Towards Human-Level Autonomous Research via Chain-of-Evidence.” arXiv:2605.26340, 2026.</li>
+<li>Kulikov et al. “Autodata: An agentic data scientist to create high quality synthetic data.” arXiv:2606.25996, 2026.</li>
+<li>Hu, Lu, and Clune. “Automated Design of Agentic Systems.” ICLR 2025.</li>
+<li>Madaan et al. “Self-Refine: Iterative Refinement with Self-Feedback.” NeurIPS 2023.</li>
+<li>Zhang et al. “AFlow: Automating Agentic Workflow Generation.” ICLR 2025.</li>
+<li>Zelikman et al. “Self-Taught Optimizer (STOP): Recursively Self-Improving Code Generation.” COLM 2024.</li>
+<li>Zhang et al. “Self-Harness: Harnesses That Improve Themselves.” arXiv:2606.09498, 2026.</li>
+<li>Fernando et al. “Promptbreeder: Self-Referential Self-Improvement Via Prompt Evolution.” arXiv:2309.16797, 2023.</li>
+<li>Agrawal et al. “GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning.” arXiv:2507.19457, 2025.</li>
+<li>Novikov et al. “AlphaEvolve: A coding agent for scientific and algorithmic discovery.” arXiv:2506.13131, 2025.</li>
+<li>Lange, Imajuku, and Cetin. “ShinkaEvolve: Towards Open-Ended And Sample-Efficient Program Evolution.” arXiv:2509.19349, 2025.</li>
+<li>Wang et al. “ThetaEvolve: Test-time Learning on Open Problems.” arXiv:2511.23473, 2025.</li>
+<li>Zhang et al. “Darwin Gödel Machine: Open-Ended Evolution of Self-Improving Agents.” arXiv:2505.22954, 2025.</li>
+<li>Zhang et al. “Hyperagents.” arXiv:2603.19461, 2026.</li>
+<li>Yuksekgonul et al. “Learning to Discover at Test Time.” arXiv:2601.16175, 2026.</li>
+<li>Riaz et al. “Epistemic Uncertainty for Test-Time Discovery.” arXiv:2605.11328, 2026.</li>
+<li>Hebbar et al. “SIA: Self Improving AI with Harness &amp; Weight Updates.” arXiv:2605.27276, 2026.</li>
+<li>Trehan and Chopra. “Why LLMs Aren’t Scientists Yet: Lessons from Four Autonomous Research Attempts.” arXiv:2601.03315, 2026.</li>
+<li>Bubeck et al. “Early science acceleration experiments with GPT-5.” arXiv:2511.16072, 2025.</li>
+<li>Starace et al. “PaperBench: Evaluating AI’s Ability to Replicate AI Research.” ICML 2025.</li>
+<li>Wijk et al. “RE-Bench: Evaluating frontier AI R&amp;D capabilities of language model agents against human experts.” ICML 2025.</li>
+<li>Chan et al. “MLE-bench: Evaluating Machine Learning Agents on Machine Learning Engineering.” arXiv:2410.07095, 2024.</li>
+<li>Chen et al. “ScienceAgentBench: Toward Rigorous Assessment of Language Agents for Data-Driven Scientific Discovery.” ICLR 2025.</li>
+<li>Siegel et al. “CORE-Bench: Fostering the Credibility of Published Research Through a Computational Reproducibility Agent Benchmark.” TMLR 2024.</li>
+<li>Ouyang et al. “KernelBench: Can LLMs Write Efficient GPU Kernels?” arXiv:2502.10517, 2025.</li>
+<li>Lin et al. “Harness Updating Is Not Harness Benefit: Disentangling Evolution Capabilities in Self-Evolving LLM Agents.” arXiv:2605.30621, 2026.</li>
+<li>Lin et al. “Agentic Harness Engineering: Observability-Driven Automatic Evolution of Coding-Agent Harnesses.” arXiv:2604.25850, 2026.</li>
+<li>Karten et al. “Continual Harness: Online Adaptation for Self-Improving Foundation Agents.” arXiv:2605.09998, 2026.</li>
+<li>Che et al. “DemoEvolve: Overcoming Sparse Feedback in Agentic Harness Evolution with Demonstrations.” arXiv:2605.24539, 2026.</li>
+</ol>
+</div><aside class="article-aside" data-reveal data-astro-cid-7mn2gw7j><p class="eyebrow" data-astro-cid-7mn2gw7j>Filed under</p><div class="tag-list" data-astro-cid-7mn2gw7j><span data-astro-cid-7mn2gw7j>AI</span><span data-astro-cid-7mn2gw7j>Agent</span><span data-astro-cid-7mn2gw7j>Harness</span><span data-astro-cid-7mn2gw7j>自主学习</span></div></aside></div><nav class="article-nav" aria-label="笔记翻页" data-reveal data-astro-cid-7mn2gw7j><a href="/writing/a2ui-agent-ui-notes" data-astro-cid-7mn2gw7j><span data-astro-cid-7mn2gw7j>上一篇</span><strong data-astro-cid-7mn2gw7j>A2UI：让 Agent 用组件协议生成界面</strong></a><div data-astro-cid-7mn2gw7j></div></nav></article></main></div><script type="module" src="/_astro/Layout.astro_astro_type_script_index_0_lang.CYCgXV3R.js"></script><div data-astro-transition-persist="site-page-curtain" class="page-curtain" data-page-curtain data-state="open" aria-hidden="true" data-astro-cid-zo45weup><svg class="page-curtain-panel" viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-zo45weup><path d="M -300 0 L 1030 0 C 1260 280 1260 720 1030 1000 L -300 1000 C -70 720 -70 280 -300 0 Z" fill="#ffda3d" data-astro-cid-zo45weup></path></svg><div class="page-curtain-content" data-astro-cid-zo45weup><div class="page-curtain-mark" data-astro-cid-zo45weup><svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-astro-cid-zo45weup><rect x="1.5" y="1.5" width="93" height="93" rx="27" fill="#11130f" data-astro-cid-zo45weup></rect><ellipse cx="48" cy="49" rx="36" ry="13" fill="none" stroke="#f8f9f6" stroke-opacity="0.3" transform="rotate(-20 48 49)" data-astro-cid-zo45weup></ellipse><ellipse cx="48" cy="49" rx="33" ry="11" fill="none" stroke="#ffda3d" stroke-opacity="0.34" transform="rotate(58 48 49)" data-astro-cid-zo45weup></ellipse><circle cx="20" cy="62" r="2.8" fill="#ffda3d" data-astro-cid-zo45weup></circle><circle cx="76" cy="26" r="2.4" fill="#7ca3ff" data-astro-cid-zo45weup></circle><circle cx="64" cy="76" r="2.1" fill="#ff9d73" data-astro-cid-zo45weup></circle><path d="M48 17C51.2 33.7 58.4 41.2 76 44.8 58.4 48.4 51.2 55.9 48 72.6 44.8 55.9 37.6 48.4 20 44.8 37.6 41.2 44.8 33.7 48 17Z" fill="#f8f9f6" data-astro-cid-zo45weup></path></svg></div><h2 class="page-curtain-title" data-curtain-title data-text="记录代码与生活" data-astro-cid-zo45weup>记录代码与生活</h2><p class="page-curtain-outline" data-astro-cid-zo45weup>前端 · 后端 · 算法 · AI</p></div></div><script type="module" src="/_astro/PageCurtain.astro_astro_type_script_index_0_lang.DqvMDfgE.js"></script></body></html>
