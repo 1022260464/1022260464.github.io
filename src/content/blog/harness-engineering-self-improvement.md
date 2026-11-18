@@ -6,8 +6,6 @@ tags: ["AI", "Agent", "Harness", "自主学习"]
 category: "AI 与 Agent"
 order: 3
 draft: false
-cover: "/images/harness-self-improvement/fig-05-meta-harness-loop.webp"
-coverAlt: "Meta-Harness 通过外层循环搜索和优化模型外围的 Harness"
 ---
 
 > 本文是 Lilian Weng 于 2026 年 7 月发布的 [Harness Engineering for Self-Improvement](https://lilianweng.github.io/posts/2026-07-04-harness/) 的中文翻译与术语整理。原文版权归作者所有，涉及方法细节时建议结合原文阅读。

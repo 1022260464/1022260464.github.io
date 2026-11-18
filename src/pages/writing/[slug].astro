@@ -312,8 +312,8 @@ const updatedDate = post.data.updatedDate
 
   .article-grid {
     display: grid;
-    grid-template-columns: minmax(0, 760px) minmax(130px, 1fr);
-    gap: 58px;
+    grid-template-columns: minmax(0, 940px);
+    gap: 0;
     padding-top: 52px;
   }
 
@@ -321,16 +321,51 @@ const updatedDate = post.data.updatedDate
     min-width: 0;
   }
 
+  .article-body.prose {
+    max-width: 940px;
+  }
+
+  .prose figure {
+    margin: 2.2em 0;
+  }
+
+  .prose figure img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .prose figcaption {
+    margin-top: 12px;
+    color: var(--faint);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+
   .article-aside {
-    align-self: start;
-    padding-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    align-items: flex-start;
+    width: min(100%, 940px);
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+
+  .article-aside > .eyebrow:first-child {
+    flex: 0 0 auto;
+    padding-top: 6px;
   }
 
   .tag-list {
     display: flex;
+    flex: 1 1 420px;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: 13px;
+    margin-top: 0;
   }
 
   .tag-list span {
@@ -344,8 +379,9 @@ const updatedDate = post.data.updatedDate
 
   .article-hierarchy {
     display: grid;
+    flex: 1 1 100%;
     gap: 0;
-    margin-top: 28px;
+    margin-top: 12px;
     padding-top: 18px;
     border-top: 1px solid var(--line);
   }
@@ -379,6 +415,7 @@ const updatedDate = post.data.updatedDate
   }
 
   .updated {
+    flex-basis: 100%;
     margin-top: 26px;
     color: var(--faint);
     font-family: var(--font-mono);
@@ -437,7 +474,7 @@ const updatedDate = post.data.updatedDate
     }
 
     .article-aside {
-      margin-top: 40px;
+      margin-top: 48px;
       padding-top: 20px;
       border-top: 1px solid var(--line);
     }
