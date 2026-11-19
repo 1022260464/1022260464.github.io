@@ -42,12 +42,70 @@ DSH 不是一个“主程序里顺便支持插件”的聊天工具，而是一�
   <figcaption>DSH 可以粗略看成四段：启动组合、Cordis 运行时、能力缝和最终输出界面。每一段都可以单独替换或扩展。</figcaption>
 </figure>
 
+## 几十个包，其实可以先分成几类
+
+DSH 的仓库不是随便把功能切碎，而是尽量让“协议、实现、应用组合和运行环境”分别变化。因此看到新包时，可以先判断它属于哪一类，而不是马上从入口文件一路追调用栈。
+
+| 分组 | 主要职责 | 常见包或能力 |
+| --- | --- | --- |
+| `core/` | Agent 循环、作用域、会话抽象、提示词和工具协议 | `agent`、`agent-loop`、`scope`、`session`、`system-prompt`、`tools` |
+| `sandbox/` | 沙箱约定、本机实现和策略 | `sandbox`、`sandbox-local`、`sandbox-policy` |
+| `session/` | 会话持久化、状态投影和遥测 | JSONL/SQLite persistence、session projection、telemetry |
+| `llm/` | 模型接口、具体 Provider 和失败重试 | `llm`、`llm-deepseek`、`llm-pi-ai`、`llm-retry` |
+| `context/` | 向 Agent 注入额外上下文 | 会话引用、时间上下文、Agent 指令 |
+| `compaction/` | 长上下文压缩与压缩命令 | compaction 基础实现、compact command |
+| `shell/`、`fs/`、`terminal/`、`web/` | 真正接触外部世界的执行与搜索能力 | bash、文件系统、终端、Web 搜索 |
+| `bundle/`、`boot/`、`apps/cli` | 把领域插件组合成能启动的应用 | base、web-app、headless、应用启动、命令行 |
+| `client/`、`host/` | Web 客户端与宿主控制面 | 浏览器 UI、API Gateway、领域 Controller |
+| `extensions/` | 运行期动态加载扩展 | Cordis Host/Client Runner、客户端 UI 扩展 |
+
+除此之外，`mcp`、`skill`、`goal`、`plan`、`schedule`、`subagent`、`jobs`、`workflow`、`storage`、`credentials`、`lsp` 和 `code-runtime` 等包，则分别提供一种相对独立的能力。
+
+包名以后可能变化，但分组思路很稳定：**接口和实现分开，核心循环和界面分开，会话事实和存储后端分开，默认组合和具体能力分开。**
+
+## DSH 的五层运行结构
+
+如果从上往下看，可以把 DSH 理解为五层：
+
+```text
+应用层
+  Web / Headless / SDK / ACP + 用户 profile
+        ↓
+核心服务层
+  Agent Loop / Session / LLM / Tools / Sandbox
+        ↓
+组合层
+  Cordis Context / Service / Event / Effect
+        ↓
+宿主运行层
+  Node 进程 / 文件系统 / Shell / 终端 / 网络
+        ↓
+动态扩展层
+  Inspect → Package → Host Runner / Client Runner
+```
+
+应用层决定“要以什么形态运行”，核心服务层决定“Agent 怎么工作”，组合层负责“谁和谁连起来”，宿主运行层决定“操作最后落在哪个真实环境”，动态扩展层则允许程序跑起来以后继续加入新能力。
+
+这五层也解释了为什么 DSH 不把所有能力直接写进入口程序。入口只需要选择 profile，剩下的工作由对应层完成。
+
 ## 从一条启动命令开始
 
 体验 DSH 最简单的方式，是运行：
 
 ```powershell
 npx @deepseek-ai/dsh web
+```
+
+默认情况下，它会启动一个本地 Web 服务，地址通常是 `http://127.0.0.1:3080`。第一次运行时，DSH 会初始化 `web` profile；配置好 DeepSeek API Key，或者设置 `DEEPSEEK_API_KEY` 环境变量之后，就可以开始对话。
+
+如果想从源码运行，完整过程通常是：
+
+```powershell
+git clone https://github.com/deepseek-ai/deepseek-harness.git
+cd deepseek-harness
+pnpm install
+pnpm run build
+pnpm dsh web
 ```
 
 终端里看起来只是启动了一个本地 Web 服务，但内部发生的事并不简单。
@@ -87,10 +145,17 @@ retries: 3
 - `web-app` 在基础能力上补 Web Server、API 和界面；
 - `headless` 去掉浏览器界面，更适合自动化；
 - `sdk` 让其他程序可以直接嵌入 DSH；
-- `sdk-minimal` 刻意只保留很少的服务，适合做轻量集成；
+- `sdk-minimal` 是一棵独立的精简组合树，不继承完整 `base`，只保留少量必要服务；
 - `acp` 则面向另一类客户端协议。
 
 Profile 是这些默认层再叠加用户修改后的结果。所以排查问题时，先确认“当前 profile 到底装了什么”，往往比直接翻源码更快。
+
+DSH 的资料里还经常出现两个词：**host plane** 和 **agent plane**。
+
+- host plane 更像进程级基础设施，负责注册表、模型路由、持久化、沙箱和宿主能力；
+- agent plane 更像某个 Agent 自己的桌面，决定它能看到哪些工具、提示词片段和配置。
+
+把它们分开以后，一个进程就可以同时运行多个组合不同的 Agent，而不会让 A Agent 的本地工具自动出现在 B Agent 的上下文里。
 
 ## Cordis 到底在做什么？
 
@@ -103,6 +168,14 @@ Cordis 经常被一句话带过：“它是一个插件和依赖注入框架。�
 3. 注册一组可撤销的资源。插件卸载时，这些监听器和资源也会一起清理。
 
 DSH 中很多关键决策都是通过事件完成的。比如模型请求发出前，插件可以修改 provider、模型或参数；请求失败后，另一个插件可以决定是否重试。
+
+早期源码解析中，Agent Loop 至少有三个很关键的 `waterfall` 插桩点：
+
+- `agent/pre-step`：已经领到用户输入，但当前 Step 还没正式开始。插件可以拒绝、改写或追加工作；
+- `agent/request`：模型请求发出前。插件可以修改 Provider、模型名称和请求参数；
+- `agent/request-error`：模型请求失败后。插件可以决定是否重试，或者把错误转换成别的处理方式。
+
+这类事件和普通“通知”不同。普通事件更像广播，`waterfall` 则允许插件真正接管一项决策，再把新的结果交给下一层。这正是“一切皆插件”能进入 Agent 主循环的原因。
 
 这里要分清“看见”和“接管”：
 
@@ -170,6 +243,18 @@ DSH 的 Agent Loop 本身并不想做所有事情。它的责任是组织请求�
 
 如果这些逻辑散落在每个工具里，最后每个工具都会有自己的一套规则。DSH 把这些公共步骤放进工具流水线，具体工具只负责自己的业务语义。
 
+从事件角度看，这条流水线大致是：
+
+```text
+pre-execute
+  → approval / guard
+  → tools/execute
+  → post-execute
+  → tool/result
+```
+
+`pre-execute` 可以补充或检查上下文，`approval` 和 `guard` 决定这次操作能否继续，真正的 Provider 执行完成后再经过 `post-execute`，最后把规范化结果写成 `tool/result` 事件。
+
 ## 能力缝：换掉实现，不影响调用者
 
 DSH 经常出现一个词：**capability seam**，可以理解成“能力缝”或“可替换能力的接口边界”。
@@ -199,6 +284,17 @@ DSH 经常出现一个词：**capability seam**，可以理解成“能力缝”
 DSH 可以让同一个进程运行多个 Agent。每个 Agent 可以有独立的 Scope，决定它能看见哪些工具、提示词片段和变量。
 
 A Agent 注册的东西不会自动进入 B Agent 的视图，这叫可见性隔离。
+
+每个 Agent 的组合方式通常由 **Agent Preset** 声明。一个 Preset 不是单纯的一段角色提示词，它会同时决定：
+
+- 这个 Agent 的 persona；
+- 它可以使用的工具集；
+- 需要加载的提示词片段；
+- 默认作用域和运行配置。
+
+可以把它理解成一份“人格 + 能力清单”。会话创建时会选择某个 Preset，并记录选择结果；恢复会话时，系统不仅恢复历史消息，也要恢复到同一个 Agent 能力环境中。
+
+如果在同一个 profile 里准备多个 Preset，就能得到几个职责不同的 Agent。例如一个专门写代码，一个专门整理内容，一个专门做研究。它们共享宿主进程中的基础服务，但各自能看到和使用的工具可以不同。
 
 但“看不见”不等于“碰不到”。Scope 不是安全边界。真正限制进程访问文件、网络和系统资源的是 sandbox、Shell、文件系统 Provider 和审批策略。
 
@@ -233,6 +329,20 @@ DSH 有一条很关键的原则：
 
 因此，日志里不只有用户消息和模型回复，还会记录 `request/header`、工具调用、工具结果、错误、重试和中断恢复信息。否则，你就无法解释模型当时到底看到了什么，也就很难复盘一次奇怪的行为。
 
+常见的 Session 事件包括：
+
+- `turn/start`、`turn/end`；
+- `step/start`、`step/end`；
+- `user/message`；
+- `assistant/chunk`、`assistant/message`；
+- `request/header`；
+- `tool/call`、`tool/result`；
+- 错误、重试、压缩和中断恢复事件。
+
+这些事件在写入时会被当作已经发生的事实保存。早期源码实现会在追加时冻结事件对象，避免后面的插件悄悄改掉历史。若进程在 Turn 中途崩溃，恢复逻辑还可以根据尾部状态补出中断闭合事件，而不是假装上一轮正常结束。
+
+所以 replay 在 DSH 里不是调试时临时加的功能，而是一种基本能力。断线重连、会话恢复、UI 回放和后续审计，都可以建立在同一套事件历史上。
+
 ## 为什么不把全部上下文每轮重发？
 
 每进入一个新的 Step，Agent 仍然会重新组装上下文，但“重新组装”不等于“把所有内容重新追加一遍”。
@@ -244,9 +354,13 @@ DSH 有一条很关键的原则：
 
 稳定部分如果没有变化，可以复用上一次的请求结构；只有真的变了，才追加新的请求头。
 
+早期源码解析提到，项目级和用户级的 `AGENTS.md` 指令链、Skill 目录、persona 和权限上下文都属于相对持久的内容。它们带有摘要或保留标记，只要内容没有变化，就不必每个 Step 都重新追加一遍。工具目录和运行时上下文也会做类似的比较，只有摘要发生变化时才产生新的版本。
+
 这样做有两个好处：Session 不会因为重复文本不断膨胀，模型服务也更容易复用稳定的请求前缀，从而提高 KV Cache 的命中率。
 
-当上下文真的接近上限时，DSH 再通过 compaction 生成摘要。摘要属于派生数据，原始 Session 才是事实来源，两者不能混为一谈。
+当上下文真的接近上限时，DSH 再通过 compaction 生成摘要。具体触发阈值可以根据模型和配置调整；社区源码分析中曾出现约 `0.8` 的阈值，但不需要把它当成固定常数。
+
+压缩时，系统会从已有 Session 前缀生成新的摘要上下文，而不是直接把原始事件删掉。摘要属于派生数据，原始 Session 才是事实来源，两者不能混为一谈。对支持缓存的服务商，压缩请求也会尽量复用稳定前缀，避免一次压缩把之前积累的缓存全部作废。
 
 ## Web UI 为什么也能算插件？
 
@@ -254,12 +368,28 @@ DSH 的 Web 形态采用“宿主进程 + 浏览器客户端”的结构：
 
 - 宿主侧运行 Agent、Session、工具和沙箱；
 - 浏览器侧负责聊天、轨迹、审批和设置界面；
-- 两边通过 API 和事件通信；
+- 两边通过类型化 API、HTTP 和 WebSocket 通信；
 - 客户端插件再根据清单加载自己的 `client.js`。
 
 所以 Web 扩展并不一定要修改一个巨大的 React 主包。某项能力可以同时包含宿主服务插件、浏览器 UI 插件和两边共享的协议类型。
 
+早期社区解析描述的客户端启动过程是：宿主扫描插件声明的 `dsh.client`，把启动信息注入 `window.__DSH_BOOT__`，浏览器再按清单加载 `/plugins/<id>/client.js`。这些具体字段可能变化，但思路没有变：**页面外壳先启动，真正的功能仍然按插件清单装配。**
+
 不过，浏览器插件仍然只能在浏览器安全边界内运行。它扩展的是界面，不会因为在客户端加载就获得宿主进程权限。
+
+## 运行中的动态扩展
+
+除了启动时通过 profile 装载插件，DSH 还提供动态扩展机制。
+
+可以把它想成三步：
+
+1. 先检查一份扩展或包的内容；
+2. 把它转换为不会被继续随意修改的 Package；
+3. 分别交给宿主侧 Runner 或浏览器侧 Runner 执行。
+
+这和普通热更新不同。动态扩展不只是替换一段前端代码，它可能有自己的服务注册、事件监听、界面组件和生命周期。把它单独放在 `extensions/` 中，可以与启动时的静态组合区分开。
+
+同时也意味着安全要求更高。允许安装任意扩展，接近于允许别人向你的宿主进程增加能力。因此插件来源、权限、凭据和隔离环境都必须认真处理。
 
 ## 想知道当前装了什么，可以这样看
 
