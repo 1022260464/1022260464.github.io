@@ -1,7 +1,7 @@
 # 内容地图
 
 > 此文件由 `pnpm content:map` 自动生成，请勿手动编辑。
-> 共 6 篇文章，2 个模块。
+> 共 7 篇文章，2 个模块。
 
 ## 前端开发
 
@@ -14,6 +14,7 @@
 - `01` [J-Space：语言模型内部的全局工作空间](<./src/content/blog/j-space-share.md>) · `id: j-space-share`
 - `02` [A2UI：让 Agent 用组件协议生成界面](<./src/content/blog/a2ui-agent-ui-notes.md>) · `id: a2ui-agent-ui-notes`
 - `03` [Harness 工程与自我改进：模型外围的递归进化](<./src/content/blog/harness-engineering-self-improvement.md>) · `id: harness-engineering-self-improvement`
+- `04` [DeepSeek Harness 是怎么搭起来的：一篇通俗的架构介绍](<./src/content/blog/deepseek-harness-architecture.md>) · `id: deepseek-harness-architecture`
 
 ---
 

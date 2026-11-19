@@ -6,6 +6,9 @@ import { fileURLToPath } from 'node:url';
 const yamlBrowserEntry = fileURLToPath(
   new URL('./node_modules/yaml/browser/index.js', import.meta.url),
 );
+const picomatchEntry = fileURLToPath(
+  new URL('./scripts/picomatch-entry.mjs', import.meta.url),
+);
 
 // https://astro.build/config
 export default defineConfig({
@@ -16,6 +19,7 @@ export default defineConfig({
     resolve: {
       alias: {
         yaml: yamlBrowserEntry,
+        picomatch: picomatchEntry,
       },
     },
   },
