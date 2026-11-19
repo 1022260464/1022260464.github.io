@@ -6,6 +6,13 @@
         <description>记录代码学习、日常生活，以及前端、后端、算法与 AI 知识的个人网站。</description>
         <language>zh-CN</language>
         <item>
+          <title>DeepSeek Harness 是怎么搭起来的：一篇通俗的架构介绍</title>
+          <link>https://1022260464.github.io/writing/deepseek-harness-architecture/</link>
+          <guid>https://1022260464.github.io/writing/deepseek-harness-architecture/</guid>
+          <pubDate>Thu, 19 Nov 2026 00:00:00 GMT</pubDate>
+          <description>从启动命令、插件树、Turn 与 Step 到 Session 日志，用更直观的方式理解 DeepSeek Harness 为什么能做到“一切皆插件”。</description>
+        </item>
+        <item>
           <title>Harness 工程与自我改进：模型外围的递归进化</title>
           <link>https://1022260464.github.io/writing/harness-engineering-self-improvement/</link>
           <guid>https://1022260464.github.io/writing/harness-engineering-self-improvement/</guid>

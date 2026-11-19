@@ -1,0 +1,290 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.4.4"><meta name="description" content="从启动命令、插件树、Turn 与 Step 到 Session 日志，用更直观的方式理解 DeepSeek Harness 为什么能做到“一切皆插件”。"><meta name="theme-color" content="#f8f9f6"><meta property="og:title" content="DeepSeek Harness 是怎么搭起来的：一篇通俗的架构介绍 — 0x330"><meta property="og:description" content="从启动命令、插件树、Turn 与 Step 到 Session 日志，用更直观的方式理解 DeepSeek Harness 为什么能做到“一切皆插件”。"><meta property="og:type" content="article"><meta property="og:url" content="https://1022260464.github.io/writing/deepseek-harness-architecture/"><meta property="og:site_name" content="0x330"><link rel="canonical" href="https://1022260464.github.io/writing/deepseek-harness-architecture/"><link rel="alternate" type="application/rss+xml" title="0x330 RSS" href="/writing.xml"><title>DeepSeek Harness 是怎么搭起来的：一篇通俗的架构介绍 — 0x330</title><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.DXqcZz58.js"></script><script>
+			document.documentElement.classList.add("motion-pending");
+			document.documentElement.classList.add("motion-enabled");
+			window.setTimeout(() => {
+				if (document.documentElement.dataset.motionReady !== "true") {
+					document.documentElement.classList.remove("motion-enabled");
+				}
+			}, 1800);
+		</script><link rel="stylesheet" href="/_astro/PageCurtain.aCXEYLlv.css"><link rel="stylesheet" href="/_astro/_slug_.CAnf7Du5.css"><link rel="stylesheet" href="/_astro/Layout.C1lvO3Je.css"></head><body><a class="skip-link" href="#content">跳到主要内容</a><div class="site-frame"><aside class="sidebar" aria-label="站点导航" data-astro-cid-wv7whodv><div class="sidebar-inner" data-astro-cid-wv7whodv><a class="brand" href="/home/" aria-label="0x330 首页" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>0x330</span><svg data-spin="true" data-astro-cid-wv7whodv="true" class="spark-icon brand-mark" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="--spark-delay: -3s" data-astro-cid-vlrgvanf><defs data-astro-cid-vlrgvanf><linearGradient id="spark-paint-7cf93944131e418d832270d4f4cb52e6" x1="4" y1="2.5" x2="20" y2="21.5" gradientUnits="userSpaceOnUse" data-astro-cid-vlrgvanf><stop stop-color="#4d8dff" data-astro-cid-vlrgvanf></stop><stop offset="0.3" stop-color="#8c6cff" data-astro-cid-vlrgvanf></stop><stop offset="0.56" stop-color="#ed68a8" data-astro-cid-vlrgvanf></stop><stop offset="0.78" stop-color="#ff8b55" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffd75c" data-astro-cid-vlrgvanf></stop></linearGradient><radialGradient id="spark-highlight-7cf93944131e418d832270d4f4cb52e6" cx="0" cy="0" r="1" data-astro-cid-vlrgvanf><stop stop-color="#ffffff" stop-opacity="0.92" data-astro-cid-vlrgvanf></stop><stop offset="0.34" stop-color="#ffffff" stop-opacity="0.28" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffffff" stop-opacity="0" data-astro-cid-vlrgvanf></stop></radialGradient></defs><g class="spark-rotor" data-astro-cid-vlrgvanf><path d="M12 2.15C12.9 8.7 15.3 11.1 21.85 12C15.3 12.9 12.9 15.3 12 21.85C11.1 15.3 8.7 12.9 2.15 12C8.7 11.1 11.1 8.7 12 2.15Z" fill="url(#spark-paint-7cf93944131e418d832270d4f4cb52e6)" data-astro-cid-vlrgvanf></path><path d="M12 6.2C12.5 10.2 13.8 11.5 17.8 12C13.8 12.5 12.5 13.8 12 17.8C11.5 13.8 10.2 12.5 6.2 12C10.2 11.5 11.5 10.2 12 6.2Z" fill="url(#spark-paint-7cf93944131e418d832270d4f4cb52e6)" opacity="0.45" data-astro-cid-vlrgvanf></path><circle cx="9.1" cy="8.4" r="3.3" fill="url(#spark-highlight-7cf93944131e418d832270d4f4cb52e6)" data-astro-cid-vlrgvanf></circle></g></svg></a><div class="identity" data-astro-cid-wv7whodv><div class="avatar" data-astro-cid-wv7whodv><img src="/images/avatar-code-notes.jpg" alt="" width="40" height="40" data-astro-cid-wv7whodv></div><div data-astro-cid-wv7whodv><p class="identity-name" data-astro-cid-wv7whodv>0x330</p><p class="identity-role" data-astro-cid-wv7whodv>代码 · 生活 · 技术笔记</p></div></div><nav class="nav-list" aria-label="主导航" data-astro-cid-wv7whodv><a class="nav-link" href="/home/" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>首页</span><span class="nav-index" data-astro-cid-wv7whodv>01</span></a><a class="nav-link active" href="/writing" aria-current="page" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>笔记</span><span class="nav-index" data-astro-cid-wv7whodv>02</span></a><a class="nav-link" href="/gallery" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>分享</span><span class="nav-index" data-astro-cid-wv7whodv>03</span></a><a class="nav-link" href="/about" data-astro-cid-wv7whodv><span data-astro-cid-wv7whodv>关于</span><span class="nav-index" data-astro-cid-wv7whodv>04</span></a></nav><div class="sidebar-rule" data-astro-cid-wv7whodv></div><section class="status" aria-labelledby="status-title" data-astro-cid-wv7whodv><p class="eyebrow" id="status-title" data-astro-cid-wv7whodv>Now</p><p data-astro-cid-wv7whodv>持续记录前端、后端、算法与 AI 学习，也留下日常生活。</p><span class="status-pill" data-astro-cid-wv7whodv><i data-astro-cid-wv7whodv></i> Learning in public</span></section><div class="sidebar-footer" data-astro-cid-wv7whodv><a href="https://github.com/1022260464" target="_blank" rel="noreferrer" data-astro-cid-wv7whodv>GitHub ↗</a><a href="/writing.xml" data-astro-cid-wv7whodv>RSS ↗</a><p data-astro-cid-wv7whodv>© 2026 0x330</p></div></div></aside><header class="mobile-header" data-astro-cid-hghorjjy><a class="mobile-brand" href="/home/" data-astro-cid-hghorjjy><img class="mobile-avatar" src="/images/avatar-code-notes.jpg" alt="" width="26" height="26" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>0x330</span><svg data-spin="true" data-astro-cid-hghorjjy="true" class="spark-icon mobile-mark" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="--spark-delay: -3s" data-astro-cid-vlrgvanf><defs data-astro-cid-vlrgvanf><linearGradient id="spark-paint-435379232a524f679a666da4e10a0dba" x1="4" y1="2.5" x2="20" y2="21.5" gradientUnits="userSpaceOnUse" data-astro-cid-vlrgvanf><stop stop-color="#4d8dff" data-astro-cid-vlrgvanf></stop><stop offset="0.3" stop-color="#8c6cff" data-astro-cid-vlrgvanf></stop><stop offset="0.56" stop-color="#ed68a8" data-astro-cid-vlrgvanf></stop><stop offset="0.78" stop-color="#ff8b55" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffd75c" data-astro-cid-vlrgvanf></stop></linearGradient><radialGradient id="spark-highlight-435379232a524f679a666da4e10a0dba" cx="0" cy="0" r="1" data-astro-cid-vlrgvanf><stop stop-color="#ffffff" stop-opacity="0.92" data-astro-cid-vlrgvanf></stop><stop offset="0.34" stop-color="#ffffff" stop-opacity="0.28" data-astro-cid-vlrgvanf></stop><stop offset="1" stop-color="#ffffff" stop-opacity="0" data-astro-cid-vlrgvanf></stop></radialGradient></defs><g class="spark-rotor" data-astro-cid-vlrgvanf><path d="M12 2.15C12.9 8.7 15.3 11.1 21.85 12C15.3 12.9 12.9 15.3 12 21.85C11.1 15.3 8.7 12.9 2.15 12C8.7 11.1 11.1 8.7 12 2.15Z" fill="url(#spark-paint-435379232a524f679a666da4e10a0dba)" data-astro-cid-vlrgvanf></path><path d="M12 6.2C12.5 10.2 13.8 11.5 17.8 12C13.8 12.5 12.5 13.8 12 17.8C11.5 13.8 10.2 12.5 6.2 12C10.2 11.5 11.5 10.2 12 6.2Z" fill="url(#spark-paint-435379232a524f679a666da4e10a0dba)" opacity="0.45" data-astro-cid-vlrgvanf></path><circle cx="9.1" cy="8.4" r="3.3" fill="url(#spark-highlight-435379232a524f679a666da4e10a0dba)" data-astro-cid-vlrgvanf></circle></g></svg></a><details class="mobile-menu" data-astro-cid-hghorjjy><summary data-astro-cid-hghorjjy>菜单</summary><nav aria-label="移动端导航" data-astro-cid-hghorjjy><a href="/home/" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>首页</span><span data-astro-cid-hghorjjy>01</span></a><a href="/writing" class="active" aria-current="page" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>笔记</span><span data-astro-cid-hghorjjy>02</span></a><a href="/gallery" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>分享</span><span data-astro-cid-hghorjjy>03</span></a><a href="/about" data-astro-cid-hghorjjy><span data-astro-cid-hghorjjy>关于</span><span data-astro-cid-hghorjjy>04</span></a></nav></details></header><main class="site-main" id="content"><div class="reading-progress" aria-hidden="true" data-astro-cid-kw4rgypl><span data-astro-cid-kw4rgypl></span></div><article class="article-shell" data-astro-cid-7mn2gw7j><header class="article-header" data-astro-cid-7mn2gw7j><nav class="article-path" aria-label="笔记层级" data-enter data-astro-cid-7mn2gw7j><a href="/writing" data-astro-cid-7mn2gw7j>笔记</a><span aria-hidden="true" data-astro-cid-7mn2gw7j>/</span><span data-astro-cid-7mn2gw7j>AI 与 Agent</span></nav><div class="article-kicker" data-enter data-astro-cid-7mn2gw7j><time datetime="2026-11-19T00:00:00.000Z" data-astro-cid-7mn2gw7j>2026年11月19日</time><span aria-hidden="true" data-astro-cid-7mn2gw7j>/</span><span data-astro-cid-7mn2gw7j>AI</span></div><h1 data-split="chars" data-astro-cid-7mn2gw7j>DeepSeek Harness 是怎么搭起来的：一篇通俗的架构介绍</h1><p class="article-description" data-typewriter data-astro-cid-7mn2gw7j>从启动命令、插件树、Turn 与 Step 到 Session 日志，用更直观的方式理解 DeepSeek Harness 为什么能做到“一切皆插件”。</p><div class="article-meta" data-enter data-astro-cid-7mn2gw7j><span data-astro-cid-7mn2gw7j>笔记 / 0x330</span><span data-astro-cid-7mn2gw7j>18 分钟阅读</span></div></header><div class="article-grid" data-astro-cid-7mn2gw7j><aside class="toc" aria-label="笔记目录" data-reveal data-astro-cid-7mn2gw7j><p data-astro-cid-7mn2gw7j>On this page</p><ol data-astro-cid-7mn2gw7j><li data-astro-cid-7mn2gw7j><a href="#一句话理解-dsh" data-astro-cid-7mn2gw7j>一句话理解 DSH</a></li><li data-astro-cid-7mn2gw7j><a href="#从一条启动命令开始" data-astro-cid-7mn2gw7j>从一条启动命令开始</a></li><li data-astro-cid-7mn2gw7j><a href="#bundle-和-profile-有什么区别" data-astro-cid-7mn2gw7j>Bundle 和 Profile 有什么区别？</a></li><li data-astro-cid-7mn2gw7j><a href="#cordis-到底在做什么" data-astro-cid-7mn2gw7j>Cordis 到底在做什么？</a></li><li data-astro-cid-7mn2gw7j><a href="#三类事件各管一件事" data-astro-cid-7mn2gw7j>三类事件，各管一件事</a></li><li data-astro-cid-7mn2gw7j><a href="#一次对话是怎样跑完的" data-astro-cid-7mn2gw7j>一次对话是怎样跑完的？</a></li><li data-astro-cid-7mn2gw7j><a href="#工具为什么不是直接调用一个函数" data-astro-cid-7mn2gw7j>工具为什么不是“直接调用一个函数”？</a></li><li data-astro-cid-7mn2gw7j><a href="#能力缝换掉实现不影响调用者" data-astro-cid-7mn2gw7j>能力缝：换掉实现，不影响调用者</a></li><li data-astro-cid-7mn2gw7j><a href="#scope-不是安全沙箱" data-astro-cid-7mn2gw7j>Scope 不是安全沙箱</a></li><li data-astro-cid-7mn2gw7j><a href="#session-日志为什么重要" data-astro-cid-7mn2gw7j>Session 日志为什么重要？</a></li><li data-astro-cid-7mn2gw7j><a href="#为什么不把全部上下文每轮重发" data-astro-cid-7mn2gw7j>为什么不把全部上下文每轮重发？</a></li><li data-astro-cid-7mn2gw7j><a href="#web-ui-为什么也能算插件" data-astro-cid-7mn2gw7j>Web UI 为什么也能算插件？</a></li><li data-astro-cid-7mn2gw7j><a href="#想知道当前装了什么可以这样看" data-astro-cid-7mn2gw7j>想知道当前装了什么，可以这样看</a></li><li data-astro-cid-7mn2gw7j><a href="#想扩展-dsh应该改哪里" data-astro-cid-7mn2gw7j>想扩展 DSH，应该改哪里？</a></li><li data-astro-cid-7mn2gw7j><a href="#这套设计也有代价" data-astro-cid-7mn2gw7j>这套设计也有代价</a></li><li data-astro-cid-7mn2gw7j><a href="#调试链路更长" data-astro-cid-7mn2gw7j>调试链路更长</a></li><li data-astro-cid-7mn2gw7j><a href="#配置也需要像代码一样维护" data-astro-cid-7mn2gw7j>配置也需要像代码一样维护</a></li><li data-astro-cid-7mn2gw7j><a href="#插件带来的安全风险更大" data-astro-cid-7mn2gw7j>插件带来的安全风险更大</a></li><li data-astro-cid-7mn2gw7j><a href="#开发者预览版仍会变化" data-astro-cid-7mn2gw7j>开发者预览版仍会变化</a></li><li data-astro-cid-7mn2gw7j><a href="#最后总结" data-astro-cid-7mn2gw7j>最后总结</a></li><li data-astro-cid-7mn2gw7j><a href="#参考资料" data-astro-cid-7mn2gw7j>参考资料</a></li></ol></aside><div class="article-body prose" data-astro-cid-7mn2gw7j><p>第一次打开 DeepSeek Harness（下面简称 DSH）的仓库，很容易被几十个包名劝退：<code>agent-loop</code>、<code>session</code>、<code>sandbox</code>、<code>bundle</code>、<code>llm-deepseek</code>、<code>client</code>、<code>host</code>……看起来像一堆零件，而且每个零件都有人负责。</p>
+<p>但只要换一个角度看，它其实很像一套可以自由拼装的电脑：</p>
+<ul>
+<li>机箱和应用形态由 <code>profile</code> 决定；</li>
+<li>主板和插槽由 Cordis 提供；</li>
+<li>模型、工具、沙箱、会话存储是一张张可以更换的扩展卡；</li>
+<li>Agent Loop 负责真正开机运行；</li>
+<li>Session 日志则像一份不会随便涂改的运行记录。</li>
+</ul>
+<p>这样看，“一切皆插件”就不再是一句口号，而是 DSH 从启动到执行都遵守的组织方式。</p>
+<figure>
+  <img src="/images/deepseek-harness/harness-ui.webp" alt="DeepSeek Harness 的 Web 对话界面" width="1600" height="794" loading="lazy" decoding="async" />
+  <figcaption>DSH 的 Web 界面不只是一个聊天框。顶部可以查看轨迹和 Session 日志，底部会显示轮次、Step、模型调用和缓存等信息。</figcaption>
+</figure>
+<h2 id="一句话理解-dsh">一句话理解 DSH</h2>
+<p>DSH 不是一个“主程序里顺便支持插件”的聊天工具，而是一套由配置组装出来的 Agent 运行环境。</p>
+<p>它启动时会先回答三个问题：</p>
+<ol>
+<li>这次要运行成 Web、命令行、SDK，还是其他应用形态？</li>
+<li>当前配置要装载哪些插件和服务？</li>
+<li>Cordis 如何根据依赖关系，把它们真正连接起来？</li>
+</ol>
+<p>配置决定“装什么”，Cordis 决定“怎么连”，Agent Loop 决定“怎么跑”，Session 记录“到底跑了什么”。把这四件事分开之后，DSH 的包虽然多，但各部分的边界会清楚很多。</p>
+<figure>
+  <img src="/images/deepseek-harness/overall-architecture.webp" alt="DeepSeek Harness 从启动组合到能力输出的四层架构" width="1600" height="750" loading="lazy" decoding="async" />
+  <figcaption>DSH 可以粗略看成四段：启动组合、Cordis 运行时、能力缝和最终输出界面。每一段都可以单独替换或扩展。</figcaption>
+</figure>
+<h2 id="从一条启动命令开始">从一条启动命令开始</h2>
+<p>体验 DSH 最简单的方式，是运行：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">npx @deepseek</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">ai</span><span style="color:#F97583">/</span><span style="color:#E1E4E8">dsh web</span></span></code></pre>
+<p>终端里看起来只是启动了一个本地 Web 服务，但内部发生的事并不简单。</p>
+<p>DSH 不会先写死“Web 版需要哪些功能”，而是先读取一个 <code>web</code> profile，再把基础 bundle、Web 应用 bundle 和用户自己的 patch 一层层叠起来。最后得到的是一棵插件树，而不是一大段把所有功能都塞进去的启动代码。</p>
+<figure>
+  <img src="/images/deepseek-harness/startup-composition.webp" alt="dsh web 启动时叠加多个配置层并激活 Cordis 插件树" width="1600" height="769" loading="lazy" decoding="async" />
+  <figcaption>`dsh web` 会先把多层配置压成插件树，再交给 Cordis 根据服务依赖激活。图中的配置行数会随版本变化，真正重要的是这套叠加顺序。</figcaption>
+</figure>
+<p>这里有一个容易踩坑的细节：后加载的 patch 如果命中了同一个配置条目 id，它通常会替换整段 <code>config</code>，而不是帮你把新旧对象逐字段合并。</p>
+<p>比如默认配置里已经有：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">endpoint</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">https://example.test</span></span>
+<span class="line"><span style="color:#85E89D">retries</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">3</span></span></code></pre>
+<p>你不能假设只写一个 <code>retries: 5</code> 就能保留原来的 <code>endpoint</code>。修改配置之前，最好先查看完整的默认条目，再写清楚目标状态下需要的完整配置。</p>
+<p>这也说明了一件事：在 DSH 里，配置不是无关紧要的附属文件，它本身就是应用的一部分。</p>
+<h2 id="bundle-和-profile-有什么区别">Bundle 和 Profile 有什么区别？</h2>
+<p>可以把 Bundle 理解成“一套已经配好的零件包”，Profile 则是“这次实际装出来的整机方案”。</p>
+<p>以 Web 形态为例：</p>
+<figure>
+  <img src="/images/deepseek-harness/web-profile.webp" alt="Web Profile 由基础 Bundle 与 Web App Bundle 组合而成" width="1600" height="712" loading="lazy" decoding="async" />
+  <figcaption>基础 bundle 负责 Agent、Session、工具和 Shell 等通用能力，Web 应用 bundle 再补上 Web Server、API 和 UI。</figcaption>
+</figure>
+<ul>
+<li><code>base</code> 负责 Agent 运行所需的通用能力；</li>
+<li><code>web-app</code> 在基础能力上补 Web Server、API 和界面；</li>
+<li><code>headless</code> 去掉浏览器界面，更适合自动化；</li>
+<li><code>sdk</code> 让其他程序可以直接嵌入 DSH；</li>
+<li><code>sdk-minimal</code> 刻意只保留很少的服务，适合做轻量集成；</li>
+<li><code>acp</code> 则面向另一类客户端协议。</li>
+</ul>
+<p>Profile 是这些默认层再叠加用户修改后的结果。所以排查问题时，先确认“当前 profile 到底装了什么”，往往比直接翻源码更快。</p>
+<h2 id="cordis-到底在做什么">Cordis 到底在做什么？</h2>
+<p>Cordis 经常被一句话带过：“它是一个插件和依赖注入框架。”这话没错，但不够直观。</p>
+<p>可以把 Cordis 想成一块带标准插槽的主板。插件插上去以后，主要能做三件事：</p>
+<ol>
+<li>提供一种服务，例如让别的插件可以使用 <code>ctx.llm</code> 或 <code>ctx.sandbox</code>；</li>
+<li>监听某种事件，例如会话开始、模型请求或工具执行结束；</li>
+<li>注册一组可撤销的资源。插件卸载时，这些监听器和资源也会一起清理。</li>
+</ol>
+<p>DSH 中很多关键决策都是通过事件完成的。比如模型请求发出前，插件可以修改 provider、模型或参数；请求失败后，另一个插件可以决定是否重试。</p>
+<p>这里要分清“看见”和“接管”：</p>
+<ul>
+<li>普通监听器适合记录日志、统计指标；</li>
+<li><code>waterfall</code> 事件允许插件参与决策，并把新的结果交给下一层；</li>
+<li>替换 Service 则会改变一项能力的完整实现。</li>
+</ul>
+<p>不过，Cordis 只负责把插件连接起来，它不负责 Turn 怎么结束、工具是否需要批准、Session 如何恢复。那些仍由 DSH 自己的 Agent、工具、沙箱和会话系统处理。</p>
+<h2 id="三类事件各管一件事">三类事件，各管一件事</h2>
+<p>DSH 的事件很多，但可以先按职责分成三类：</p>
+<figure>
+  <img src="/images/deepseek-harness/event-layers.webp" alt="Session Event、Agent Event 与 Capability Event 的职责区别" width="1600" height="265" loading="lazy" decoding="async" />
+  <figcaption>Session Event 记录已经发生的事实，Agent Event 描述正在运行的流程，Capability Event 关注工具、文件系统和遥测等能力层的适配。</figcaption>
+</figure>
+<ul>
+<li><strong>Session Event</strong>：已经发生、值得长期保留的事实，例如用户消息、模型回复和工具结果；</li>
+<li><strong>Agent Event</strong>：正在进行的 Turn、Step、模型请求及其状态变化；</li>
+<li><strong>Capability Event</strong>：工具、文件系统、遥测等具体能力上的事件。</li>
+</ul>
+<p>这样拆开以后，日志不会被 UI 状态淹没，能力插件也不用理解整个 Agent 的生命周期。</p>
+<h2 id="一次对话是怎样跑完的">一次对话是怎样跑完的？</h2>
+<p>用户看到的是一问一答，DSH 内部跑的却是一个循环。</p>
+<p>假设你对 Agent 说：“帮我修复测试并提交。”</p>
+<ol>
+<li>Agent 先读取代码，发起第一次模型请求；</li>
+<li>模型要求读取文件，系统执行工具并记录结果；</li>
+<li>模型根据结果修改代码；</li>
+<li>Agent 再请求模型，随后运行测试；</li>
+<li>测试失败，继续修复；</li>
+<li>测试通过，完成提交，当前 Turn 结束。</li>
+</ol>
+<p>这里的两个词很重要：</p>
+<ul>
+<li><strong>Turn</strong>：从领取一次用户输入开始，到暂时没有后续工作为止；</li>
+<li><strong>Step</strong>：一次模型请求，以及由它产生的工具调用和工具结果。</li>
+</ul>
+<p>所以上面这次任务虽然只算一个 Turn，却包含多个 Step。</p>
+<figure>
+  <img src="/images/deepseek-harness/turn-step-flow.webp" alt="一个 Turn 中的模型请求、工具调用与结果回写流程" width="1600" height="807" loading="lazy" decoding="async" />
+  <figcaption>模型流式返回结果后，如果提出 ToolCall，就进入工具执行流水线；工具结果再推动下一次 Step。</figcaption>
+</figure>
+<p>DSH 的 Agent Loop 本身并不想做所有事情。它的责任是组织请求、驱动 Step 和判断是否继续；具体决策则尽量留给事件和 Service 插件。这也是为什么主循环可以保持相对简单。</p>
+<h2 id="工具为什么不是直接调用一个函数">工具为什么不是“直接调用一个函数”？</h2>
+<p>从模型角度看，工具调用像是一句“请读取这个文件”或“请运行这条命令”。但在真实环境里，一次工具调用还要经过很多检查：</p>
+<ol>
+<li>工具是否存在；</li>
+<li>参数是否符合格式；</li>
+<li>当前 Agent 是否声明了这项工具；</li>
+<li>权限策略是否允许；</li>
+<li>是否需要用户确认；</li>
+<li>路径或命令是否超出工作区；</li>
+<li>执行是否超时；</li>
+<li>输出是否需要截断；</li>
+<li>结果如何写回 Session。</li>
+</ol>
+<p>如果这些逻辑散落在每个工具里，最后每个工具都会有自己的一套规则。DSH 把这些公共步骤放进工具流水线，具体工具只负责自己的业务语义。</p>
+<h2 id="能力缝换掉实现不影响调用者">能力缝：换掉实现，不影响调用者</h2>
+<p>DSH 经常出现一个词：<strong>capability seam</strong>，可以理解成“能力缝”或“可替换能力的接口边界”。</p>
+<p>一条完整的能力缝通常包含三部分：</p>
+<ul>
+<li>一份服务定义，说明这项能力能做什么；</li>
+<li>一个或多个 Provider，负责真正实现它；</li>
+<li>一些 Consumer，只依赖接口，不关心底层是谁实现。</li>
+</ul>
+<figure>
+  <img src="/images/deepseek-harness/capability-seam.webp" alt="能力缝中的服务定义、Provider 与消费者三层关系" width="1600" height="810" loading="lazy" decoding="async" />
+  <figcaption>以 Shell 为例，工具只需要使用 ShellService。底层换成本地 bash、带沙箱的 bash 或 PowerShell，不需要修改 Agent Loop。</figcaption>
+</figure>
+<p>这套模式不只用于 Shell，也用于模型、Session、文件系统、存储和子 Agent。</p>
+<p>它的好处很实际：</p>
+<ul>
+<li>换模型 provider，不需要改 Session 格式；</li>
+<li>换会话存储，不需要改工具协议；</li>
+<li>把本地 Shell 换成容器或远程执行器，不需要让每个工具知道底层差异；</li>
+<li>测试时可以注入一个假实现，不用真的启动模型或执行命令。</li>
+</ul>
+<h2 id="scope-不是安全沙箱">Scope 不是安全沙箱</h2>
+<p>DSH 可以让同一个进程运行多个 Agent。每个 Agent 可以有独立的 Scope，决定它能看见哪些工具、提示词片段和变量。</p>
+<p>A Agent 注册的东西不会自动进入 B Agent 的视图，这叫可见性隔离。</p>
+<p>但“看不见”不等于“碰不到”。Scope 不是安全边界。真正限制进程访问文件、网络和系统资源的是 sandbox、Shell、文件系统 Provider 和审批策略。</p>
+<p>这几层职责可以这样记：</p>
+<ul>
+<li>Scope 管模型看得见什么；</li>
+<li>sandbox 管进程实际能操作什么；</li>
+<li>approval 管某次敏感操作是否需要人工确认；</li>
+<li>credentials 管凭据以什么方式提供给程序。</li>
+</ul>
+<h2 id="session-日志为什么重要">Session 日志为什么重要？</h2>
+<p>一般的聊天应用只保存消息列表。DSH 保存的是一条 append-only 的 Session 事件日志。</p>
+<p>“append-only”的意思是：新事实只往后追加，原有事件不随便改写。这样做的目的不是把日志做得很复杂，而是让下面这些事情都使用同一份事实来源：</p>
+<ul>
+<li>Web UI 展示对话；</li>
+<li>模型组装下次请求；</li>
+<li>应用崩溃后恢复；</li>
+<li>重放某次执行；</li>
+<li>做压缩和摘要；</li>
+<li>后续审计与测试。</li>
+</ul>
+<figure>
+  <img src="/images/deepseek-harness/session-projection.webp" alt="同一份 Session Log 如何投影为模型上下文和 Web UI" width="1600" height="826" loading="lazy" decoding="async" />
+  <figcaption>原始日志只有一份。模型上下文、JSONL 持久化和 Web UI 都是根据同一份事件派生出来的视图。</figcaption>
+</figure>
+<p>DSH 有一条很关键的原则：</p>
+<blockquote>
+<p>模型能看见的内容，都应该能从 Session 日志里重新得到。</p>
+</blockquote>
+<p>因此，日志里不只有用户消息和模型回复，还会记录 <code>request/header</code>、工具调用、工具结果、错误、重试和中断恢复信息。否则，你就无法解释模型当时到底看到了什么，也就很难复盘一次奇怪的行为。</p>
+<h2 id="为什么不把全部上下文每轮重发">为什么不把全部上下文每轮重发？</h2>
+<p>每进入一个新的 Step，Agent 仍然会重新组装上下文，但“重新组装”不等于“把所有内容重新追加一遍”。</p>
+<p>可以把它分成两部分：</p>
+<ul>
+<li>相对稳定的内容，例如 Agent 指令、Skill 目录、persona 和工具说明；</li>
+<li>每一步都可能变化的内容，例如用户刚发的消息、新的工具结果和运行时状态。</li>
+</ul>
+<p>稳定部分如果没有变化，可以复用上一次的请求结构；只有真的变了，才追加新的请求头。</p>
+<p>这样做有两个好处：Session 不会因为重复文本不断膨胀，模型服务也更容易复用稳定的请求前缀，从而提高 KV Cache 的命中率。</p>
+<p>当上下文真的接近上限时，DSH 再通过 compaction 生成摘要。摘要属于派生数据，原始 Session 才是事实来源，两者不能混为一谈。</p>
+<h2 id="web-ui-为什么也能算插件">Web UI 为什么也能算插件？</h2>
+<p>DSH 的 Web 形态采用“宿主进程 + 浏览器客户端”的结构：</p>
+<ul>
+<li>宿主侧运行 Agent、Session、工具和沙箱；</li>
+<li>浏览器侧负责聊天、轨迹、审批和设置界面；</li>
+<li>两边通过 API 和事件通信；</li>
+<li>客户端插件再根据清单加载自己的 <code>client.js</code>。</li>
+</ul>
+<p>所以 Web 扩展并不一定要修改一个巨大的 React 主包。某项能力可以同时包含宿主服务插件、浏览器 UI 插件和两边共享的协议类型。</p>
+<p>不过，浏览器插件仍然只能在浏览器安全边界内运行。它扩展的是界面，不会因为在客户端加载就获得宿主进程权限。</p>
+<h2 id="想知道当前装了什么可以这样看">想知道当前装了什么，可以这样看</h2>
+<p>排查 DSH 问题时，先看当前 profile，而不是凭包名猜。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">dsh web </span><span style="color:#F97583">--</span><span style="color:#E1E4E8">dump</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">config</span></span></code></pre>
+<p>它会展示最终组合树，并告诉我们某个条目来自哪个 bundle、是否被用户 patch 覆盖。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">dsh web </span><span style="color:#F97583">--</span><span style="color:#E1E4E8">dump</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">default</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">config</span></span></code></pre>
+<p>它会展示默认 bundle 层，适合和当前配置做对比。</p>
+<p>一个比较顺手的排查顺序是：</p>
+<ol>
+<li>现在启动的是哪个 profile？</li>
+<li>目标插件有没有被装载？</li>
+<li>它来自哪个 bundle？</li>
+<li>用户 patch 有没有覆盖它？</li>
+<li>它需要的 Service 是否已经存在？</li>
+<li>某次行为是被事件拦截了，还是 Provider 本身有问题？</li>
+<li>最终失败发生在模型、工具、权限、沙箱还是宿主机？</li>
+</ol>
+<h2 id="想扩展-dsh应该改哪里">想扩展 DSH，应该改哪里？</h2>
+<p>大多数需求不需要直接改核心源码，可以先按下面的顺序判断：</p>
+<table>
+<thead>
+<tr>
+<th>想做的事情</th>
+<th>优先修改的位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>增加一个工具</td>
+<td>写工具插件</td>
+</tr>
+<tr>
+<td>替换模型服务</td>
+<td>写新的 LLM Provider</td>
+</tr>
+<tr>
+<td>改变某个 Agent 的人格和工具集</td>
+<td>新建 Agent Preset</td>
+</tr>
+<tr>
+<td>组合出新的 Web、CLI 或 SDK 形态</td>
+<td>写 Bundle 和 Profile</td>
+</tr>
+<tr>
+<td>换本地 Shell、文件系统或沙箱</td>
+<td>写新的能力 Provider</td>
+</tr>
+<tr>
+<td>增加会话存储方式</td>
+<td>写 Session Provider</td>
+</tr>
+<tr>
+<td>调整默认参数</td>
+<td>修改 Profile patch</td>
+</tr>
+</tbody>
+</table>
+<p>有一条简单原则：<strong>能用 Provider 解决，就不要改消费者；能用 Preset 或 Profile 解决，就不要改核心包。</strong></p>
+<h2 id="这套设计也有代价">这套设计也有代价</h2>
+<p>DSH 看起来很灵活，但灵活并不免费。</p>
+<h3 id="调试链路更长">调试链路更长</h3>
+<p>一个工具失败，可能是工具本身、参数校验、Scope 可见性、审批、沙箱、模型返回或 profile 没装载。只看某一个函数通常不够，需要结合 Session 和最终配置一起判断。</p>
+<h3 id="配置也需要像代码一样维护">配置也需要像代码一样维护</h3>
+<p>Profile 的加载顺序、patch 的命中 id 和整段替换规则都会改变结果。配置写错和代码写错没有本质区别，所以也要做版本管理、diff 和验证。</p>
+<h3 id="插件带来的安全风险更大">插件带来的安全风险更大</h3>
+<p>插件不仅能展示 UI，还可能注册 Service、监听事件和访问宿主能力。生产环境需要限制插件来源、审查代码、控制凭据，并把不可信执行放进容器或远程环境中。</p>
+<h3 id="开发者预览版仍会变化">开发者预览版仍会变化</h3>
+<p>包名、配置字段和内部实现都可能调整。本文更适合用来理解 DSH 的设计思路，不应把某个版本的目录结构当成永远稳定的 API。</p>
+<h2 id="最后总结">最后总结</h2>
+<p>如果只用一句话介绍 DSH，我会这样说：</p>
+<blockquote>
+<p>DSH 先把 Agent 需要的能力拆成插件，再通过 Cordis 组合成应用，由 Agent Loop 执行，并把每一步都记录成可恢复、可查看的 Session 事件。</p>
+</blockquote>
+<p>所以它真正特别的地方不是包多，而是每个包都知道自己该站在哪一层：</p>
+<ul>
+<li>Profile 决定装什么；</li>
+<li>Cordis 决定怎么连接；</li>
+<li>能力缝决定怎样替换；</li>
+<li>Agent Loop 负责执行；</li>
+<li>Session 日志负责保留事实。</li>
+</ul>
+<p>理解了这条线，再去看仓库里那几十个包，就不再是一团名字，而是一棵能顺着找下去的插件树。</p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness 官方仓库</a></li>
+<li><a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.zh.md">DSH 官方架构文档</a></li>
+<li><a href="https://deepseek-harness.github.io/deepseek-harness/">DSH 官方文档站点</a></li>
+<li><a href="https://blog.csdn.net/weixin_45304503/article/details/163734841">CSDN：图解 DeepSeek Harness 架构解析</a></li>
+</ul>
+</div><aside class="article-aside" data-reveal data-astro-cid-7mn2gw7j><p class="eyebrow" data-astro-cid-7mn2gw7j>Filed under</p><div class="tag-list" data-astro-cid-7mn2gw7j><span data-astro-cid-7mn2gw7j>AI</span><span data-astro-cid-7mn2gw7j>Agent</span><span data-astro-cid-7mn2gw7j>Harness</span><span data-astro-cid-7mn2gw7j>架构</span></div></aside></div><nav class="article-nav" aria-label="笔记翻页" data-reveal data-astro-cid-7mn2gw7j><a href="/writing/harness-engineering-self-improvement" data-astro-cid-7mn2gw7j><span data-astro-cid-7mn2gw7j>上一篇</span><strong data-astro-cid-7mn2gw7j>Harness 工程与自我改进：模型外围的递归进化</strong></a><div data-astro-cid-7mn2gw7j></div></nav></article></main></div><script type="module" src="/_astro/Layout.astro_astro_type_script_index_0_lang.CYCgXV3R.js"></script><div data-astro-transition-persist="site-page-curtain" class="page-curtain" data-page-curtain data-state="open" aria-hidden="true" data-astro-cid-zo45weup><svg class="page-curtain-panel" viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-zo45weup><path d="M -300 0 L 1030 0 C 1260 280 1260 720 1030 1000 L -300 1000 C -70 720 -70 280 -300 0 Z" fill="#ffda3d" data-astro-cid-zo45weup></path></svg><div class="page-curtain-content" data-astro-cid-zo45weup><div class="page-curtain-mark" data-astro-cid-zo45weup><svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-astro-cid-zo45weup><rect x="1.5" y="1.5" width="93" height="93" rx="27" fill="#11130f" data-astro-cid-zo45weup></rect><ellipse cx="48" cy="49" rx="36" ry="13" fill="none" stroke="#f8f9f6" stroke-opacity="0.3" transform="rotate(-20 48 49)" data-astro-cid-zo45weup></ellipse><ellipse cx="48" cy="49" rx="33" ry="11" fill="none" stroke="#ffda3d" stroke-opacity="0.34" transform="rotate(58 48 49)" data-astro-cid-zo45weup></ellipse><circle cx="20" cy="62" r="2.8" fill="#ffda3d" data-astro-cid-zo45weup></circle><circle cx="76" cy="26" r="2.4" fill="#7ca3ff" data-astro-cid-zo45weup></circle><circle cx="64" cy="76" r="2.1" fill="#ff9d73" data-astro-cid-zo45weup></circle><path d="M48 17C51.2 33.7 58.4 41.2 76 44.8 58.4 48.4 51.2 55.9 48 72.6 44.8 55.9 37.6 48.4 20 44.8 37.6 41.2 44.8 33.7 48 17Z" fill="#f8f9f6" data-astro-cid-zo45weup></path></svg></div><h2 class="page-curtain-title" data-curtain-title data-text="记录代码与生活" data-astro-cid-zo45weup>记录代码与生活</h2><p class="page-curtain-outline" data-astro-cid-zo45weup>前端 · 后端 · 算法 · AI</p></div></div><script type="module" src="/_astro/PageCurtain.astro_astro_type_script_index_0_lang.DqvMDfgE.js"></script></body></html>
