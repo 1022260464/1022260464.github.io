@@ -20,7 +20,7 @@
 
 ## 分享
 
-> 2 个顶层目录，共 24 条分享。
+> 3 个顶层目录，共 33 条分享。
 
 - `06` [动效参考网站：6 个常逛的站点](<./src/content/shares/motion-library-recommendations.md>) · `id: motion-library-recommendations` · `category: 动效` · Lookbook 01
   - `01` [Motion 官方 React 示例](<./src/content/shares/motion-examples.md>) · `id: motion-examples` · `category: 动效基础`
@@ -46,3 +46,12 @@
   - `14` [Magic UI](<./src/content/shares/magic-ui-library.md>) · `id: magic-ui-library` · `category: 动效组件`
   - `15` [Float UI](<./src/content/shares/float-ui.md>) · `id: float-ui` · `category: 官网区块`
   - `16` [Uiverse](<./src/content/shares/uiverse.md>) · `id: uiverse` · `category: 灵感素材`
+- `08` [Codex 高端审美 Skill：8 个值得收藏的设计能力](<./src/content/shares/codex-aesthetic-skills.md>) · `id: codex-aesthetic-skills` · `category: Skill 分享` · Lookbook 03
+  - `01` [taste-skill](<./src/content/shares/codex-aesthetic-skill-taste.md>) · `id: codex-aesthetic-skill-taste` · `category: 审美指导`
+  - `02` [impeccable](<./src/content/shares/codex-aesthetic-skill-impeccable.md>) · `id: codex-aesthetic-skill-impeccable` · `category: 设计词汇`
+  - `03` [diagram-design](<./src/content/shares/codex-aesthetic-skill-diagram-design.md>) · `id: codex-aesthetic-skill-diagram-design` · `category: 图表设计`
+  - `04` [hallmark](<./src/content/shares/codex-aesthetic-skill-hallmark.md>) · `id: codex-aesthetic-skill-hallmark` · `category: 界面设计`
+  - `05` [huashu-design](<./src/content/shares/codex-aesthetic-skill-huashu-design.md>) · `id: codex-aesthetic-skill-huashu-design` · `category: 交付设计`
+  - `06` [awesome-claude-design](<./src/content/shares/codex-aesthetic-skill-awesome-claude-design.md>) · `id: codex-aesthetic-skill-awesome-claude-design` · `category: 风格参考`
+  - `07` [frontend-design](<./src/content/shares/codex-aesthetic-skill-frontend-design.md>) · `id: codex-aesthetic-skill-frontend-design` · `category: 前端设计`
+  - `08` [claude-artisan](<./src/content/shares/codex-aesthetic-skill-claude-artisan.md>) · `id: codex-aesthetic-skill-claude-artisan` · `category: 组件生成`
