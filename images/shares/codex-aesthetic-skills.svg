@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Codex aesthetic skills</title>
+  <desc id="desc">An editorial art-direction board with a yellow spark, typography studies and restrained color swatches.</desc>
+  <rect width="1200" height="900" fill="#f3ecd9"/>
+  <g stroke="#171914" stroke-opacity=".09">
+    <path d="M0 90h1200M0 180h1200M0 270h1200M0 360h1200M0 450h1200M0 540h1200M0 630h1200M0 720h1200M0 810h1200"/>
+    <path d="M90 0v900M180 0v900M270 0v900M360 0v900M450 0v900M540 0v900M630 0v900M720 0v900M810 0v900M900 0v900M990 0v900M1080 0v900"/>
+  </g>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" fill="#171914">
+    <text x="112" y="92" font-size="20" letter-spacing="4">CODEX / ART DIRECTION</text>
+    <text x="1088" y="92" font-size="20" text-anchor="end">SYSTEM 08</text>
+  </g>
+  <rect x="112" y="126" width="976" height="648" fill="#fbf8f0" stroke="#171914" stroke-opacity=".2" stroke-width="2"/>
+  <path d="M112 252h976" stroke="#171914" stroke-opacity=".12" stroke-width="2"/>
+  <g>
+    <rect x="150" y="168" width="54" height="54" rx="27" fill="#ffda3d"/>
+    <rect x="220" y="168" width="54" height="54" rx="27" fill="#171914"/>
+    <rect x="290" y="168" width="54" height="54" rx="27" fill="#e87356"/>
+    <rect x="360" y="168" width="54" height="54" rx="27" fill="#7891f2"/>
+    <circle cx="177" cy="195" r="7" fill="#171914"/>
+  </g>
+  <g fill="none" stroke="#171914">
+    <ellipse cx="600" cy="430" rx="322" ry="122" stroke-width="2" opacity=".22" transform="rotate(-16 600 430)"/>
+    <ellipse cx="600" cy="430" rx="258" ry="88" stroke-width="2" opacity=".32" transform="rotate(38 600 430)"/>
+    <circle cx="600" cy="430" r="162" stroke-width="2" opacity=".16"/>
+    <path d="M354 430h112M734 430h112" stroke-width="2" stroke-dasharray="7 12" opacity=".4"/>
+  </g>
+  <path d="M600 270C623 373 657 407 760 430 657 453 623 487 600 590 577 487 543 453 440 430 543 407 577 373 600 270Z" fill="#ffda3d"/>
+  <path d="M600 324C613 384 634 407 694 430 634 453 613 476 600 536 587 476 566 453 506 430 566 407 587 384 600 324Z" fill="#171914"/>
+  <circle cx="605" cy="430" r="15" fill="#fbf8f0"/>
+  <g>
+    <circle cx="342" cy="390" r="13" fill="#e87356"/>
+    <circle cx="858" cy="470" r="16" fill="#7891f2"/>
+    <circle cx="788" cy="312" r="9" fill="#ffda3d"/>
+    <circle cx="406" cy="527" r="9" fill="#171914"/>
+  </g>
+  <g transform="translate(794 574) rotate(-7)">
+    <rect width="210" height="132" fill="#171914"/>
+    <text x="24" y="82" fill="#fbf8f0" font-family="Georgia, 'Times New Roman', serif" font-size="74">Aa</text>
+    <circle cx="180" cy="34" r="10" fill="#ffda3d"/>
+  </g>
+  <g transform="translate(158 542)">
+    <path d="M0 0h238v148H0z" fill="none" stroke="#171914" stroke-width="2"/>
+    <path d="M0 38h238M0 78h238M0 118h238M46 0v148M96 0v148M146 0v148M196 0v148" stroke="#171914" stroke-opacity=".16"/>
+    <path d="M18 105C54 105 56 35 96 35s44 58 78 58 34-39 52-58" fill="none" stroke="#171914" stroke-width="5"/>
+    <circle cx="96" cy="35" r="7" fill="#e87356"/>
+  </g>
+  <path d="M112 774h976" stroke="#171914" stroke-opacity=".18"/>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" fill="#171914">
+    <text x="112" y="835" font-size="17" letter-spacing="3">TASTE / TYPE / MOTION / SYSTEM</text>
+    <text x="1088" y="835" font-size="17" text-anchor="end">2026.10.30</text>
+  </g>
+</svg>
